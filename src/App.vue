@@ -1,30 +1,31 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+<!--    头部-->
+    <Header></Header>
+<!--    主体-->
+    <div style="display: flex">
+<!--      侧边栏-->
+      <Aside></Aside>
+<!--      内容区域-->
+      <router-view style="flex: 1">
+
+      </router-view>
+    </div>
   </nav>
-  <router-view/>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style scoped>
+/*@import url("//unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css");*/
 </style>
+<script>
+import Header from "@/components/Header";
+import Aside from "@/components/Aside";
+
+export default {
+  name: "Layout",
+  components: {
+    Header,
+    Aside
+  }
+}
+</script>
