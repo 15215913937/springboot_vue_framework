@@ -1,5 +1,3 @@
-<!-- 引入HelloWorld.vue组件-->
-
 <template>
     <div style="padding: 10px">
         <!--    功能区-->
@@ -24,9 +22,9 @@
             <el-table-column fixed="right" label="操作" width="150px">
                 <template #default="scope">
                     <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-popconfirm title="你确定要删除吗?">
+                    <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
                         <template #reference>
-                            <el-button type="danger" @click="handleDelete(scope.row.id)">删除
+                            <el-button type="danger">删除
                             </el-button>
                         </template>
                     </el-popconfirm>
@@ -148,8 +146,17 @@
                 this.form = JSON.parse(JSON.stringify(row));
                 this.dialogVisible = true
             },
-            handleDelete(id) {
-                console.log(id)
+            handleDelete(row) {
+                this.id=row.id
+                console.log(this.id);
+                request.delete("/api/user/" + this.id).then(res => {
+                    if (res.code === '0') {
+                        this.$message.success("删除成功")
+                    } else {
+                        this.$message.error(res.msg)
+                    }
+                    this.load();//刷新表格数据
+                })
             },
             handleSizeChange() {
                 //改变当前每页个数的触发

@@ -2,7 +2,8 @@
   <div>
     <el-menu
         style="width: 200px;min-height: calc(100vh - 50px)"
-        default-active="2"
+        default-active="user"
+        :default-openeds="[1]"
         class="el-menu-vertical-demo"
     >
       <el-sub-menu index="1">
@@ -10,17 +11,11 @@
           <el-icon>
             <location/>
           </el-icon>
-          <span>菜单1</span>
+          <span>系统管理</span>
         </template>
-        <el-menu-item index="1-3">小组1</el-menu-item>
-
+        <el-menu-item index="user">用户管理</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="2">
-        <el-icon>
-          <icon-menu/>
-        </el-icon>
-        <span>菜单2</span>
-      </el-menu-item>
+      <el-menu-item index="data">数据管理</el-menu-item>
     </el-menu>
   </div>
 </template>

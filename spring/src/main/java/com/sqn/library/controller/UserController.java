@@ -17,6 +17,32 @@ public class UserController {
     @Resource
     UserMapper userMapper;
 
+    //登录接口
+    @PostMapping("/login")
+    public Result<?> login(@RequestBody User user) {
+        User res =
+                userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()).eq(User::getPassword, user.getPassword()));
+        if (res == null) {
+            return Result.error("-1", "用户名或密码错误！");
+        }
+        return Result.success();
+    }
+
+    //注册接口
+    @PostMapping("/register")
+    public Result<?> register(@RequestBody User user) {
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+        if (res != null) {
+            return Result.error("-1", "用户名已存在");
+        }
+        if (user.getPassword() == null) {
+            user.setPassword("123456");
+        }
+        userMapper.insert(user);
+        return Result.success();
+    }
+
+    //新增接口
     @PostMapping
     public Result<?> save(@RequestBody User user) {
         if (user.getPassword() == null) {
@@ -25,13 +51,22 @@ public class UserController {
         userMapper.insert(user);
         return Result.success();
     }
+
+    //修改接口
     @PutMapping
     public Result<?> update(@RequestBody User user) {
         userMapper.updateById(user);
         return Result.success();
     }
 
+    //删除接口
+    @DeleteMapping("/{id}")
+    public Result<?> delete(@PathVariable Long id) {
+        userMapper.deleteById(id);
+        return Result.success();
+    }
 
+    //查询接口
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,

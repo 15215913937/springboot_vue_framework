@@ -5,12 +5,12 @@
     <div style="width: 100px;padding-top: 15px ">
       <el-dropdown>
           <span class="el-dropdown-link">
-            小沈<el-icon class="el-icon-arrow-right el-icon--right"> > </el-icon>
+            小沈<el-icon class="el-icon-arrow-right el-icon--right"></el-icon>
           </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>退出系统</el-dropdown-item>
+            <el-dropdown-item @click="this.$router.push('/login')">退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
