@@ -55,7 +55,7 @@ export default {
       }
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          request.post("/api/user/register", this.form).then(res => {
+          request.post("/user/register", this.form).then(res => {
             if (res.code === '0') {
               this.$message.success("注册成功")
               this.$router.push("/login") //注册成功后自动跳转到登录页

@@ -4,7 +4,7 @@
     <div style="margin: 150px auto;width: 500px">
       <div
           style="color: #cccccc;font-size: 50px;text-align: center;font-family:KaiTi,serif;padding:30px 0">
-        沈家图书管理系统
+        沈氏家族管理系统
       </div>
       <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
         <el-form-item prop="username">
@@ -15,7 +15,7 @@
           <!--                    <Lock style="width: 1em; height: 1em; margin-right: 8px"></Lock>-->
           <el-input :prefix-icon="Lock" show-password placeholder="请输入密码" v-model="form.password"/>
         </el-form-item>
-        <el-form-item style="flex: auto">
+        <el-form-item>
           <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login">登录</el-button>
           <el-button style="flex:1;margin-bottom:20px" type="primary" @click="$router.push('/register')">注册</el-button>
         </el-form-item>
@@ -47,7 +47,7 @@ export default {
     login() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          request.post("/api/user/login", this.form).then(res => {
+          request.post("/user/login", this.form).then(res => {
             if (res.code === '0') {
               this.$message.success("登录成功")
               this.$router.push("/") //登录成功后自动跳转到主页

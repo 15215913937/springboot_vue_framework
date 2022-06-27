@@ -16,9 +16,8 @@
             <el-table-column prop="id" label="ID" sortable=""/>
             <el-table-column prop="username" label="用户名"/>
             <el-table-column prop="nickName" label="昵称"/>
-            <el-table-column prop="age" label="年龄"/>
+            <el-table-column prop="birthday" label="出生日期"/>
             <el-table-column prop="sex" label="性别"/>
-            <el-table-column prop="address" label="地址"/>
             <el-table-column fixed="right" label="操作" width="150px">
                 <template #default="scope">
                     <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
@@ -53,15 +52,12 @@
                     <el-form-item label="昵称">
                         <el-input v-model="form.nickName" style="width: 80%"/>
                     </el-form-item>
-                    <el-form-item label="年龄">
-                        <el-input v-model="form.age" style="width: 80%"/>
+                    <el-form-item label="出生日期">
+                        <el-input v-model="form.birthday" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="性别">
                         <el-radio v-model="form.sex" label="男" size="large">男</el-radio>
                         <el-radio v-model="form.sex" label="女" size="large">女</el-radio>
-                    </el-form-item>
-                    <el-form-item label="地址">
-                        <el-input type="textarea" v-model="form.address" style="width: 80%"/>
                     </el-form-item>
 
                 </el-form>
@@ -100,7 +96,7 @@
         },
         methods: {
             load() {
-                request.get("/api/user", {
+                request.get("/user", {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: this.pageSize,
@@ -119,7 +115,7 @@
             },
             save() {
                 if (this.form.id) {//若果id存在，更新
-                    request.put("/api/user", this.form).then(res => {
+                    request.put("/user", this.form).then(res => {
                         console.log(res);
                         if (res.code === '0') {
                             this.$message.success("修改成功")
@@ -130,7 +126,7 @@
                         this.dialogVisible = false
                     });
                 } else {//如果id不存在，新增
-                    request.post("/api/user", this.form).then(res => {
+                    request.post("/user", this.form).then(res => {
                         console.log(res);
                         if (res.code === '0') {
                             this.$message.success("新增成功")
@@ -149,7 +145,7 @@
             handleDelete(row) {
                 this.id=row.id
                 console.log(this.id);
-                request.delete("/api/user/" + this.id).then(res => {
+                request.delete("/user/" + this.id).then(res => {
                     if (res.code === '0') {
                         this.$message.success("删除成功")
                     } else {

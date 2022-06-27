@@ -9,7 +9,7 @@
           </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item @click="this.$router.push('/person')">个人信息</el-dropdown-item>
             <el-dropdown-item @click="this.$router.push('/login')">退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </template>

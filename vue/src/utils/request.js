@@ -1,7 +1,8 @@
 import axios from 'axios'
+import router from "@/router";
 
 const request = axios.create({
-    // baseURL: '/api',  // 注意！！ 这里是全局统一加上了 '/api' 前缀，也就是说所有接口都会加上'/api'前缀在，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
+    baseURL: '/api',  // 注意！！ 这里是全局统一加上了 '/api' 前缀，也就是说所有接口都会加上'/api'前缀在，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
     timeout: 5000
 })
 
@@ -12,6 +13,13 @@ request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
 
     // config.headers['token'] = user.token;  // 设置请求头
+    // 取出sessionStorage里面缓存的用户信息
+    let user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null
+    if (!user) {
+        router.push("/login");
+    } else {
+        config.headers['token'] = user.token;  // 设置请求头
+    }
     return config
 }, error => {
     return Promise.reject(error)

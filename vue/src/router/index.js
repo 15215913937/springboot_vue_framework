@@ -7,12 +7,23 @@ const routes = [
         path: '/',
         name: 'Layout',
         component: Layout,
-        redirect: "/home",
+        redirect: "/book",
         children: [{
-            path: 'home',
-            name: 'Home',
-            component: () => import("@/views/Home.vue")
-        }]
+            path: 'user',
+            name: 'User',
+            component: () => import("@/views/User.vue")
+        },
+            {
+                path: 'book',
+                name: 'BookManager',
+                component: () => import("@/views/BookManager.vue")
+            },
+            {
+                path: 'person',
+                name: 'Person',
+                component: () => import("@/views/Person.vue")
+            }
+        ]
     },
     {
         path: '/login',
