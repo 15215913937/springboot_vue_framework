@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <!--    头部-->
         <Header></Header>
         <!--    主体-->
@@ -8,8 +7,7 @@
             <!--      侧边栏-->
             <Aside></Aside>
             <!--      内容区域-->
-            <router-view style="flex: 1"></router-view>
-
+            <router-view style="width:0;flex:1;"></router-view>
         </div>
     </div>
 </template>
