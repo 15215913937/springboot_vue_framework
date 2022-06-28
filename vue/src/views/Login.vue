@@ -4,12 +4,12 @@
     <div style="margin: 150px auto;width: 500px">
       <div
           style="color: #cccccc;font-size: 50px;text-align: center;font-family:KaiTi,serif;padding:30px 0">
-        沈氏家族管理系统
+        管理系统
       </div>
       <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
         <el-form-item prop="username">
           <!--                    <Avatar style="width: 1em; height: 1em; margin-right: 8px"></Avatar>-->
-          <el-input :prefix-icon="Avatar" placeholder="请输入用户名" v-model="form.username"/>
+          <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
         </el-form-item>
         <el-form-item prop="password">
           <!--                    <Lock style="width: 1em; height: 1em; margin-right: 8px"></Lock>-->
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {Avatar, Key} from "@element-plus/icons-vue"
+import {User, Lock} from "@element-plus/icons-vue"
 import request from "../utils/request";
 
 export default {
@@ -41,6 +41,12 @@ export default {
           {required: true, message: '请输入密码', trigger: 'blur'}
         ]
       }
+    }
+  },
+  setup(){
+    return {
+      User,
+      Lock
     }
   },
   methods: {
@@ -60,8 +66,6 @@ export default {
     }
   },
   components: {
-    "Avatar": Avatar,
-    "Key": Key
   }
 }
 
