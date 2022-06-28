@@ -48,7 +48,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
       />
-      <el-dialog v-model="dialogVisible" title="新增" width="30%">
+      <el-dialog v-model="dialogVisible" title="新增家庭成员" width="30%">
         <el-form model="form" label-width="120px">
           <el-form-item label="用户名">
             <el-input v-model="form.username" style="width: 80%"/>
@@ -83,7 +83,7 @@ import request from "../utils/request";
 import {Search} from "@element-plus/icons-vue";
 
 export default {
-  name: 'HomeView',
+  name: 'User',
   components: {},
   data() {
     return {

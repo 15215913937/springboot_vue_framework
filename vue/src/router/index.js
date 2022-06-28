@@ -15,8 +15,8 @@ const routes = [
         },
             {
                 path: 'book',
-                name: 'BookManager',
-                component: () => import("@/views/BookManager.vue")
+                name: 'Book',
+                component: () => import("@/views/Book.vue")
             },
             {
                 path: 'person',

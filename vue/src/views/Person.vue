@@ -38,7 +38,6 @@
         },
         created() {
             let str = sessionStorage.getItem("user") || "{}"
-            console.log("userinfo:"+str)
             this.form = JSON.parse(str)
         },
         methods: {
