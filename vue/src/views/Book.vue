@@ -2,7 +2,12 @@
     <div style="padding: 10px">
         <!--    功能区-->
         <div style="margin: 10px 0">
-            <el-button type="primary" @click="add"><el-icon><CirclePlus /></el-icon>&nbsp新增</el-button>
+            <el-button type="primary" @click="add">
+                <el-icon>
+                    <CirclePlus/>
+                </el-icon>
+                &nbsp新增
+            </el-button>
         </div>
         <!--    搜索区-->
         <div style="margin: 10px 0;display: block;clear: both">
@@ -13,16 +18,32 @@
             <el-input v-model="search" placeholder="请输入类别" style="width: 20%" :prefix-icon="Search" class="mr-10"
                       clearable/>
             <el-button type="primary" @click="load">查询</el-button>
-            <el-button type="danger" style="float: right;margin-right: 20px"><el-icon><Remove /></el-icon>&nbsp批量删除</el-button>
+            <el-button type="danger" style="float: right;margin-right: 20px">
+                <el-icon>
+                    <Remove/>
+                </el-icon>
+                &nbsp批量删除
+            </el-button>
 
         </div>
         <!--    列表区-->
         <!--        stripe:斑马纹-->
         <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange"
                   highlight-current-row>
-            <el-table-column type="selection" width="40px" />
+            <el-table-column type="selection" width="40px"/>
             <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable=""/>
+            <el-table-column label="封面">
+                <template #default="scope">
+                    <el-image
+                            style="width: 100%; height: 90px"
+                            :src="scope.row.cover"
+                            :preview-src-list="[scope.row.cover]"
+                            hide-on-click-modal="true"
+                            preview-teleported="true">
+                    </el-image>
+                </template>
+            </el-table-column>
             <el-table-column prop="bookname" label="书名"/>
             <el-table-column prop="author" label="作者"/>
             <el-table-column prop="category" label="类别"/>
@@ -60,6 +81,13 @@
             />
             <el-dialog v-model="dialogVisible" title="新增图书" width="30%">
                 <el-form model="form" label-width="120px">
+                    <el-form-item label="封面">
+                        <el-upload ref="upload" action="http://localhost:9090/files/upload"
+                                   :on-success="fileUploadSuccess">
+                            <el-button type="primary">点击上传</el-button>
+                        </el-upload>
+                        <div slot="tip" style="font-size: 13px">只能上传jpg/png文件，且不超过1M</div>
+                    </el-form-item>
                     <el-form-item label="书名">
                         <el-input v-model="form.bookname" style="width: 80%"/>
                     </el-form-item>
@@ -120,7 +148,7 @@
                 dialogVisible: false,
                 search: '',
                 currentPage: 1,
-                pageSize:10,
+                pageSize: 10,
                 total: 10,
                 tableData: []
             }
@@ -134,6 +162,10 @@
             }
         },
         methods: {
+            fileUploadSuccess(res) {
+                console.log(res)
+                this.form.cover = res.data
+            },
             load() {
                 request.get("/book", {
                     params: {
@@ -151,6 +183,9 @@
                 this.dialogVisible = true;
                 // 清空表单域，点击取消后，下次打开就是清空内容了
                 this.form = {}
+                this.$nextTick(() => {
+                    this.$refs['upload'].clearFiles() //清楚历史文件列表
+                })
             },
             save() {
                 if (this.form.id) {//若果id存在，更新
@@ -180,6 +215,9 @@
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));
                 this.dialogVisible = true
+                this.$nextTick(() => {
+                    this.$refs['upload'].clearFiles() //清楚历史文件列表
+                })
             },
             handleDelete(row) {
                 this.id = row.id

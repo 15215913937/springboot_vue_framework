@@ -24,4 +24,5 @@ public class Book {
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date buyDate;
     private String comment;
+    private String cover;
 }
