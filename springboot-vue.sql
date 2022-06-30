@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : test
+ Source Server         : mydata
  Source Server Type    : MySQL
  Source Server Version : 80012
- Source Host           : 127.0.0.1:3306
+ Source Host           : localhost:3306
  Source Schema         : springboot-vue
 
  Target Server Type    : MySQL
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 30/06/2022 17:58:29
+ Date: 01/07/2022 01:16:20
 */
 
 SET NAMES utf8mb4;
@@ -30,34 +30,35 @@ CREATE TABLE `book`  (
   `publishing_house` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '出版社',
   `purchaser` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '购买人',
   `price` decimal(10, 2) NOT NULL COMMENT '价格',
-  `buy_date` datetime(0) NULL DEFAULT NULL COMMENT '购书日期',
+  `buy_date` date NULL DEFAULT NULL COMMENT '购书日期',
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES (5, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07 00:00:00', NULL, 'http://localhost:9090/files/dc6a0bd40de9439b8a3be3fc0dbc7ab3');
-INSERT INTO `book` VALUES (7, '123', '132', '123', '312', '321', '312', 312.00, '2022-06-30 16:40:59', NULL, 'http://localhost:9090/files/8aa693e7cc414f60b16a3bc04e47f689');
+INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07', NULL, 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
+INSERT INTO `book` VALUES (11, '语文', '小沈', '课本', NULL, '23', '沈奇男', 21.00, '2022-06-22', NULL, NULL);
 
 -- ----------------------------
--- Table structure for role
+-- Table structure for event
 -- ----------------------------
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role`  (
+DROP TABLE IF EXISTS `event`;
+CREATE TABLE `event`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
+  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of role
+-- Records of event
 -- ----------------------------
-INSERT INTO `role` VALUES (1, 'admin', '系统管理员');
-INSERT INTO `role` VALUES (2, 'user', '普通家庭用户');
+INSERT INTO `event` VALUES (3, '假新闻', '<p>很板</p>', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for user
@@ -72,7 +73,7 @@ CREATE TABLE `user`  (
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '性别',
   `avater` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -81,19 +82,8 @@ INSERT INTO `user` VALUES (18, 'shenqinan', '123', '沈奇男', '1997-10-01', '�
 INSERT INTO `user` VALUES (20, 'shenqiya', '123456', '沈奇亚', '1997-03-07', '女', NULL);
 INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL);
 INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL);
-
--- ----------------------------
--- Table structure for user_role
--- ----------------------------
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role`  (
-  `user_id` int(11) NOT NULL COMMENT '用户id',
-  `role_id` int(11) NOT NULL COMMENT '角色id',
-  PRIMARY KEY (`user_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of user_role
--- ----------------------------
+INSERT INTO `user` VALUES (24, 'shenjianying', '123456', '沈建英', NULL, '女', NULL);
+INSERT INTO `user` VALUES (25, 'shenronger', '123456', '沈蓉儿', '2000-11-19', '女', NULL);
+INSERT INTO `user` VALUES (26, 'bianzhenyu', '123456', '边震宇', '2008-08-30', '男', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
