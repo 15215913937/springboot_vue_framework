@@ -52,10 +52,12 @@ public class BookController {
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+                              @RequestParam(defaultValue = "") String name,
+                              @RequestParam(defaultValue = "") String author,
+                              @RequestParam(defaultValue = "") String category) {
         LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
-        if (StrUtil.isNotBlank(search)) {
-            wrapper.like(Book::getBookname, search);
+        if (StrUtil.isNotBlank(name)||StrUtil.isNotBlank(author)||StrUtil.isNotBlank(category)) {
+            wrapper.like(Book::getBookname, name).like(Book::getAuthor, author).like(Book::getCategory, category);
         }
         Page<Book> bookPage = bookMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
         return Result.success(bookPage);

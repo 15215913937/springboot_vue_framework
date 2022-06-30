@@ -22,6 +22,8 @@
       <el-table-column prop="name" label="昵称"/>
       <el-table-column prop="birthday" label="出生日期"/>
       <el-table-column prop="sex" label="性别"/>
+      <el-table-column label="相册">
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px">
         <template #default="scope">
           <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
@@ -70,7 +72,8 @@
             <el-radio v-model="form.sex" label="男" size="large">男</el-radio>
             <el-radio v-model="form.sex" label="女" size="large">女</el-radio>
           </el-form-item>
-
+          <el-form-item label="相册">
+          </el-form-item>
         </el-form>
         <template #footer>
                     <span class="dialog-footer">

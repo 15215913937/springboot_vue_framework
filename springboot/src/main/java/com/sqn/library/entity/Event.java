@@ -6,18 +6,17 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-@TableName("user")
+@TableName("event")
 @Data
-public class User {
+public class Event {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String username;
-    private String password;
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
-    private Date birthday;
-    private String name;
-    private String sex;
-    private String avater;
+    private String title;
+    private String author;
+    private String content;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date createTime;
 }

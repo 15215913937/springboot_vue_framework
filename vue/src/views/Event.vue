@@ -6,19 +6,17 @@
                 <el-icon>
                     <CirclePlus/>
                 </el-icon>
-                &nbsp新增
+                &nbsp发表新事件
             </el-button>
         </div>
         <!--    搜索区-->
         <div style="margin: 10px 0;display: block;clear: both">
-            <el-input v-model="name" placeholder="请输入书名" style="width: 15%" class="mr-10" :prefix-icon="Search"
+            <el-input v-model="title" placeholder="请输入标题" style="width: 20%" class="mr-10" :prefix-icon="Search"
                       clearable/>
-            <el-input v-model="author" placeholder="请输入作者" style="width: 15%" :prefix-icon="Search" class="mr-10"
+            <el-input v-model="author" placeholder="请输入作者" style="width: 20%" :prefix-icon="Search" class="mr-10"
                       clearable/>
-            <el-input v-model="category" placeholder="请输入类别" style="width: 15%" :prefix-icon="Search" class="mr-10"
+            <el-input v-model="createTime" placeholder="请选择时间" style="width: 20%" :prefix-icon="Search" class="mr-10"
                       clearable/>
-<!--            <el-input v-model="buyDate" placeholder="请输入时间" style="width: 15%" :prefix-icon="Search" class="mr-10"-->
-<!--                      clearable/>-->
             <el-button type="primary" @click="load">查询</el-button>
             <el-button type="primary" @click="reset">重置</el-button>
             <el-button type="danger" style="float: right;margin-right: 20px">
@@ -36,26 +34,9 @@
             <el-table-column type="selection" width="40px"/>
             <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable=""/>
-            <el-table-column label="封面">
-                <template #default="scope">
-                    <el-image
-                            style="width: 100%; height: 90px"
-                            :src="scope.row.cover"
-                            :preview-src-list="[scope.row.cover]"
-                            hide-on-click-modal="true"
-                            preview-teleported="true">
-                    </el-image>
-                </template>
-            </el-table-column>
-            <el-table-column prop="bookname" label="书名"/>
+            <el-table-column prop="title" label="标题"/>
             <el-table-column prop="author" label="作者"/>
-            <el-table-column prop="category" label="类别"/>
-            <el-table-column prop="version" label="版本"/>
-            <el-table-column prop="publishingHouse" label="出版社"/>
-            <el-table-column prop="purchaser" label="购买人"/>
-            <el-table-column prop="price" label="价格"/>
-            <el-table-column prop="buyDate" label="购书日期"/>
-            <el-table-column prop="comment" label="备注"/>
+            <el-table-column prop="createTime" label="创建时间"/>
             <el-table-column fixed="right" label="操作" width="150px">
                 <template #default="scope">
                     <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
@@ -82,55 +63,19 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
             />
-            <el-dialog v-model="dialogVisible" title="新增图书" width="30%">
+            <el-dialog v-model="dialogVisible" title="编辑事件" width="50%">
                 <el-form model="form" label-width="120px">
-                    <el-form-item label="封面">
-                        <el-upload ref="upload" action="http://localhost:9090/files/upload"
-                                   :on-success="fileUploadSuccess">
-                            <el-button type="primary">点击上传</el-button>
-                        </el-upload>
-                        <div slot="tip" style="font-size: 13px">只能上传jpg/png文件，且不超过1M</div>
+                    <el-form-item label="标题">
+                        <el-input v-model="form.title" style="width: 50%"/>
                     </el-form-item>
-                    <el-form-item label="书名">
-                        <el-input v-model="form.bookname" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="作者">
-                        <el-input v-model="form.author" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="类别">
-                        <el-input v-model="form.category" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="版本">
-                        <el-input v-model="form.version" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="出版社">
-                        <el-input v-model="form.publishingHouse" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="购买人">
-                        <el-input v-model="form.purchaser" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="价格">
-                        <el-input v-model="form.price" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="购书日期">
-                        <el-date-picker
-                                v-model="form.buyDate"
-                                type="date"
-                                clearable
-                                style="width: 80%"
-                                format="YYYY/MM/DD"
-                                value-format="YYYY-MM-DD"
-                        />
-                    </el-form-item>
-                    <el-form-item label="备注">
-                        <el-input v-model="form.comment" style="width: 80%"/>
-                    </el-form-item>
+                    <div id="div1">
 
+                    </div>
                 </el-form>
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="save">提交</el-button>
+                        <el-button type="primary" @click="save">发布</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -142,18 +87,23 @@
 <script>
 
     import request from "../utils/request";
-    import {Search,Delete} from "@element-plus/icons-vue";
-
+    import {Search, Delete} from "@element-plus/icons-vue";
+    import '@wangeditor/editor/dist/css/style.css' // 引入 css
+    import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+    import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
+    import E from 'wangeditor'
+    //设置全局变量
+    let editor;
     export default {
-        name: 'Book',
+        name: 'Event',
         components: {},
         data() {
             return {
                 form: {},
                 dialogVisible: false,
-                name: '',
-                author:'',
-                category:'',
+                title: '',
+                author: '',
+                createTime: '',
                 currentPage: 1,
                 pageSize: 10,
                 total: 10,
@@ -165,23 +115,19 @@
         },
         setup() {
             return {
-                Search,Delete
+                Search,
+                Delete
             }
         },
         methods: {
-            fileUploadSuccess(res) {
-                console.log(res)
-                this.form.cover = res.data
-            },
-            reset(){
-
-                request.get("/book", {
+            reset() {
+                request.get("/event", {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: this.pageSize,
-                        name: '',
-                        author:'',
-                        category:''
+                        title: '',
+                        author: '',
+                        createTime: ''
                     }
                 }).then(res => {
                     console.log(res);
@@ -190,13 +136,13 @@
                 })
             },
             load() {
-                request.get("/book", {
+                request.get("/event", {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: this.pageSize,
-                        name: this.name,
-                        author:this.author,
-                        category:this.category
+                        title: this.title,
+                        author: this.author,
+                        createTime: this.createTime
                     }
                 }).then(res => {
                     console.log(res);
@@ -207,19 +153,22 @@
             add() {
                 this.dialogVisible = true;
                 // 清空表单域，点击取消后，下次打开就是清空内容了
-                this.form = {}
-                this.$nextTick(() => {
-                    if(this.$refs['upload']){
-                        this.$refs['upload'].clearFiles() //清楚历史文件列表
-                    }
+                this.form = {};
+                //缓冲效果，等待页面元素加载完成
+                this.$nextTick(()=>{
+                    //关联add弹窗里面的div，new一个editor对象
+                    editor = new E('#div1');
+                    editor.create()
                 })
+
             },
             save() {
+                this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
                 if (this.form.id) {//若果id存在，更新
-                    request.put("/book", this.form).then(res => {
+                    request.put("/event", this.form).then(res => {
                         console.log(res);
                         if (res.code === '0') {
-                            this.$message.success("修改成功")
+                            this.$message.success("编辑成功")
                         } else {
                             this.$message.error(res.msg)
                         }
@@ -227,10 +176,10 @@
                         this.dialogVisible = false
                     });
                 } else {//如果id不存在，新增
-                    request.post("/book", this.form).then(res => {
+                    request.post("/event", this.form).then(res => {
                         console.log(res);
                         if (res.code === '0') {
-                            this.$message.success("新增成功")
+                            this.$message.success("发表成功")
                         } else {
                             this.$message.error(res.msg)
                         }
@@ -242,16 +191,11 @@
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));
                 this.dialogVisible = true
-                this.$nextTick(() => {
-                    if(this.$refs['upload']){
-                        this.$refs['upload'].clearFiles() //清楚历史文件列表
-                    }
-                })
             },
             handleDelete(row) {
-                this.id = row.id
+                this.id = row.id;
                 console.log(this.id);
-                request.delete("/book/" + this.id).then(res => {
+                request.delete("/event/" + this.id).then(res => {
                     if (res.code === '0') {
                         this.$message.success("删除成功")
                     } else {

@@ -15,10 +15,14 @@
                     <span>事务管理</span>
                 </template>
                 <el-menu-item index="/book">
-                    <el-icon>
-                        <Notebook/>
-                    </el-icon>
-                    书籍管理
+                <el-icon>
+                    <Notebook/>
+                </el-icon>
+                书籍管理
+            </el-menu-item>
+                <el-menu-item index="/event">
+                    <el-icon><Ship /></el-icon>
+                    事件论坛
                 </el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
