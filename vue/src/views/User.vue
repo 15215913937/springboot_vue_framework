@@ -6,8 +6,8 @@
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="search" placeholder="请输入用户名" style="width: 20%" class="mr-10" :prefix-icon="Search" clearable/>
-      <el-input v-model="search" placeholder="请输入昵称" style="width: 20%" :prefix-icon="Search" class="mr-10" clearable/>
+      <el-input v-model="search" placeholder="请输入关键字" style="width: 20%" class="mr-10" :prefix-icon="Search"
+                clearable/>
       <el-button type="primary" @click="load">查询</el-button>
       <el-button type="danger" style="float: right;margin-right: 20px"><el-icon><Remove /></el-icon>&nbsp批量删除</el-button>
 
@@ -19,7 +19,7 @@
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable=""/>
       <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="nickName" label="昵称"/>
+      <el-table-column prop="name" label="昵称"/>
       <el-table-column prop="birthday" label="出生日期"/>
       <el-table-column prop="sex" label="性别"/>
       <el-table-column fixed="right" label="操作" width="150px">
@@ -54,10 +54,17 @@
             <el-input v-model="form.username" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="昵称">
-            <el-input v-model="form.nickName" style="width: 80%"/>
+            <el-input v-model="form.name" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="出生日期">
-            <el-input v-model="form.birthday" style="width: 80%"/>
+            <el-date-picker
+                    v-model="form.birthday"
+                    type="date"
+                    clearable
+                    style="width: 80%"
+                    format="YYYY/MM/DD"
+                    value-format="YYYY-MM-DD"
+            />
           </el-form-item>
           <el-form-item label="性别">
             <el-radio v-model="form.sex" label="男" size="large">男</el-radio>

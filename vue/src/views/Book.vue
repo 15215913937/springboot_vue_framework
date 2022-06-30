@@ -115,6 +115,8 @@
                                 type="date"
                                 clearable
                                 style="width: 80%"
+                                format="YYYY/MM/DD"
+                                value-format="YYYY-MM-DD"
                         />
                     </el-form-item>
                     <el-form-item label="备注">
