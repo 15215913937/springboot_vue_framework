@@ -174,7 +174,6 @@
                 this.form.cover = res.data
             },
             reset(){
-
                 request.get("/book", {
                     params: {
                         pageNum: this.currentPage,

@@ -9,7 +9,7 @@
       <el-input v-model="search" placeholder="请输入关键字" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
       <el-button type="primary" @click="load">查询</el-button>
-      <el-button type="danger" style="float: right;margin-right: 20px"><el-icon><Remove /></el-icon>&nbsp批量删除</el-button>
+      <el-button type="danger" style="float: right;margin-right: 20px"><el-icon><Delete /></el-icon>&nbsp批量删除</el-button>
 
     </div>
     <!--    列表区-->
@@ -90,7 +90,7 @@
 <script>
 
 import request from "../utils/request";
-import {Search} from "@element-plus/icons-vue";
+import {Search,Delete} from "@element-plus/icons-vue";
 
 export default {
   name: 'User',
@@ -111,7 +111,8 @@ export default {
   },
   setup() {
     return {
-      Search
+      Search,
+      Delete
     }
   },
   methods: {

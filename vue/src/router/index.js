@@ -1,50 +1,49 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Layout from '@/layout/layout.vue'
-import Login from "@/views/Login";
+import Layout from "@/layout/Layout";
 
 const routes = [
     {
-        path: '/',
-        name: 'Layout',
-        component: Layout,
-        redirect: "/book",
-        children: [{
-            path: 'user',
-            name: 'User',
-            component: () => import("@/views/User.vue")
-        },
+        path:'/',
+        redirect: '/login'
+    },
+    {
+        path: '/index',
+        name:'Layout',
+        component:Layout,
+        redirect:'/index/book',
+        children: [
             {
                 path: 'book',
                 name: 'Book',
-                component: () => import("@/views/Book.vue")
+                component: () => import("@/views/Book"),
             },
             {
-                path: 'person',
-                name: 'Person',
-                component: () => import("@/views/Person.vue")
+                path: 'user',
+                name: 'User',
+                component: () => import("@/views/User"),
             },
             {
-                path: 'event',
-                name: 'Event',
-                component: () => import("@/views/Event.vue")
+                path: 'events',
+                name: 'Events',
+                component: () => import("@/views/Events"),
             }
         ]
     },
     {
         path: '/login',
         name: 'Login',
-        component: () => import("@/views/Login.vue")
+        component: () => import("@/views/Login")
     },
     {
         path: '/register',
         name: 'Register',
-        component: () => import("@/views/Register.vue")
+        component: () => import("@/views/Register")
     }
+
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
-
 export default router
