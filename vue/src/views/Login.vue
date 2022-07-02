@@ -19,7 +19,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login">登录</el-button>
-                <el-button style="flex:1;margin-bottom:20px" type="primary" @click="$router.push('/register')">注册
+                <el-button style="flex:1;margin-bottom:20px" type="primary" @click="$router.push('/register')">前往注册>>
                 </el-button>
               </el-form-item>
             </el-form>
@@ -61,13 +61,47 @@ export default {
       Lock
     }
   },
+  // mounted() {
+  //   sessionStorage.removeItem("user")
+  //
+  //   window.onresize = () => {
+  //     const windowWidth = document.body.clientWidth
+  //     const windowHeight = document.body.clientHeight
+  //     const windowAspectRatio = windowHeight / windowWidth
+  //     let videoWidth
+  //     let videoHeight
+  //     if (windowAspectRatio < 0.5625) {
+  //       videoWidth = windowWidth
+  //       videoHeight = videoWidth * 0.5625
+  //       this.fixStyle = {
+  //         height: windowWidth * 0.5625 + 'px',
+  //         width: windowWidth + 'px',
+  //         'margin-bottom': (windowHeight - videoHeight) / 2 + 'px',
+  //         'margin-left': 'initial'
+  //       }
+  //     } else {
+  //       videoHeight = windowHeight
+  //       videoWidth = videoHeight / 0.5625
+  //       this.fixStyle = {
+  //         height: windowHeight + 'px',
+  //         width: windowHeight / 0.5625 + 'px',
+  //         'margin-left': (windowWidth - videoWidth) / 2 + 'px',
+  //         'margin-bottom': 'initial'
+  //       }
+  //     }
+  //   }
+  //   window.onresize()
+  // },
   methods: {
     login() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           request.post("/user/login", this.form).then(res => {
+            console.log(res)
             if (res.code === '0') {
               this.$message.success("登录成功")
+              console.log(res)
+              sessionStorage.setItem("user", JSON.stringify(res.data))  // 缓存用户信息
               this.$router.push("/index/") //登录成功后自动跳转到首页
             } else {
               this.$message.error(res.msg)
@@ -79,8 +113,7 @@ export default {
     canplay() {
       this.vedioCanPlay = true
     }
-  },
-  components: {}
+  }
 }
 
 </script>

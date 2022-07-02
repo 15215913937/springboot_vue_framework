@@ -6,10 +6,10 @@
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="search" placeholder="请输入关键字" style="width: 20%" class="mr-10" :prefix-icon="Search"
+      <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
-      <el-button type="primary" @click="load">查询</el-button>
-      <el-button type="danger" style="float: right;margin-right: 20px"><el-icon><Delete /></el-icon>&nbsp批量删除</el-button>
+      <el-button class="mb-10" type="primary" @click="load">查询</el-button>
+      <el-button type="danger" style="float: right;margin-right: 10px"><el-icon><Delete /></el-icon>&nbsp批量删除</el-button>
 
     </div>
     <!--    列表区-->
@@ -19,7 +19,7 @@
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable=""/>
       <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="name" label="昵称"/>
+      <el-table-column prop="name" label="姓名"/>
       <el-table-column prop="birthday" label="出生日期"/>
       <el-table-column prop="sex" label="性别"/>
       <el-table-column label="相册">
@@ -55,7 +55,7 @@
           <el-form-item label="用户名">
             <el-input v-model="form.username" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="昵称">
+          <el-form-item label="姓名">
             <el-input v-model="form.name" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="出生日期">
@@ -99,7 +99,7 @@ export default {
     return {
       form: {},
       dialogVisible: false,
-      search: '',
+      name: '',
       currentPage: 1,
       pageSize: 5,
       total: 5,
@@ -121,10 +121,10 @@ export default {
         params: {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
-          search: this.search
+          name: this.name
         }
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.tableData = res.data.records;
         this.total = res.data.total;
       })
@@ -137,7 +137,7 @@ export default {
     save() {
       if (this.form.id) {//若果id存在，更新
         request.put("/user", this.form).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === '0') {
             this.$message.success("修改成功")
           } else {
@@ -148,7 +148,7 @@ export default {
         });
       } else {//如果id不存在，新增
         request.post("/user", this.form).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === '0') {
             this.$message.success("新增成功")
           } else {
@@ -165,7 +165,7 @@ export default {
     },
     handleDelete(row) {
       this.id = row.id
-      console.log(this.id);
+      // console.log(this.id);
       request.delete("/user/" + this.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")

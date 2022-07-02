@@ -10,6 +10,7 @@ import com.sqn.library.mapper.EventsMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/events")
@@ -20,6 +21,7 @@ public class EventsController {
     //事件新增接口
     @PostMapping
     public Result<?> save(@RequestBody Events events) {
+        events.setCreateTime(new Date());
         eventsMapper.insert(events);
         return Result.success();
     }
@@ -43,11 +45,12 @@ public class EventsController {
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String title,
-                              @RequestParam(defaultValue = "") String author,
-                              @RequestParam(defaultValue = "") String createTime) {
+                              @RequestParam(defaultValue = "") String author
+//                              @RequestParam(defaultValue = "") String createTime
+    ) {
         LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
-        if (StrUtil.isNotBlank(title)||StrUtil.isNotBlank(author)||StrUtil.isNotBlank(createTime)) {
-            wrapper.like(Events::getTitle, title).like(Events::getAuthor,author).like(Events::getCreateTime,createTime);
+        if (StrUtil.isNotBlank(title)||StrUtil.isNotBlank(author)) {
+            wrapper.like(Events::getTitle, title).like(Events::getAuthor,author);
         }
         Page<Events> eventsPage = eventsMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
         return Result.success(eventsPage);

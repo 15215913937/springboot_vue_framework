@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-menu
-        style="width: 200px;min-height: calc(100vh - 50px)"
+        style="width: 180px;min-height: calc(100vh - 50px)"
         :default-active="$route.path"
         :default-openeds="[1]"
         unique-opened="true"

@@ -16,7 +16,7 @@ import java.util.Date;
 import static cn.hutool.core.date.LocalDateTimeUtil.parseDate;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/book")//统一接口加前缀
 public class BookController {
     @Resource
     BookMapper bookMapper;

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style>
     <!--    头部-->
-    <Header/>
+    <Header :user="user"/>
 
     <!--    主体-->
     <div style="display: flex">
@@ -24,6 +24,27 @@ export default {
     Header,
     Aside
   },
+  data() {
+    return {
+      user: {}
+    }
+  },
+  created() {
+    this.refreshUser()
+  },
+  methods: {
+    refreshUser() {
+      let userJson = sessionStorage.getItem("user");
+      if (!userJson) {
+        return
+      }
+      let userId = JSON.parse(userJson).id
+      // 从后台取出更新后的最新用户信息
+      request.get("/user/" + userId).then(res => {
+        this.user = res.data
+      })
+    }
+  }
 }
 </script>
 

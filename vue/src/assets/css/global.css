@@ -6,3 +6,9 @@
 .mr-10{
     margin-right: 10px;
 }
+.mb-10{
+    margin-bottom: 5px;
+}
+.el-sub-menu .el-menu-item{
+    min-width: 180px;
+}

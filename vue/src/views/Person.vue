@@ -43,10 +43,10 @@
         methods: {
             update() {
                 request.put("/user", this.form).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.code === '0') {
                         this.$message.success("保存成功")
-                        sessionStorage.setItem("user", JSON.stringify(this.form))
+                        // sessionStorage.setItem("user", JSON.stringify(this.form))
                     } else {
                         this.$message.error(res.msg)
                     }
