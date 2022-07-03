@@ -29,7 +29,10 @@
           <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
-              <el-button type="danger">删除
+              <el-button type="danger">
+                <el-icon>
+                  <Delete/>
+                </el-icon>
               </el-button>
             </template>
           </el-popconfirm>

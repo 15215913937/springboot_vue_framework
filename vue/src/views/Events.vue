@@ -17,17 +17,17 @@
                 clearable/>
       <!--      <el-input v-model="createTime" placeholder="请选择时间" style="width: 20%" :prefix-icon="Search" class="mr-10"-->
       <!--                clearable/>-->
-<!--      <el-date-picker-->
-<!--          class="mr-10"-->
-<!--          v-model="createTime"-->
-<!--          type="daterange"-->
-<!--          unlink-panels-->
-<!--          range-separator="-"-->
-<!--          start-placeholder="开始日期"-->
-<!--          end-placeholder="结束日期"-->
-<!--          :shortcuts="shortcuts"-->
-<!--          :size="size"-->
-<!--      />-->
+      <!--      <el-date-picker-->
+      <!--          class="mr-10"-->
+      <!--          v-model="createTime"-->
+      <!--          type="daterange"-->
+      <!--          unlink-panels-->
+      <!--          range-separator="-"-->
+      <!--          start-placeholder="开始日期"-->
+      <!--          end-placeholder="结束日期"-->
+      <!--          :shortcuts="shortcuts"-->
+      <!--          :size="size"-->
+      <!--      />-->
       <el-button type="primary" class="mb-10" @click="load">查询</el-button>
       <el-button type="primary" class="mb-10" @click="reset">重置</el-button>
       <el-button type="danger" style="float: right;margin-right: 10px">
@@ -48,12 +48,16 @@
       <el-table-column prop="title" label="标题"/>
       <el-table-column prop="author" label="作者"/>
       <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column fixed="right" label="操作" width="150px">
+      <el-table-column fixed="right" label="操作" width="180px">
         <template #default="scope">
+          <el-button link type="primary" @click="details(scope.row)">详情</el-button>
           <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
-              <el-button type="danger">删除
+              <el-button type="danger">
+                <el-icon>
+                  <Delete/>
+                </el-icon>
               </el-button>
             </template>
           </el-popconfirm>
@@ -90,6 +94,11 @@
                     </span>
         </template>
       </el-dialog>
+      <el-dialog v-model="vis" title="事件详情" width="50%">
+        <el-card>
+          <div v-html="detail.content" style="min-height: 100px"></div>
+        </el-card>
+      </el-dialog>
     </div>
 
   </div>
@@ -104,35 +113,35 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import E from 'wangeditor'
 //设置全局变量
 let editor;
-const shortcuts = [
-  {
-    text: 'Last week',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-      return [start, end]
-    },
-  },
-  {
-    text: 'Last month',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      return [start, end]
-    },
-  },
-  {
-    text: 'Last 3 months',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      return [start, end]
-    },
-  },
-]
+// const shortcuts = [
+//   {
+//     text: 'Last week',
+//     value: () => {
+//       const end = new Date()
+//       const start = new Date()
+//       start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+//       return [start, end]
+//     },
+//   },
+//   {
+//     text: 'Last month',
+//     value: () => {
+//       const end = new Date()
+//       const start = new Date()
+//       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+//       return [start, end]
+//     },
+//   },
+//   {
+//     text: 'Last 3 months',
+//     value: () => {
+//       const end = new Date()
+//       const start = new Date()
+//       start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+//       return [start, end]
+//     },
+//   },
+// ]
 export default {
   name: 'Events',
   components: {},
@@ -146,7 +155,10 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 10,
-      tableData: []
+      tableData: [],
+      detail: {},
+      vis: false,
+      editor: null
     }
   },
   created() {
@@ -159,6 +171,10 @@ export default {
     }
   },
   methods: {
+    details(row) {
+      this.detail = row
+      this.vis = true
+    },
     reset() {
       request.get("/events", {
         params: {
@@ -195,9 +211,12 @@ export default {
       this.form = {};
       //缓冲效果，等待页面元素加载完成
       this.$nextTick(() => {
-        //关联add弹窗里面的div，new一个editor对象
-        editor = new E('#div1');
-        editor.create()
+        if (!editor) {
+          //关联add弹窗里面的div，new一个editor对象
+          editor = new E('#div1');
+          editor.create()
+        }
+        editor.txt.html("")
       })
 
     },
@@ -205,16 +224,24 @@ export default {
       this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
 
       if (this.form.id) {//若果id存在，更新
-        request.put("/events", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("编辑成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
+        let userStr = sessionStorage.getItem("user") || "{}"
+        let user = JSON.parse(userStr)
+        // console.log("原作者："+this.form.author+",新作者："+user.name)
+        if (this.form.author === user.name) {
+          request.put("/events", this.form).then(res => {
+            // console.log(res);
+            if (res.code === '0') {
+              this.$message.success("编辑成功")
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.load();//刷新表格数据
+            this.dialogVisible = false
+          });
+        } else {
+          this.$message.error("不是作者本人，编辑无效！")
+        }
+
       } else {//如果id不存在，新增
         let userStr = sessionStorage.getItem("user") || "{}"
         let user = JSON.parse(userStr)
@@ -234,6 +261,15 @@ export default {
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
       this.dialogVisible = true
+
+      this.$nextTick(() => {
+        if (!editor) {
+          editor = new E('#div1');
+          editor.create()
+        }
+        //关联add弹窗里面的div，new一个editor对象
+        editor.txt.html(row.content)
+      })
     },
     handleDelete(row) {
       this.id = row.id;
@@ -255,10 +291,6 @@ export default {
       //改变当前页数的触发
       this.load()
     },
-    shortcuts() {
-
-    }
-
   }
 }
 </script>
