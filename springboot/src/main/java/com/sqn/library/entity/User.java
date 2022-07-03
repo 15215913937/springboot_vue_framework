@@ -16,12 +16,12 @@ public class User {
     private Integer id;
     private String username;
     private String password;
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date birthday;
     private String name;
     private String sex;
     private String avater;
-
+    private Integer role;
     @TableField(exist = false)
     private String token;
 }

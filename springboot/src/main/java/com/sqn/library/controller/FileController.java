@@ -3,7 +3,10 @@ package com.sqn.library.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.sqn.library.common.Result;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +48,32 @@ public class FileController {
                 System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" + originalFilename;
         //获取上传路径
         FileUtil.writeBytes(file.getBytes(), rootFilePath);//利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
-        return Result.success(ip+":"+port+"/files/"+flag); //返回结果url
+        return Result.success(ip + ":" + port + "/files/" + flag); //返回结果url
+    }
+
+    /**
+     * 富文本文件上传接口
+     */
+    @PostMapping("/editor/upload")
+    public JSONObject editorUpload(MultipartFile file) throws IOException {
+
+        String originalFilename = file.getOriginalFilename(); //获取原文件名称
+        //定义上传文件的唯一标识（前缀）
+        String flag = IdUtil.fastSimpleUUID();
+        String rootFilePath =
+                System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" + originalFilename;
+        //获取上传路径
+        FileUtil.writeBytes(file.getBytes(), rootFilePath);//利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
+        String url = ip + ":" + port + "/files/" + flag;
+        //富文本图片上传格式
+        JSONObject json = new JSONObject();
+        json.set("errno",0);
+        JSONArray array = new JSONArray();
+        JSONObject data = new JSONObject();
+        array.add(data);
+        data.set("url",url);
+        json.set("data",array);
+        return json; //返回结果url
     }
 
     /**

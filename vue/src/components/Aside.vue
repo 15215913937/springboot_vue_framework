@@ -35,7 +35,7 @@
           </el-icon>
           <span>系统管理</span>
         </template>
-        <el-menu-item index="/index/user">
+        <el-menu-item index="/index/user" v-if="user.role===1">
           <el-icon>
             <UserFilled/>
           </el-icon>
@@ -49,12 +49,26 @@
 
 <script>
 
+import request from "@/utils/request";
+
 export default {
   name: "Aside",
   data() {
     return {
-      path: this.$route.path  //设置菜单按钮默认高亮效果
+      path: this.$route.path, //设置菜单按钮默认高亮效果
+      user: {}
     }
+  },
+  created() {
+    let userStr = sessionStorage.getItem("user") || "{}"
+    this.user = JSON.parse(userStr)
+
+    //请求服务端，确认当前用户的合法信息，避免本地缓存修改数据
+    request.get("/user/" + this.user.id).then(res => {
+      if (res.code === '0') {
+        this.user = res.data
+      }
+    })
   }
 }
 </script>

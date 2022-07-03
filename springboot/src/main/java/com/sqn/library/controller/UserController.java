@@ -30,13 +30,13 @@ public class UserController {
     //@RequestBody ：把前端传过来的json对象转换为java对象
     @PostMapping("/login")
     public Result<?> login(@RequestBody User user) {
-        User userPwd = userMapper.selectByName(user.getUsername());
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", user.getUsername());
-        queryWrapper.eq("password", userPwd.getPassword());
-        User res = userMapper.selectOne(queryWrapper);
-//        User res =
-//                userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()).eq(User::getPassword, user.getPassword()));
+//        User userPwd = userMapper.selectByName(user.getUsername());
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("username", user.getUsername());
+//        queryWrapper.eq("password", userPwd.getPassword());
+//        User res = userMapper.selectOne(queryWrapper);
+        User res =
+                userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()).eq(User::getPassword, user.getPassword()));
         if (res == null) {
             return Result.error("-1", "用户名或密码错误！");
         }

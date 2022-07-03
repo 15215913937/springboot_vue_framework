@@ -2,28 +2,44 @@
   <div style="padding: 10px">
     <!--    功能区-->
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="add"><el-icon><CirclePlus /></el-icon>&nbsp新增</el-button>
+      <el-button type="primary" @click="add">
+        <el-icon>
+          <CirclePlus/>
+        </el-icon>
+        &nbsp新增
+      </el-button>
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
       <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-      <el-button type="danger" style="float: right;margin-right: 10px"><el-icon><Delete /></el-icon>&nbsp批量删除</el-button>
+      <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+      <el-button type="danger" style="float: right;margin-right: 10px">
+        <el-icon>
+          <Delete/>
+        </el-icon>
+        &nbsp批量删除
+      </el-button>
 
     </div>
     <!--    列表区-->
     <!--        stripe:斑马纹-->
     <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55"/>
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable=""/>
       <el-table-column prop="username" label="用户名"/>
       <el-table-column prop="name" label="姓名"/>
       <el-table-column prop="birthday" label="出生日期"/>
       <el-table-column prop="sex" label="性别"/>
-      <el-table-column label="相册">
+      <el-table-column prop="role" label="角色">
+        <template #default="scope">
+          <span v-if="scope.row.role === 1">管理员</span>
+          <span v-if="scope.row.role === 2">普通成员</span>
+        </template>
       </el-table-column>
+
       <el-table-column fixed="right" label="操作" width="150px">
         <template #default="scope">
           <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
@@ -63,12 +79,12 @@
           </el-form-item>
           <el-form-item label="出生日期">
             <el-date-picker
-                    v-model="form.birthday"
-                    type="date"
-                    clearable
-                    style="width: 80%"
-                    format="YYYY/MM/DD"
-                    value-format="YYYY-MM-DD"
+                v-model="form.birthday"
+                type="date"
+                clearable
+                style="width: 80%"
+                format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD"
             />
           </el-form-item>
           <el-form-item label="性别">
@@ -93,7 +109,7 @@
 <script>
 
 import request from "../utils/request";
-import {Search,Delete} from "@element-plus/icons-vue";
+import {Search, Delete} from "@element-plus/icons-vue";
 
 export default {
   name: 'User',
@@ -106,7 +122,7 @@ export default {
       currentPage: 1,
       pageSize: 5,
       total: 5,
-      tableData: []
+      tableData: [],
     }
   },
   created() {
@@ -127,9 +143,23 @@ export default {
           name: this.name
         }
       }).then(res => {
+        console.log(res);
+        this.tableData = res.data.records;
+        this.total = res.data.total;
+      })
+    },
+    reset() {
+      request.get("/user", {
+        params: {
+          pageNum: this.currentPage,
+          pageSize: this.pageSize,
+          name: '',
+        }
+      }).then(res => {
         // console.log(res);
         this.tableData = res.data.records;
         this.total = res.data.total;
+        this.name = '';
       })
     },
     add() {

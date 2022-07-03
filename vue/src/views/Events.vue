@@ -113,6 +113,8 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import E from 'wangeditor'
 //设置全局变量
 let editor;
+let userStr = sessionStorage.getItem("user") || "{}"
+let user = JSON.parse(userStr)
 // const shortcuts = [
 //   {
 //     text: 'Last week',
@@ -188,6 +190,8 @@ export default {
         // console.log(res);
         this.tableData = res.data.records;
         this.total = res.data.total;
+        this.title = '';
+        this.author = '';
       })
     },
     load() {
@@ -214,6 +218,9 @@ export default {
         if (!editor) {
           //关联add弹窗里面的div，new一个editor对象
           editor = new E('#div1');
+          //本地图片上传设置注意后端设置返回json格式
+          editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'
+          editor.config.uploadFileName = "file"
           editor.create()
         }
         editor.txt.html("")
@@ -243,8 +250,7 @@ export default {
         }
 
       } else {//如果id不存在，新增
-        let userStr = sessionStorage.getItem("user") || "{}"
-        let user = JSON.parse(userStr)
+
         this.form.author = user.name
         request.post("/events", this.form).then(res => {
           // console.log(res);
@@ -265,13 +271,15 @@ export default {
       this.$nextTick(() => {
         if (!editor) {
           editor = new E('#div1');
+          editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'
+          editor.config.uploadFileName = "file"
           editor.create()
         }
-        //关联add弹窗里面的div，new一个editor对象
         editor.txt.html(row.content)
       })
     },
     handleDelete(row) {
+
       this.id = row.id;
       // console.log(this.id);
       request.delete("/events/" + this.id).then(res => {

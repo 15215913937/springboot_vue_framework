@@ -88,7 +88,7 @@
       <el-dialog v-model="dialogVisible" title="新增图书" width="30%">
         <el-form model="form" label-width="120px">
           <el-form-item label="封面">
-            <el-upload ref="upload" action="http://localhost:9090/files/upload"
+            <el-upload ref="upload" :action="filesUploadUrl"
                        :on-success="fileUploadSuccess">
               <el-button type="primary">点击上传</el-button>
             </el-upload>
@@ -162,7 +162,8 @@ export default {
       total: 10,
       tableData: [],
       multipleSelection: [],
-      ids: []
+      ids: [],
+      filesUploadUrl: 'http://localhost:9090/files/upload'
     }
   },
   created() {
@@ -200,6 +201,9 @@ export default {
         // console.log(res);
         this.tableData = res.data.records;
         this.total = res.data.total;
+        this.name = '';
+        this.author = '';
+        this.category = '';
       })
     },
     load() {
