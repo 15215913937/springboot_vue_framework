@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.w3c.dom.ls.LSInput;
 
 import java.util.Date;
+import java.util.List;
 
 @TableName("user")
 @Data
@@ -24,4 +26,7 @@ public class User {
     private Integer role;
     @TableField(exist = false)
     private String token;
+
+    @TableField(exist = false)
+    private List<Book> bookList;
 }

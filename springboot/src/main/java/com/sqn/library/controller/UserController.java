@@ -91,11 +91,11 @@ public class UserController {
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name) {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
         if (StrUtil.isNotBlank(name)) {
             wrapper.like(User::getName, name);
         }
-        Page<User> userPage = userMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name);
         return Result.success(userPage);
     }
 

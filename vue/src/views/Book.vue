@@ -58,7 +58,7 @@
       <el-table-column prop="comment" label="备注"/>
       <el-table-column fixed="right" label="操作" width="150px">
         <template #default="scope">
-          <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
               <el-button type="danger">

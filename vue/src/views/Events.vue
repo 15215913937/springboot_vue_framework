@@ -48,10 +48,10 @@
       <el-table-column prop="title" label="标题"/>
       <el-table-column prop="author" label="作者"/>
       <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column fixed="right" label="操作" width="180px">
+      <el-table-column fixed="right" label="操作" width="300px">
         <template #default="scope">
-          <el-button link type="primary" @click="details(scope.row)">详情</el-button>
-          <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button plain type="success" @click="details(scope.row)">详情</el-button>
+          <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
               <el-button type="danger">

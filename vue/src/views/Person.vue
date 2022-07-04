@@ -49,7 +49,8 @@
                     // console.log(res);
                     if (res.code === '0') {
                         this.$message.success("保存成功")
-                        // sessionStorage.setItem("user", JSON.stringify(this.form))
+                        sessionStorage.setItem("user", JSON.stringify(this.form))
+                        this.$emit("userInfo")
                     } else {
                         this.$message.error(res.msg)
                     }
