@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Events;
 import com.sqn.library.mapper.EventsMapper;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/events")
+@Api(tags = "事件管理")
 public class EventsController {
 
     @Resource

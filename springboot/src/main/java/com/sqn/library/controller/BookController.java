@@ -7,14 +7,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.mapper.BookMapper;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static cn.hutool.core.date.LocalDateTimeUtil.parseDate;
 
+@Api(tags = "书籍管理")
 @RestController
 @RequestMapping("/book")//统一接口加前缀
 public class BookController {
@@ -56,10 +59,17 @@ public class BookController {
                               @RequestParam(defaultValue = "") String author,
                               @RequestParam(defaultValue = "") String category) {
         LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
-        if (StrUtil.isNotBlank(name)||StrUtil.isNotBlank(author)||StrUtil.isNotBlank(category)) {
+        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(author) || StrUtil.isNotBlank(category)) {
             wrapper.like(Book::getBookname, name).like(Book::getAuthor, author).like(Book::getCategory, category);
         }
         Page<Book> bookPage = bookMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
         return Result.success(bookPage);
+    }
+
+    //批量删除
+    @PostMapping("/deleteBatch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
+        bookMapper.deleteBatchIds(ids);
+        return Result.success();
     }
 }

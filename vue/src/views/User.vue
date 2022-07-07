@@ -15,12 +15,12 @@
                       clearable/>
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-            <el-button type="danger" style="float: right;margin-right: 10px">
-                <el-icon>
-                    <Delete/>
-                </el-icon>
-                &nbsp批量删除
-            </el-button>
+<!--            <el-button type="danger" style="float: right;margin-right: 10px">-->
+<!--                <el-icon>-->
+<!--                    <Delete/>-->
+<!--                </el-icon>-->
+<!--                &nbsp批量删除-->
+<!--            </el-button>-->
 
         </div>
         <!--    列表区-->

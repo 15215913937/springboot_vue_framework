@@ -2,16 +2,14 @@ package com.sqn.library.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.UserMapper;
-import com.sqn.library.service.UserService;
+import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +21,9 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     UserMapper userMapper;
+
     @Autowired
-    UserService userService;
+    IUserService iUserService;
 
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象
@@ -82,7 +81,7 @@ public class UserController {
     public Result<?> delete(@PathVariable Long id) {
 //        userMapper.deleteById(id);
 //        return Result.success();
-        userService.removeById(id);
+        iUserService.removeById(id);
         return Result.success();
     }
 
@@ -100,7 +99,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    private Result<?> getById(@PathVariable Long id){
+    private Result<?> getById(@PathVariable Long id) {
         User user = userMapper.selectById(id);
         return Result.success(user);
 

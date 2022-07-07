@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.sqn.library.common.Result;
+import io.swagger.annotations.Api;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
 //文件上传
 @RestController
 @RequestMapping("/files")
+@Api(tags = "文件上传管理")
 public class FileController {
     //获取当前端口
     @Value("${server.port}")
