@@ -1,7 +1,7 @@
 <template>
   <div
       class="ValidCode disabled-select"
-      :style="`width:${width}; height:${height}`"
+      :style="`width:${width}; height:${height};margin-left:${margin_left};`"
       @click="refreshCode"
   >
     <span
@@ -26,7 +26,11 @@ export default {
     },
     height: {
       type: String,
-      default: '40px'
+      default: '32px'
+    },
+    margin_left: {
+      type: String,
+      default: '30px'
     },
     length: {
       type: Number,
@@ -36,24 +40,24 @@ export default {
       type: Number
     }
   },
-  data () {
+  data() {
     return {
       codeList: []
     }
   },
   watch: {
-    refresh () {
+    refresh() {
       this.createdCode()
     }
   },
-  mounted () {
+  mounted() {
     this.createdCode()
   },
   methods: {
-    refreshCode () {
+    refreshCode() {
       this.createdCode()
     },
-    createdCode () {
+    createdCode() {
       const len = this.length
       const codeList = []
       const chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz0123456789'
@@ -75,7 +79,7 @@ export default {
       // console.log(codeList.map(item => item.code).join(''))
       this.$emit('input', codeList.map(item => item.code).join(''))
     },
-    getStyle (data) {
+    getStyle(data) {
       return `color: ${data.color}; font-size: ${data.fontSize}; padding: ${data.padding}; transform: ${data.transform}`
     }
   }
@@ -83,13 +87,14 @@ export default {
 </script>
 
 <style scoped>
-.ValidCode{
+.ValidCode {
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
-.ValidCode span{
+
+.ValidCode span {
   display: inline-block;
 }
 </style>

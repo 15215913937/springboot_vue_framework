@@ -22,7 +22,7 @@ public class User {
     private Date birthday;
     private String name;
     private String sex;
-    private String avater;
+    private String avatar;
     private Integer role;
     @TableField(exist = false)
     private String token;
