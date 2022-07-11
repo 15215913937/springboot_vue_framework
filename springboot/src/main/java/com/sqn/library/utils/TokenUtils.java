@@ -31,6 +31,7 @@ public class TokenUtils {
 
     /**
      * 生成token
+     *
      * @param user
      * @return
      */
@@ -41,11 +42,13 @@ public class TokenUtils {
 
     /**
      * 获取token中的用户信息
+     *
      * @return
      */
     public static User getUser() {
         try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String token = request.getHeader("token");
             String aud = JWT.decode(token).getAudience().get(0);
             Integer userId = Integer.valueOf(aud);

@@ -12,7 +12,6 @@ import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.UserMapper;
-import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;

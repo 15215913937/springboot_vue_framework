@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 05/07/2022 01:08:03
+ Date: 12/07/2022 01:20:35
 */
 
 SET NAMES utf8mb4;
@@ -34,14 +34,12 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
 INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07', NULL, 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
-INSERT INTO `book` VALUES (18, '123', '123', '123', '123', '123', '杜梅军', 12.00, '2022-07-05', NULL, NULL);
-INSERT INTO `book` VALUES (19, 'qwe', 'wqe', 'qwe', 'wqe', 'qew', '沈奇男', 123.00, '2022-07-05', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for events
@@ -62,11 +60,29 @@ CREATE TABLE `events`  (
 INSERT INTO `events` VALUES (12, '我要结婚啦', '<p>天气好，适合结婚</p>', '沈奇亚', '2022-07-03 16:38:37');
 INSERT INTO `events` VALUES (18, '21', '<p>123</p>', '沈奇男', '2022-07-03 16:41:56');
 INSERT INTO `events` VALUES (16, '我师兄猪猪', '<p>我是大猪猪我是大猪猪我是大猪猪我是大猪猪我是大猪猪我是大猪猪我是大猪猪我是大猪猪</p>', '沈奇亚', '2022-07-03 16:39:24');
-INSERT INTO `events` VALUES (17, 'qweeqe', '<p>qeqwew433214</p>', '沈奇亚', '2022-07-03 16:40:52');
-INSERT INTO `events` VALUES (19, '1234', '<p>12313244132</p>', '沈奇男', '2022-07-03 16:42:06');
-INSERT INTO `events` VALUES (20, 'qweqwe', '<p>123132123</p>', '沈奇男', '2022-07-03 16:53:21');
 INSERT INTO `events` VALUES (21, '我附带图片', '<p><img src=\"http://localhost:9090/files/49b091e6eb034642b9c3866273b0e414\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:9090/files/a7f5ba8e7e1f4c3b8d794df1cc7d0e3b\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', '沈奇男', '2022-07-03 22:08:57');
 INSERT INTO `events` VALUES (22, '我是妈妈', '<p>我抱孙子啦，<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😁</span></p>', '杜梅军', '2022-07-03 23:19:58');
+
+-- ----------------------------
+-- Table structure for files
+-- ----------------------------
+DROP TABLE IF EXISTS `files`;
+CREATE TABLE `files`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件类型',
+  `size` bigint(20) NULL DEFAULT NULL COMMENT '文件大小',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '下载链接',
+  `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
+  `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of files
+-- ----------------------------
+INSERT INTO `files` VALUES (1, '开工头像照片1.jpg', 'jpg', 38951, 'http://localhost:9090360974931fba471ab0dc5582d9e142c2.jpg', 0, 1);
+INSERT INTO `files` VALUES (2, '开工头像照片1.jpg', 'jpg', 38951, 'http://localhost:9090/e001a484991e4b98b9fdf8a235d5434f.jpg', 0, 1);
 
 -- ----------------------------
 -- Table structure for permission

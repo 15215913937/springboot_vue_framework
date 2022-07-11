@@ -6,13 +6,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.sqn.library.common.Result;
+import com.sqn.library.entity.Files;
+import com.sqn.library.mapper.FileMapper;
 import io.swagger.annotations.Api;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -32,6 +36,39 @@ public class FileController {
     private String port;
     //定义返回接口的ip
     private static final String ip = "http://localhost";
+    //定义文件存储的路径
+    @Value("${files.upload.path}")
+    private String fileUploadPath;
+
+    @Resource
+    FileMapper fileMapper;
+
+    @PostMapping("/testUpload")
+    public Result<?> testUpload(@RequestParam MultipartFile file) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(originalFilename);
+        long size = file.getSize();
+        //先存储到磁盘
+        File uploadParentFile = new File(fileUploadPath);
+        if (!uploadParentFile.exists()) {
+            uploadParentFile.mkdir(); //若不存在，则新建
+        }
+        //定义上传文件的唯一标识（前缀）
+        String flag = IdUtil.fastSimpleUUID();
+        String fileFlag = flag + StrUtil.DOT + type;
+        File uploadFile = new File(fileUploadPath + fileFlag);
+        //把获取到的文件存储到磁盘路径中
+        file.transferTo(uploadFile);
+        String url = ip + ":" + port + "/" + fileFlag;
+        //存储数据库
+        Files saveFiles = new Files();
+        saveFiles.setName(originalFilename);
+        saveFiles.setSize(size);
+        saveFiles.setType(type);
+        saveFiles.setUrl(url);
+        fileMapper.insert(saveFiles);
+        return Result.success(url);
+    }
 
     /**
      * 上传接口
@@ -46,8 +83,11 @@ public class FileController {
         String originalFilename = file.getOriginalFilename(); //获取原文件名称
         //定义上传文件的唯一标识（前缀）
         String flag = IdUtil.fastSimpleUUID();
+        //定义文件名
         String rootFilePath =
-                System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" + originalFilename;
+                System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" +
+                        originalFilename;
+
         //获取上传路径
         FileUtil.writeBytes(file.getBytes(), rootFilePath);//利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
         return Result.success(ip + ":" + port + "/files/" + flag); //返回结果url
@@ -69,12 +109,12 @@ public class FileController {
         String url = ip + ":" + port + "/files/" + flag;
         //富文本图片上传格式
         JSONObject json = new JSONObject();
-        json.set("errno",0);
+        json.set("errno", 0);
         JSONArray array = new JSONArray();
         JSONObject data = new JSONObject();
         array.add(data);
-        data.set("url",url);
-        json.set("data",array);
+        data.set("url", url);
+        json.set("data", array);
         return json; //返回结果url
     }
 

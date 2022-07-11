@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -20,6 +21,7 @@ public class EventsController {
 
     @Resource
     EventsMapper eventsMapper;
+
     //事件新增接口
     @PostMapping
     public Result<?> save(@RequestBody Events events) {
@@ -51,10 +53,17 @@ public class EventsController {
 //                              @RequestParam(defaultValue = "") String createTime
     ) {
         LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
-        if (StrUtil.isNotBlank(title)||StrUtil.isNotBlank(author)) {
-            wrapper.like(Events::getTitle, title).like(Events::getAuthor,author);
+        if (StrUtil.isNotBlank(title) || StrUtil.isNotBlank(author)) {
+            wrapper.like(Events::getTitle, title).like(Events::getAuthor, author);
         }
         Page<Events> eventsPage = eventsMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
         return Result.success(eventsPage);
+    }
+
+    //事件批量删除
+    @PostMapping("/deleteBatch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
+        eventsMapper.deleteBatchIds(ids);
+        return Result.success();
     }
 }
