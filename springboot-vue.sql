@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 12/07/2022 01:20:35
+ Date: 13/07/2022 01:26:36
 */
 
 SET NAMES utf8mb4;
@@ -73,16 +73,16 @@ CREATE TABLE `files`  (
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件类型',
   `size` bigint(20) NULL DEFAULT NULL COMMENT '文件大小',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '下载链接',
+  `md5` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件MD5',
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `nui_md5`(`md5`) USING BTREE COMMENT 'MD5设置唯一'
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
-INSERT INTO `files` VALUES (1, '开工头像照片1.jpg', 'jpg', 38951, 'http://localhost:9090360974931fba471ab0dc5582d9e142c2.jpg', 0, 1);
-INSERT INTO `files` VALUES (2, '开工头像照片1.jpg', 'jpg', 38951, 'http://localhost:9090/e001a484991e4b98b9fdf8a235d5434f.jpg', 0, 1);
 
 -- ----------------------------
 -- Table structure for permission

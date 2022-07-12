@@ -3,18 +3,21 @@ package com.sqn.library.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Files;
 import com.sqn.library.mapper.FileMapper;
 import io.swagger.annotations.Api;
-import lombok.val;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -44,30 +47,68 @@ public class FileController {
     FileMapper fileMapper;
 
     @PostMapping("/testUpload")
-    public Result<?> testUpload(@RequestParam MultipartFile file) throws IOException {
+    public String testUpload(@RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(originalFilename);
         long size = file.getSize();
-        //先存储到磁盘
-        File uploadParentFile = new File(fileUploadPath);
-        if (!uploadParentFile.exists()) {
-            uploadParentFile.mkdir(); //若不存在，则新建
-        }
+
         //定义上传文件的唯一标识（前缀）
         String flag = IdUtil.fastSimpleUUID();
         String fileFlag = flag + StrUtil.DOT + type;
         File uploadFile = new File(fileUploadPath + fileFlag);
-        //把获取到的文件存储到磁盘路径中
-        file.transferTo(uploadFile);
-        String url = ip + ":" + port + "/" + fileFlag;
+        //判断配置的文件目录是否存在，若不存在，则新建一个新的文件目录
+        File parentFile = uploadFile.getParentFile(); //取父级目录
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+        String url;
+        String md5;
+        //当文件存在的时候再获取md5
+        if (uploadFile.exists()) {
+            //获取文件的md5，通过对比md5避免上传相同内容的文件
+            md5 = SecureUtil.md5(uploadFile);
+            //从数据库查询是否存在相同的md5
+            Files dbFiles = getFileByMd5(md5);
+
+            //获取文件的url
+            if (dbFiles != null) {
+                url = dbFiles.getUrl();
+            } else {
+                //把获取到的文件存储到磁盘路径中
+                file.transferTo(uploadFile);
+                url = ip + ":" + port + "/files/test/" + fileFlag;
+            }
+        } else {
+            //把获取到的文件存储到磁盘路径中
+            file.transferTo(uploadFile);
+            md5 = SecureUtil.md5(uploadFile);
+            url = ip + ":" + port + "/files/test/" + fileFlag;
+        }
+
+
         //存储数据库
         Files saveFiles = new Files();
         saveFiles.setName(originalFilename);
-        saveFiles.setSize(size);
+        saveFiles.setSize(size / 1024);
         saveFiles.setType(type);
         saveFiles.setUrl(url);
+        saveFiles.setMd5(md5);
         fileMapper.insert(saveFiles);
-        return Result.success(url);
+        return url;
+    }
+
+    @GetMapping("/test/{fileFlag}")
+    public void download(@PathVariable String fileFlag, HttpServletResponse response) throws IOException {
+        //根据文件的唯一标识码获取文件
+        File uploadFile = new File(fileUploadPath + fileFlag);
+        //设置输出流的格式
+        ServletOutputStream outputStream = response.getOutputStream();
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFlag, "UTF-8"));
+        response.setContentType("application/octet-stream");
+        //读取文件的字节流
+        outputStream.write(FileUtil.readBytes(uploadFile));
+        outputStream.flush();
+        outputStream.close();
     }
 
     /**
@@ -146,5 +187,17 @@ public class FileController {
         } catch (Exception e) {
             System.out.println("文件下载失败");
         }
+    }
+
+    /**
+     * 通过文件的md5查询文件
+     *
+     * @param md5
+     */
+    public Files getFileByMd5(String md5) {
+        //查询文件的md5是否存在
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("md5", md5);
+        return fileMapper.selectOne(queryWrapper);
     }
 }
