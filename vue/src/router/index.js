@@ -3,14 +3,14 @@ import Layout from "@/layout/Layout";
 
 const routes = [
     {
-        path:'/',
+        path: '/',
         redirect: '/login'
     },
     {
         path: '/index',
-        name:'Layout',
-        component:Layout,
-        redirect:'/index/book',
+        name: 'Layout',
+        component: Layout,
+        redirect: '/index/book',
         children: [
             {
                 path: 'book',
@@ -31,6 +31,11 @@ const routes = [
                 path: 'person',
                 name: 'Person',
                 component: () => import("@/views/Person"),
+            },
+            {
+                path: 'file',
+                name: 'File',
+                component: () => import("@/views/File")
             }
         ]
     },

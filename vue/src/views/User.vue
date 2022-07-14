@@ -15,12 +15,12 @@
                       clearable/>
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-<!--            <el-button type="danger" style="float: right;margin-right: 10px">-->
-<!--                <el-icon>-->
-<!--                    <Delete/>-->
-<!--                </el-icon>-->
-<!--                &nbsp批量删除-->
-<!--            </el-button>-->
+            <!--            <el-button type="danger" style="float: right;margin-right: 10px">-->
+            <!--                <el-icon>-->
+            <!--                    <Delete/>-->
+            <!--                </el-icon>-->
+            <!--                &nbsp批量删除-->
+            <!--            </el-button>-->
 
         </div>
         <!--    列表区-->
@@ -39,12 +39,7 @@
             <el-table-column prop="name" label="姓名"/>
             <el-table-column prop="birthday" label="出生日期"/>
             <el-table-column prop="sex" label="性别"/>
-            <!--      <el-table-column prop="role" label="角色">-->
-            <!--        <template #default="scope">-->
-            <!--          <span v-if="scope.row.role === 1">管理员</span>-->
-            <!--          <span v-if="scope.row.role === 2">普通成员</span>-->
-            <!--        </template>-->
-            <!--      </el-table-column>-->
+
 
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">

@@ -1,6 +1,5 @@
 package com.sqn.library.common;
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.ApiInfoBuilder;

@@ -6,12 +6,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Files;
+import com.sqn.library.entity.User;
 import com.sqn.library.mapper.FileMapper;
 import io.swagger.annotations.Api;
 import org.apache.catalina.security.SecurityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,25 +68,17 @@ public class FileController {
         }
         String url;
         String md5;
-        //当文件存在的时候再获取md5
-        if (uploadFile.exists()) {
-            //获取文件的md5，通过对比md5避免上传相同内容的文件
-            md5 = SecureUtil.md5(uploadFile);
-            //从数据库查询是否存在相同的md5
-            Files dbFiles = getFileByMd5(md5);
-
-            //获取文件的url
-            if (dbFiles != null) {
-                url = dbFiles.getUrl();
-            } else {
-                //把获取到的文件存储到磁盘路径中
-                file.transferTo(uploadFile);
-                url = ip + ":" + port + "/files/test/" + fileFlag;
-            }
+        //把获取到的文件存储到磁盘路径中
+        file.transferTo(uploadFile);
+        md5 = SecureUtil.md5(uploadFile);
+        Files dbFiles = getFileByMd5(md5);
+        //获取文件的url
+        if (dbFiles != null) {
+            url = dbFiles.getUrl();
+            //由于文件已存在，删除刚刚上传的文件
+            uploadFile.delete();
         } else {
-            //把获取到的文件存储到磁盘路径中
-            file.transferTo(uploadFile);
-            md5 = SecureUtil.md5(uploadFile);
+            //数据库不存在重复文件，新建链接
             url = ip + ":" + port + "/files/test/" + fileFlag;
         }
 
@@ -110,6 +107,73 @@ public class FileController {
         outputStream.flush();
         outputStream.close();
     }
+
+    /**
+     * 通过文件的md5查询文件
+     *
+     * @param md5
+     */
+    public Files getFileByMd5(String md5) {
+        //查询文件的md5是否存在
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("md5", md5);
+        List<Files> filesList = fileMapper.selectList(queryWrapper);
+        return filesList.size() == 0 ? null : filesList.get(0);
+    }
+
+    //更新接口
+    @PostMapping("/update")
+    public Result<?> update(@RequestBody Files files) {
+        return Result.success(fileMapper.updateById(files));
+    }
+
+    //删除接口
+    @DeleteMapping("/{id}")
+    public Result<?> delete(@PathVariable Long id) {
+        Files files = fileMapper.selectById(id);
+        files.setIsDelete(true);
+        fileMapper.updateById(files);
+        return Result.success();
+    }
+
+    //批量删除
+    @PostMapping("/deleteBatch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        //select * from files where id in (id,id,id...)
+        queryWrapper.in("id", ids);
+        List<Files> files = fileMapper.selectList(queryWrapper);
+        for (Files file : files) {
+            file.setIsDelete(true);
+            fileMapper.updateById(file);
+        }
+        return Result.success();
+    }
+
+    //分页查询接口
+    @GetMapping
+    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(defaultValue = "") String name) {
+        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        //查询未删除的数据
+        queryWrapper.eq("is_delete", false);
+        queryWrapper.orderByDesc("id");
+        if (StrUtil.isNotBlank(name)) {
+            queryWrapper.like("name", name);
+        }
+        return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+//    @GetMapping("/{id}")
+//    private Result<?> getById(@PathVariable Long id) {
+//        Files files = fileMapper.selectById(id);
+//        return Result.success(files);
+//
+//    }
+
+    //--------------------------------以下是事件论坛文件上传接口-------------------------------------
+
 
     /**
      * 上传接口
@@ -189,15 +253,4 @@ public class FileController {
         }
     }
 
-    /**
-     * 通过文件的md5查询文件
-     *
-     * @param md5
-     */
-    public Files getFileByMd5(String md5) {
-        //查询文件的md5是否存在
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("md5", md5);
-        return fileMapper.selectOne(queryWrapper);
-    }
 }

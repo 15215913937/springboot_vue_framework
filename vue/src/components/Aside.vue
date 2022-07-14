@@ -27,6 +27,10 @@
           </el-icon>
           事件论坛
         </el-menu-item>
+        <el-menu-item index="/index/file">
+          <el-icon><Folder /></el-icon>
+          文件管理
+        </el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="2">
         <template #title>

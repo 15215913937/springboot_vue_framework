@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Resource
-    private UserMapper userMapper;
+    @Autowired(required = false)
+    UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

@@ -317,12 +317,6 @@ export default {
     exportbooks(){
       window.open("http://localhost:9090/book/export")
     }
-    // handleSelectionChange(val) {
-    //   this.multipleSelection.forEach((item)=>{
-    //     this.ids.push(item.id);
-    //     console.log(this.ids)
-    //   })
-    // }
   }
 }
 </script>

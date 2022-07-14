@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 13/07/2022 01:26:36
+ Date: 15/07/2022 02:28:45
 */
 
 SET NAMES utf8mb4;
@@ -76,13 +76,14 @@ CREATE TABLE `files`  (
   `md5` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件MD5',
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `nui_md5`(`md5`) USING BTREE COMMENT 'MD5设置唯一'
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
+INSERT INTO `files` VALUES (28, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
+INSERT INTO `files` VALUES (27, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
 
 -- ----------------------------
 -- Table structure for permission
@@ -126,7 +127,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', NULL, NULL, 1);
+INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/bb7c0b5f4b644e46885fb9819f150984.jpeg', NULL, 1);
 INSERT INTO `user` VALUES (20, 'sqy', '123', '沈奇亚', '1997-03-07', '女', NULL, NULL, 1);
 INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL, NULL, 2);
 INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL, NULL, 2);
