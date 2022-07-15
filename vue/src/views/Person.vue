@@ -63,6 +63,7 @@
                         this.$message.success("保存成功")
                         //更新浏览器存储的用户信息
                         sessionStorage.setItem("user", JSON.stringify(this.form))
+                        //出发父级更新user方法
                         this.$emit("userInfo")
                     } else {
                         this.$message.error(res.msg)

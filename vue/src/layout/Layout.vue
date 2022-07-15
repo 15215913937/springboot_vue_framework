@@ -31,6 +31,7 @@ export default {
     }
   },
   created() {
+    //一开始就从后台获取user最新数据
     this.refreshUser()
   },
   methods: {
@@ -42,6 +43,7 @@ export default {
       let userId = JSON.parse(userJson).id
       // 从后台取出更新后的最新用户信息
       request.get("/user/" + userId).then(res => {
+        //重新赋值后台的最新数据
         this.user = res.data
       })
     }

@@ -15,6 +15,12 @@
           </el-icon>
           <span>事务管理</span>
         </template>
+        <el-menu-item index="/index/home">
+          <el-icon>
+            <Notebook/>
+          </el-icon>
+          全局概览
+        </el-menu-item>
         <el-menu-item index="/index/book">
           <el-icon>
             <Notebook/>

@@ -67,10 +67,11 @@ public class FileController {
             parentFile.mkdirs();
         }
         String url;
-        String md5;
         //把获取到的文件存储到磁盘路径中
         file.transferTo(uploadFile);
-        md5 = SecureUtil.md5(uploadFile);
+        //获取文件的MD5
+        String md5 = SecureUtil.md5(uploadFile);
+        //从数据库查询是否存在相同的记录
         Files dbFiles = getFileByMd5(md5);
         //获取文件的url
         if (dbFiles != null) {
