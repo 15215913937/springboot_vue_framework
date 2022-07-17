@@ -11,23 +11,18 @@
         </div>
         <!--    搜索区-->
         <div style="margin: 10px 0;display: block;clear: both">
-            <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
+            <el-input v-model="name" placeholder="请输入菜单名称" style="width: 20%" class="mr-10" :prefix-icon="Search"
                       clearable/>
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-            <!--            <el-button type="danger" style="float: right;margin-right: 10px">-->
-            <!--                <el-icon>-->
-            <!--                    <Delete/>-->
-            <!--                </el-icon>-->
-            <!--                &nbsp批量删除-->
-            <!--            </el-button>-->
-
         </div>
         <!--    列表区-->
         <!--        stripe:斑马纹-->
         <el-table
                 v-loading="loading"
                 :data="tableData"
+                row-key="id"
+                default-expand-all
                 border
                 stripe
                 style="width: 100%"
@@ -35,15 +30,19 @@
             <el-table-column type="selection" width="55"/>
             <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable=""/>
-            <el-table-column prop="username" label="用户名"/>
-            <el-table-column prop="name" label="姓名"/>
-            <el-table-column prop="birthday" label="出生日期"/>
-            <el-table-column prop="sex" label="性别"/>
-
-
+            <el-table-column prop="name" label="菜单名称"/>
+            <el-table-column prop="path" label="路径"/>
+            <el-table-column prop="icon" label="图标"/>
+            <el-table-column prop="description" label="描述"/>
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">
-                    <el-button plain type="success" @click="showBooks(scope.row.bookList)">查看图书列表</el-button>
+                    <el-button plain type="primary" @click="handleAdd(scope.row.id)"
+                               v-if="!scope.row.pid && !scope.row.path">
+                        <el-icon>
+                            <Plus/>
+                        </el-icon>
+                        新增子菜单
+                    </el-button>
                     <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
                         <template #reference>
@@ -56,54 +55,34 @@
                     </el-popconfirm>
                 </template>
             </el-table-column>
-            <el-pagination small layout="prev, pager, next" :total="50"/>
         </el-table>
         <div style="margin: 10px 0">
-            <el-pagination
-                    v-model:currentPage="currentPage"
-                    v-model:page-size="pageSize"
-                    :page-sizes="[5, 10, 50]"
-                    :small="small"
-                    :disabled="disabled"
-                    :background="background"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-            />
-
-            <el-dialog title="成员当下图书列表" v-model="bookVis" width="30%">
-                <el-table :data="bookList" stripe border>
-                    <el-table-column prop="id" label="ID"></el-table-column>
-                    <el-table-column prop="bookname" label="名称"></el-table-column>
-                    <el-table-column prop="price" label="价格"></el-table-column>
-                    <el-table-column prop="buyDate" label="购买日期"></el-table-column>
-                </el-table>
-            </el-dialog>
-
-            <el-dialog v-model="dialogVisible" title="新增家庭成员" width="30%">
+            <el-dialog v-model="dialogVisible" title="菜单信息" width="30%">
                 <el-form model="form" label-width="120px">
-                    <el-form-item label="用户名">
-                        <el-input v-model="form.username" style="width: 80%"/>
-                    </el-form-item>
-                    <el-form-item label="姓名">
+                    <el-form-item label="菜单名称">
                         <el-input v-model="form.name" style="width: 80%"/>
                     </el-form-item>
-                    <el-form-item label="出生日期">
-                        <el-date-picker
-                                v-model="form.birthday"
-                                type="date"
-                                clearable
-                                style="width: 80%"
-                                format="YYYY/MM/DD"
-                                value-format="YYYY-MM-DD"
-                        />
+                    <el-form-item label="路径">
+                        <el-input v-model="form.path" style="width: 80%"/>
                     </el-form-item>
-                    <el-form-item label="性别">
-                        <el-radio v-model="form.sex" label="男" size="large">男</el-radio>
-                        <el-radio v-model="form.sex" label="女" size="large">女</el-radio>
+                    <el-form-item label="图标">
+                        <el-select v-model="form.icon" clearable placeholder="选择图标">
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.name"
+                                    :value="item.value"
+                            >
+                                <el-icon>
+                                    <component :is="item.value"></component>
+                                </el-icon>
+                                <span>{{item.name}}</span>
+                            </el-option>
+
+                        </el-select>
                     </el-form-item>
-                    <el-form-item label="相册">
+                    <el-form-item label="描述">
+                        <el-input type="textarea" v-model="form.description" style="width: 80%"/>
                     </el-form-item>
                 </el-form>
                 <template #footer>
@@ -122,22 +101,19 @@
 
     import request from "../utils/request";
     import {Search, Delete} from "@element-plus/icons-vue";
+    import User from "./User";
 
     export default {
-        name: 'User',
-        components: {},
+        name: 'Menu',
+        components: {User},
         data() {
             return {
                 loading: true,
                 form: {},
                 dialogVisible: false,
-                bookVis: false,
                 name: '',
-                currentPage: 1,
-                pageSize: 5,
-                total: 5,
                 tableData: [],
-                bookList: [],
+                options: []
             }
         },
         created() {
@@ -150,23 +126,16 @@
             }
         },
         methods: {
-            showBooks(books) {
-                this.bookList = books;
-                this.bookVis = true
-            },
             load() {
                 this.loading = true;
-                request.get("/user", {
+                request.get("/menu", {
                     params: {
-                        pageNum: this.currentPage,
-                        pageSize: this.pageSize,
                         name: this.name
                     }
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.loading = false;
-                    this.tableData = res.data.records;
-                    this.total = res.data.total;
+                    this.tableData = res.data;
                 })
             },
             reset() {
@@ -180,7 +149,7 @@
             },
             save() {
                 if (this.form.id) {//若果id存在，更新
-                    request.put("/user", this.form).then(res => {
+                    request.post("/menu", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {
                             this.$message.success("修改成功")
@@ -191,26 +160,31 @@
                         this.dialogVisible = false
                     });
                 } else {//如果id不存在，新增
-                    request.post("/user", this.form).then(res => {
+                    request.post("/menu", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {
                             this.$message.success("新增成功")
                         } else {
                             this.$message.error(res.msg)
                         }
-                        this.load();//刷新表格数据
+                        this.load(); //刷新表格数据
                         this.dialogVisible = false
                     });
                 }
             },
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));
-                this.dialogVisible = true
+                this.dialogVisible = true;
+
+                //请求图标的数据
+                request.get("/menu/icons").then(res => {
+                    this.options = res.data;
+                })
             },
             handleDelete(row) {
-                this.id = row.id
+                this.id = row.id;
                 // console.log(this.id);
-                request.delete("/user/" + this.id).then(res => {
+                request.delete("/menu/" + this.id).then(res => {
                     if (res.code === '0') {
                         this.$message.success("删除成功")
                     } else {
@@ -219,13 +193,12 @@
                     this.load();//刷新表格数据
                 })
             },
-            handleSizeChange() {
-                //改变当前每页个数的触发
-                this.load()
-            },
-            handleCurrentChange() {
-                //改变当前页数的触发
-                this.load()
+            handleAdd(pid) {
+                this.dialogVisible = true
+                this.form = {}
+                if (pid) {
+                    this.form.pid = pid
+                }
             }
         }
     }

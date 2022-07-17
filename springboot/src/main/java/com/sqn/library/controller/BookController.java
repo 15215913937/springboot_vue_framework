@@ -11,7 +11,6 @@ import com.sqn.library.entity.Book;
 import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.service.IBookService;
 import io.swagger.annotations.Api;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,6 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

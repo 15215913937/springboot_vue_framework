@@ -1,28 +1,49 @@
 <template>
-    <div style="padding: 50px">
-        <el-row :gutter="10" style="margin-bottom: 50px">
+    <div style="padding: 10px">
+        <el-row :gutter="10" style="margin-bottom: 30px">
             <el-col :span="6">
                 <el-card style="color: #F56C6C">
-                    <div><el-icon><HomeFilled /></el-icon> 家族人数</div>
-                    <div style="padding: 10px 0;text-align: center;font-weight:bold;">100<span>人</span></div>
+                    <div>
+                        <el-icon>
+                            <HomeFilled/>
+                        </el-icon>
+                        家族人数
+                    </div>
+                    <div class="number">100
+                        <span>人</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card style="color: #F56C6C">
-                    <div><el-icon><Reading /></el-icon> 现藏有书籍</div>
-                    <div style="padding: 10px 0;text-align: center;font-weight:bold;">100<span>本</span></div>
+                    <div>
+                        <el-icon>
+                            <Reading/>
+                        </el-icon>
+                        现藏有书籍
+                    </div>
+                    <div class="number">100<span>本</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card style="color: #F56C6C">
-                    <div><el-icon><DataLine /></el-icon> 事件总数</div>
-                    <div style="padding: 10px 0;text-align: center;font-weight:bold;">100<span>件</span></div>
+                    <div>
+                        <el-icon>
+                            <DataLine/>
+                        </el-icon>
+                        事件总数
+                    </div>
+                    <div class="number">100<span>件</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card style="color: #F56C6C">
-                    <div><el-icon><Files /></el-icon> 文件总数</div>
-                    <div style="padding: 10px 0;text-align: center;font-weight:bold;">100<span>件</span></div>
+                    <div>
+                        <el-icon>
+                            <Files/>
+                        </el-icon>
+                        文件总数
+                    </div>
+                    <div class="number">100<span>件</span></div>
                 </el-card>
             </el-col>
         </el-row>
@@ -99,27 +120,40 @@
                     left: 'center'
                 },
                 tooltip: {
-                    trigger: 'item'
+                    trigger: 'item',
+                    formatter: '{b} <br/>{c}本  ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
                 },
                 series: [
                     {
+                        // name: '总体每月购书',
                         type: 'pie',
-                        radius: '50%',
+                        radius: ['40%', '60%'],
                         data: [],
                         emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            label: {
+                                show: true,
+                                fontSize: '40',
+                                fontWeight: 'bold'
                             }
                         },
                         label: {
-                            normal: {
-                                show: true,
-                                formatter: '{b}: {c}本({d}%)'
-                            }
-                        }
-                    }
+                            show: false,
+                            position: 'center'
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        avoidLabelOverlap: false,
+                    },
                 ]
             };
             request.get("/echarts/booksNumber").then(res => {
@@ -139,7 +173,7 @@
                     {name: "10月", value: res.data[9]},
                     {name: "11月", value: res.data[10]},
                     {name: "12月", value: res.data[11]}
-                ]
+                ];
                 myChart2.setOption(option2);
             })
 
@@ -150,5 +184,10 @@
 </script>
 
 <style scoped>
-
+    .number {
+        padding: 10px 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px
+    }
 </style>

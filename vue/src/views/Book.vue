@@ -219,22 +219,10 @@
                 this.form.cover = res.data
             },
             reset() {
-                request.get("/book", {
-                    params: {
-                        pageNum: this.currentPage,
-                        pageSize: this.pageSize,
-                        name: '',
-                        author: '',
-                        category: ''
-                    }
-                }).then(res => {
-                    // console.log(res);
-                    this.tableData = res.data.records;
-                    this.total = res.data.total;
-                    this.name = '';
-                    this.author = '';
-                    this.category = '';
-                })
+                this.name = '';
+                this.author = '';
+                this.category = '';
+                this.load();
             },
             load() {
                 request.get("/book", {

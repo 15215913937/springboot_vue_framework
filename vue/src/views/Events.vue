@@ -156,21 +156,9 @@
                 this.vis = true
             },
             reset() {
-                request.get("/events", {
-                    params: {
-                        pageNum: this.currentPage,
-                        pageSize: this.pageSize,
-                        title: '',
-                        author: '',
-                        // createTime: ''
-                    }
-                }).then(res => {
-                    // console.log(res);
-                    this.tableData = res.data.records;
-                    this.total = res.data.total;
-                    this.title = '';
-                    this.author = '';
-                })
+                this.title = '';
+                this.author = '';
+                this.load();
             },
             load() {
                 request.get("/events", {

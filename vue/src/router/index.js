@@ -12,36 +12,14 @@ const routes = [
         component: Layout,
         redirect: '/index/home',
         children: [
-            {
-                path: 'home',
-                name: 'Home',
-                component: () => import("@/views/Home")
-            },
-            {
-                path: 'book',
-                name: 'Book',
-                component: () => import("@/views/Book"),
-            },
-            {
-                path: 'user',
-                name: 'User',
-                component: () => import("@/views/User"),
-            },
-            {
-                path: 'events',
-                name: 'Events',
-                component: () => import("@/views/Events"),
-            },
-            {
-                path: 'person',
-                name: 'Person',
-                component: () => import("@/views/Person"),
-            },
-            {
-                path: 'file',
-                name: 'File',
-                component: () => import("@/views/File")
-            }
+            {path: 'home',name: 'Home',component: () => import("@/views/Home")},
+            {path: 'book',name: 'Book',component: () => import("@/views/Book"),},
+            {path: 'user',name: 'User',component: () => import("@/views/User"),},
+            {path: 'events',name: 'Events',component: () => import("@/views/Events"),},
+            {path: 'person',name: 'Person',component: () => import("@/views/Person"),},
+            {path: 'file',name: 'File',component: () => import("@/views/File")},
+            {path: 'role',name: 'Role',component: () => import("@/views/Role")},
+            {path: 'menu',name: 'Menu',component: () => import("@/views/Menu")},
         ]
     },
     {

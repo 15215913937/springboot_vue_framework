@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 16/07/2022 02:12:05
+ Date: 18/07/2022 01:41:43
 */
 
 SET NAMES utf8mb4;
@@ -34,12 +34,32 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
 INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07', NULL, 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
+INSERT INTO `book` VALUES (30, '134', '143', '12341', '234143', '21243', '4312', 3142.00, '2022-03-09', NULL, NULL);
+INSERT INTO `book` VALUES (29, '123', '123', '123', '123', '1231', '32', 132.00, '2022-07-17', NULL, NULL);
+INSERT INTO `book` VALUES (28, '123', '132', '123', '123', '12312', '3', 213.00, '2022-05-18', NULL, NULL);
+
+-- ----------------------------
+-- Table structure for dict
+-- ----------------------------
+DROP TABLE IF EXISTS `dict`;
+CREATE TABLE `dict`  (
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
+  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型'
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of dict
+-- ----------------------------
+INSERT INTO `dict` VALUES ('user', 'Apple', 'icon');
+INSERT INTO `dict` VALUES ('menu', 'Bicycle', 'icon');
+INSERT INTO `dict` VALUES ('book', 'Box', 'icon');
 
 -- ----------------------------
 -- Table structure for events
@@ -52,7 +72,7 @@ CREATE TABLE `events`  (
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of events
@@ -87,6 +107,33 @@ INSERT INTO `files` VALUES (28, '小手4.jpg', 'jpg', 252, 'http://localhost:909
 INSERT INTO `files` VALUES (27, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
 
 -- ----------------------------
+-- Table structure for menu
+-- ----------------------------
+DROP TABLE IF EXISTS `menu`;
+CREATE TABLE `menu`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '菜单名称',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '路径',
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图标',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+  `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of menu
+-- ----------------------------
+INSERT INTO `menu` VALUES (2, '全局概览', '/home', 'Bicycle', '', NULL);
+INSERT INTO `menu` VALUES (5, '事务管理', NULL, NULL, NULL, NULL);
+INSERT INTO `menu` VALUES (6, '系统管理', NULL, NULL, NULL, NULL);
+INSERT INTO `menu` VALUES (7, '书籍管理', '/book', '', NULL, 5);
+INSERT INTO `menu` VALUES (8, '事件论坛', '/events', NULL, NULL, 5);
+INSERT INTO `menu` VALUES (9, '文件管理', '/file', '', NULL, 5);
+INSERT INTO `menu` VALUES (10, '成员管理', '/user', NULL, NULL, 6);
+INSERT INTO `menu` VALUES (11, '角色管理', '/role', '', NULL, 6);
+INSERT INTO `menu` VALUES (12, '菜单管理', '/menu', NULL, NULL, 6);
+
+-- ----------------------------
 -- Table structure for permission
 -- ----------------------------
 DROP TABLE IF EXISTS `permission`;
@@ -107,6 +154,37 @@ INSERT INTO `permission` VALUES (2, 'Book', '/book', '书籍管理', 'el-icon-fi
 INSERT INTO `permission` VALUES (5, 'Events', '/events', '事件管理', 'el-icon-news');
 INSERT INTO `permission` VALUES (9, 'User', '/user', '用户管理', 'el-icon-user');
 INSERT INTO `permission` VALUES (13, 'Person', '/person', '个人信息', '');
+
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限');
+INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容');
+
+-- ----------------------------
+-- Table structure for role_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `role_menu`;
+CREATE TABLE `role_menu`  (
+  `role_id` int(11) NOT NULL COMMENT '角色id',
+  `menu_id` int(11) NULL DEFAULT NULL COMMENT '菜单id',
+  PRIMARY KEY (`role_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Records of role_menu
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for user

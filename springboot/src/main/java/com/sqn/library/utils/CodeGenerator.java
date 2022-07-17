@@ -2,7 +2,6 @@ package com.sqn.library.utils;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 import java.util.Collections;
@@ -29,11 +28,15 @@ public class CodeGenerator {
                 .packageConfig(builder -> {
                     builder.parent("com.sqn.library") // 设置父包名
                             .moduleName("") // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\springbootspace\\springboot_vue_framework\\springboot_vue_framework\\springboot\\src\\main\\resources\\mapper\\"));
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\springbootspace" +
+                                    "\\springboot_vue_framework\\springboot\\src\\main\\resources\\mapper\\"));
                     //设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("file") // 设置需要生成的表名
+                    builder.entityBuilder().enableLombok();
+                    builder.controllerBuilder().enableHyphenStyle()  // 开启驼峰转连字符
+                            .enableRestStyle();  // 开启生成@RestController 控制器
+                    builder.addInclude("menu") // 设置需要生成的表名
                             .addTablePrefix(""); // 设置过滤表前缀
                 })
 //                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
