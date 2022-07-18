@@ -16,19 +16,6 @@
                       clearable/>
             <el-input v-model="author" placeholder="请输入作者" style="width: 20%" :prefix-icon="Search" class="mr-10"
                       clearable/>
-            <!--      <el-input v-model="createTime" placeholder="请选择时间" style="width: 20%" :prefix-icon="Search" class="mr-10"-->
-            <!--                clearable/>-->
-            <!--      <el-date-picker-->
-            <!--          class="mr-10"-->
-            <!--          v-model="createTime"-->
-            <!--          type="daterange"-->
-            <!--          unlink-panels-->
-            <!--          range-separator="-"-->
-            <!--          start-placeholder="开始日期"-->
-            <!--          end-placeholder="结束日期"-->
-            <!--          :shortcuts="shortcuts"-->
-            <!--          :size="size"-->
-            <!--      />-->
             <el-button type="primary" class="mb-10" @click="load">查询</el-button>
             <el-button type="primary" class="mb-10" @click="reset">重置</el-button>
             <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
@@ -278,7 +265,8 @@
                         this.$message.error(res.msg)
                     }
                 })
-            }, handleSelectionChange(val) {
+            },
+          handleSelectionChange(val) {
                 this.ids = val.map(v => v.id)
             },
         }
