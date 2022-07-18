@@ -1,10 +1,18 @@
 package com.sqn.library.service.impl;
 
+import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
+import com.sqn.library.mapper.RoleMapper;
+import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.mapper.UserMapper;
+import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +24,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-
 }

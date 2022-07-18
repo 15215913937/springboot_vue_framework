@@ -23,10 +23,15 @@ public class User {
     private String name;
     private String sex;
     private String avatar;
-    private Integer role;
+    private String role;
     @TableField(exist = false)
     private String token;
 
     @TableField(exist = false)
     private List<Book> bookList;
+
+    @TableField(exist = false)
+    private List<Menu> menus;
+
+
 }

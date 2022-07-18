@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 18/07/2022 01:41:43
+ Date: 19/07/2022 02:47:46
 */
 
 SET NAMES utf8mb4;
@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '图书ID',
   `bookname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '书名',
-  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '作者',
+  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者',
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类别',
   `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本',
-  `publishing_house` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '出版社',
+  `publishing_house` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '出版社',
   `purchaser` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '购买人',
-  `price` decimal(10, 2) NOT NULL COMMENT '价格',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '价格',
   `buy_date` date NULL DEFAULT NULL COMMENT '购书日期',
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
@@ -118,7 +118,7 @@ CREATE TABLE `menu`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -163,14 +163,15 @@ CREATE TABLE `role`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+  `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限');
-INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容');
+INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限', 'ROLE_ADMIN');
+INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容', 'ROLE_USER');
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -178,13 +179,25 @@ INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu`  (
   `role_id` int(11) NOT NULL COMMENT '角色id',
-  `menu_id` int(11) NULL DEFAULT NULL COMMENT '菜单id',
-  PRIMARY KEY (`role_id`) USING BTREE
+  `menu_id` int(11) NOT NULL COMMENT '菜单id',
+  PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of role_menu
 -- ----------------------------
+INSERT INTO `role_menu` VALUES (1, 2);
+INSERT INTO `role_menu` VALUES (1, 5);
+INSERT INTO `role_menu` VALUES (1, 6);
+INSERT INTO `role_menu` VALUES (1, 7);
+INSERT INTO `role_menu` VALUES (1, 8);
+INSERT INTO `role_menu` VALUES (1, 9);
+INSERT INTO `role_menu` VALUES (1, 10);
+INSERT INTO `role_menu` VALUES (1, 11);
+INSERT INTO `role_menu` VALUES (1, 12);
+INSERT INTO `role_menu` VALUES (3, 2);
+INSERT INTO `role_menu` VALUES (3, 7);
+INSERT INTO `role_menu` VALUES (3, 8);
 
 -- ----------------------------
 -- Table structure for user
@@ -199,19 +212,20 @@ CREATE TABLE `user`  (
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '性别',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `role` int(11) NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
+  `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/bb7c0b5f4b644e46885fb9819f150984.jpeg', NULL, 1);
-INSERT INTO `user` VALUES (20, 'sqy', '123', '沈奇亚', '1997-03-07', '女', NULL, NULL, 1);
-INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL, NULL, 2);
-INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL, NULL, 2);
-INSERT INTO `user` VALUES (24, 'shenjianying', '123456', '沈建英', NULL, '女', NULL, NULL, 2);
-INSERT INTO `user` VALUES (25, 'shenronger', '123456', '沈蓉儿', '2000-11-19', '女', NULL, NULL, 2);
-INSERT INTO `user` VALUES (26, 'bianzhenyu', '123456', '边震宇', '2008-08-30', '男', NULL, NULL, 2);
+INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/bb7c0b5f4b644e46885fb9819f150984.jpeg', NULL, 'ROLE_ADMIN');
+INSERT INTO `user` VALUES (20, 'sqy', '123', '沈奇亚', '1997-03-07', '女', NULL, NULL, 'ROLE_ADMIN');
+INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (24, 'shenjianying', '123456', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (25, 'shenronger', '123456', '沈蓉儿', '2000-11-19', '女', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (26, 'bianzhenyu', '123456', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (31, '测试1', '123456', '13', '2022-07-14', '男', NULL, '2022-07-19 01:35:13', 'ROLE_USER');
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -6,4 +6,5 @@ package com.sqn.library.common;
  */
 public interface Constants {
     String DICT_TYPE_ICON = "icon";
+
 }

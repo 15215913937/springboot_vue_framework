@@ -61,12 +61,26 @@ public class RoleController {
     }
 
     @GetMapping("/page")
-    public Result<?> findPage(@RequestParam(defaultValue="") String role,
-                           @RequestParam(defaultValue = "1") Integer pageNum,
-                           @RequestParam(defaultValue = "10") Integer pageSize) {
+    public Result<?> findPage(@RequestParam(defaultValue = "") String role,
+                              @RequestParam(defaultValue = "1") Integer pageNum,
+                              @RequestParam(defaultValue = "10") Integer pageSize) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("role",role);
+        queryWrapper.like("role", role);
         return Result.success(roleService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+    /**
+     * 绑定角色和菜单的关系
+     */
+    @PostMapping("/roleMenu/{roleId}")
+    private Result<?> roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
+        roleService.setRoleMenu(roleId, menuIds);
+        return Result.success();
+    }
+
+    @GetMapping("/roleMenu/{roleId}")
+    private Result<?> getRoleMenu(@PathVariable Integer roleId) {
+        return Result.success(roleService.getRoleMenu(roleId));
     }
 
 }

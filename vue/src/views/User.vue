@@ -36,10 +36,10 @@
             <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable=""/>
             <el-table-column prop="username" label="用户名"/>
+            <el-table-column prop="role" label="角色"/>
             <el-table-column prop="name" label="姓名"/>
             <el-table-column prop="birthday" label="出生日期"/>
             <el-table-column prop="sex" label="性别"/>
-
 
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">
@@ -62,7 +62,7 @@
             <el-pagination
                     v-model:currentPage="currentPage"
                     v-model:page-size="pageSize"
-                    :page-sizes="[5, 10, 50]"
+                    :page-sizes="[10, 20, 50]"
                     :small="small"
                     :disabled="disabled"
                     :background="background"
@@ -72,7 +72,7 @@
                     @current-change="handleCurrentChange"
             />
 
-            <el-dialog title="成员当下图书列表" v-model="bookVis" width="30%">
+            <el-dialog title="拥有图书列表" v-model="bookVis" width="30%">
                 <el-table :data="bookList" stripe border>
                     <el-table-column prop="id" label="ID"></el-table-column>
                     <el-table-column prop="bookname" label="名称"></el-table-column>
@@ -81,10 +81,20 @@
                 </el-table>
             </el-dialog>
 
-            <el-dialog v-model="dialogVisible" title="新增家庭成员" width="30%">
+            <el-dialog v-model="dialogVisible" title="家庭成员信息" width="30%">
                 <el-form model="form" label-width="120px">
                     <el-form-item label="用户名">
                         <el-input v-model="form.username" style="width: 80%"/>
+                    </el-form-item>
+                    <el-form-item label="角色">
+                        <el-select v-model="form.role" clearable placeholder="请选择角色" style="width: 80%">
+                            <el-option
+                                    v-for="item in roles"
+                                    :key="item.role"
+                                    :label="item.role"
+                                    :value="item.flag"
+                            />
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="姓名">
                         <el-input v-model="form.name" style="width: 80%"/>
@@ -134,10 +144,11 @@
                 bookVis: false,
                 name: '',
                 currentPage: 1,
-                pageSize: 5,
-                total: 5,
+                pageSize: 10,
+                total: '',
                 tableData: [],
                 bookList: [],
+                roles: []
             }
         },
         created() {
@@ -167,6 +178,9 @@
                     this.loading = false;
                     this.tableData = res.data.records;
                     this.total = res.data.total;
+                });
+                request.get("/role").then(res => {
+                    this.roles = res.data;
                 })
             },
             reset() {

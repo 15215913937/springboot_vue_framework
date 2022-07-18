@@ -29,6 +29,7 @@
             <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable=""/>
             <el-table-column prop="role" label="角色"/>
+            <el-table-column prop="flag" label="唯一标识"/>
             <el-table-column prop="description" label="描述"/>
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">
@@ -57,15 +58,15 @@
                         :props="props"
                         :data="menuData"
                         node-key="id"
-                        :default-expanded-keys="[2,5]"
-                        :default-checked-keys="[2,5,7,8]"
+                        ref="tree"
+                        :default-expanded-keys="expends"
+                        :default-checked-keys="checks"
                         show-checkbox
-                        @check-change="handleCheckChange"
                 />
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="menuDialogVis = false">取消</el-button>
-                        <el-button type="primary" @click="save">提交</el-button>
+                        <el-button type="primary" @click="saveRoleMenu">提交</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -73,6 +74,9 @@
                 <el-form model="form" label-width="120px">
                     <el-form-item label="角色">
                         <el-input v-model="form.role" style="width: 80%"/>
+                    </el-form-item>
+                    <el-form-item label="唯一标识">
+                        <el-input v-model="form.flag" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="描述">
                         <el-input type="textarea" v-model="form.description" style="width: 80%"/>
@@ -109,7 +113,10 @@
                 menuData: [],
                 props: {
                     label: 'name',
-                }
+                },
+                roleId: 0,
+                expends: [],
+                checks: []
             }
         },
         created() {
@@ -125,7 +132,7 @@
             load() {
                 this.loading = true;
                 request.get("/role/page").then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.loading = false;
                     this.tableData = res.data.records;
                 });
@@ -164,6 +171,18 @@
                     });
                 }
             },
+            saveRoleMenu() {
+                // console.log(this.$refs.tree.getCheckedKeys());
+                request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+                    // console.log(res)
+                    if (res.code === '0') {
+                        this.$message.success("分配成功")
+                        this.menuDialogVis = false
+                    } else {
+                        this.$message.error(res.msg)
+                    }
+                })
+            },
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));
                 this.dialogVisible = true
@@ -182,19 +201,18 @@
             },
             selectMenu(roleId) {
                 this.menuDialogVis = true;
+                this.roleId = roleId;
                 //请求菜单数据
-                request.get("/menu", {
-                    params: {
-                        name:"",
-                    }
-                }).then(res => {
-                    console.log(res);
+                request.get("/menu").then(res => {
+                    // console.log(res);
                     this.loading = false;
                     this.menuData = res.data;
+                    // 把后台返回的菜单数据处理成 id数组
+                    this.expends = this.menuData.map(v => v.id)
                 })
-            },
-            handleCheckChange(data, checked, indeterminate) {
-                console.log(data, checked, indeterminate);
+                request.get("/role/roleMenu/" + this.roleId).then(res => {
+                    this.checks = res.data;
+                })
             }
         }
     }

@@ -3,7 +3,9 @@ package com.sqn.library.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author shenqn
@@ -35,5 +37,7 @@ public class Role implements Serializable {
     @ApiModelProperty("描述")
     private String description;
 
+    @ApiModelProperty("唯一标识")
+    private String flag;
 
 }

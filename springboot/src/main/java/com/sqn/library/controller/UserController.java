@@ -5,8 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
+import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
+import com.sqn.library.mapper.MenuMapper;
+import com.sqn.library.mapper.RoleMapper;
+import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.mapper.UserMapper;
+import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -24,6 +31,15 @@ public class UserController {
 
     @Autowired
     IUserService iUserService;
+
+    @Autowired
+    RoleMapper roleMapper;
+
+    @Autowired
+    RoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    IMenuService iMenuService;
 
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象
@@ -41,6 +57,24 @@ public class UserController {
         if (res == null) {
             return Result.error("-1", "用户名或密码错误！");
         }
+        String role = user.getRole();
+        Integer roleId = roleMapper.selectByFlag(role);
+        //当前角色的所有菜单id集合
+        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
+        //查出系统所有菜单
+        List<Menu> menus = iMenuService.findMenus("");
+        //new一个最后筛选完成之后的list
+        List<Menu> roleMenus = new ArrayList<>();
+        //筛选当前用户角色的菜单
+        for (Menu menu : menus) {
+            if (menuIds.contains(menu.getId())) {
+                roleMenus.add(menu);
+            }
+            List<Menu> children = menu.getChildren();
+            //移除children里面不在menuIds集中的元素
+            children.removeIf(child -> !menuIds.contains(child.getId()));
+        }
+        res.setMenus(roleMenus);
         // 生成token
         String token = TokenUtils.genToken(res);
         res.setToken(token);
