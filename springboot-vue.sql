@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 19/07/2022 02:47:46
+ Date: 20/07/2022 01:39:25
 */
 
 SET NAMES utf8mb4;
@@ -123,15 +123,15 @@ CREATE TABLE `menu`  (
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (2, '全局概览', '/home', 'Bicycle', '', NULL);
-INSERT INTO `menu` VALUES (5, '事务管理', NULL, NULL, NULL, NULL);
-INSERT INTO `menu` VALUES (6, '系统管理', NULL, NULL, NULL, NULL);
-INSERT INTO `menu` VALUES (7, '书籍管理', '/book', '', NULL, 5);
-INSERT INTO `menu` VALUES (8, '事件论坛', '/events', NULL, NULL, 5);
-INSERT INTO `menu` VALUES (9, '文件管理', '/file', '', NULL, 5);
-INSERT INTO `menu` VALUES (10, '成员管理', '/user', NULL, NULL, 6);
-INSERT INTO `menu` VALUES (11, '角色管理', '/role', '', NULL, 6);
-INSERT INTO `menu` VALUES (12, '菜单管理', '/menu', NULL, NULL, 6);
+INSERT INTO `menu` VALUES (2, '全局概览', '/index/home', 'PieChart', '', NULL);
+INSERT INTO `menu` VALUES (5, '事务管理', NULL, 'SetUp', NULL, NULL);
+INSERT INTO `menu` VALUES (6, '系统管理', NULL, 'Setting', NULL, NULL);
+INSERT INTO `menu` VALUES (7, '书籍管理', '/index/book', 'Notebook', NULL, 5);
+INSERT INTO `menu` VALUES (8, '事件论坛', '/index/events', 'Ship', NULL, 5);
+INSERT INTO `menu` VALUES (9, '文件管理', '/index/file', 'Folder', NULL, 5);
+INSERT INTO `menu` VALUES (10, '成员管理', '/index/user', 'Avatar', NULL, 6);
+INSERT INTO `menu` VALUES (11, '角色管理', '/index/role', 'UserFilled', NULL, 6);
+INSERT INTO `menu` VALUES (12, '菜单管理', '/index/menu', 'Menu', NULL, 6);
 
 -- ----------------------------
 -- Table structure for permission
@@ -198,6 +198,7 @@ INSERT INTO `role_menu` VALUES (1, 12);
 INSERT INTO `role_menu` VALUES (3, 2);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
+INSERT INTO `role_menu` VALUES (3, 10);
 
 -- ----------------------------
 -- Table structure for user
@@ -214,7 +215,7 @@ CREATE TABLE `user`  (
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user

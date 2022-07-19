@@ -57,7 +57,7 @@ public class UserController {
         if (res == null) {
             return Result.error("-1", "用户名或密码错误！");
         }
-        String role = user.getRole();
+        String role = res.getRole();
         Integer roleId = roleMapper.selectByFlag(role);
         //当前角色的所有菜单id集合
         List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
@@ -67,13 +67,14 @@ public class UserController {
         List<Menu> roleMenus = new ArrayList<>();
         //筛选当前用户角色的菜单
         for (Menu menu : menus) {
-            if (menuIds.contains(menu.getId())) {
+            List<Menu> children = menu.getChildren();
+            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
                 roleMenus.add(menu);
             }
-            List<Menu> children = menu.getChildren();
             //移除children里面不在menuIds集中的元素
             children.removeIf(child -> !menuIds.contains(child.getId()));
         }
+
         res.setMenus(roleMenus);
         // 生成token
         String token = TokenUtils.genToken(res);
