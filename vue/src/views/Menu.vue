@@ -32,7 +32,15 @@
             <el-table-column prop="id" label="ID" sortable=""/>
             <el-table-column prop="name" label="菜单名称"/>
             <el-table-column prop="path" label="路径"/>
-            <el-table-column prop="icon" label="图标"/>
+            <el-table-column prop="pagePath" label="页面路径"/>
+            <el-table-column label="图标" align="center" class-name="fontSize12">
+                <template #default="scope">
+                    <el-icon>
+                        <component :is="scope.row.icon"/>
+                    </el-icon>
+                </template>
+            </el-table-column>
+<!--            <el-table-column prop="icon" label="图标"/>-->
             <el-table-column prop="description" label="描述"/>
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">
@@ -65,11 +73,14 @@
                     <el-form-item label="路径">
                         <el-input v-model="form.path" style="width: 80%"/>
                     </el-form-item>
+                    <el-form-item label="页面路径">
+                        <el-input v-model="form.pagePath" style="width: 80%"/>
+                    </el-form-item>
                     <el-form-item label="图标">
                         <el-select v-model="form.icon" clearable placeholder="选择图标">
                             <el-option
                                     v-for="item in options"
-                                    :key="item.value"
+                                    :key="item.id"
                                     :label="item.name"
                                     :value="item.value"
                             >
@@ -203,3 +214,8 @@
         }
     }
 </script>
+<style>
+    .fontSize12{
+        font-size: 20px;
+    }
+</style>

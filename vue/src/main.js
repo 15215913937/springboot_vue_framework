@@ -6,7 +6,6 @@ import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-// import axios from 'axios'
 //导入该路径下的css全局配置
 import '@/assets/css/global.css'
 

@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 20/07/2022 01:39:25
+ Date: 21/07/2022 02:20:42
 */
 
 SET NAMES utf8mb4;
@@ -57,9 +57,14 @@ CREATE TABLE `dict`  (
 -- ----------------------------
 -- Records of dict
 -- ----------------------------
-INSERT INTO `dict` VALUES ('user', 'Apple', 'icon');
-INSERT INTO `dict` VALUES ('menu', 'Bicycle', 'icon');
-INSERT INTO `dict` VALUES ('book', 'Box', 'icon');
+INSERT INTO `dict` VALUES ('home', 'PieChart', 'icon');
+INSERT INTO `dict` VALUES ('events', 'Ship', 'icon');
+INSERT INTO `dict` VALUES ('book', 'Notebook', 'icon');
+INSERT INTO `dict` VALUES ('file', 'Folder', 'icon');
+INSERT INTO `dict` VALUES ('role', 'UserFilled', 'icon');
+INSERT INTO `dict` VALUES ('menu', 'List', 'icon');
+INSERT INTO `dict` VALUES ('system', 'Setting', 'icon');
+INSERT INTO `dict` VALUES ('affair', 'SetUp', 'icon');
 
 -- ----------------------------
 -- Table structure for events
@@ -72,7 +77,7 @@ CREATE TABLE `events`  (
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of events
@@ -83,6 +88,7 @@ INSERT INTO `events` VALUES (16, '我师兄猪猪', '<p>我是大猪猪我是大
 INSERT INTO `events` VALUES (21, '我附带图片', '<p><img src=\"http://localhost:9090/files/49b091e6eb034642b9c3866273b0e414\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:9090/files/a7f5ba8e7e1f4c3b8d794df1cc7d0e3b\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', '沈奇男', '2022-07-03 22:08:57');
 INSERT INTO `events` VALUES (22, '我是妈妈', '<p>我抱孙子啦，<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😁</span></p>', '杜梅军', '2022-07-03 23:19:58');
 INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', '沈奇男', '2022-07-16 01:40:10');
+INSERT INTO `events` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', '沈奇男', '2022-07-20 23:46:03');
 
 -- ----------------------------
 -- Table structure for files
@@ -98,13 +104,14 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
 INSERT INTO `files` VALUES (28, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
 INSERT INTO `files` VALUES (27, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
+INSERT INTO `files` VALUES (29, 'tx2.jpeg', 'jpeg', 61, 'http://localhost:9090/files/test/0e77b99fe15a4912a8b2cefb6381b1dc.jpeg', 'baef13857388301f8e784ffeee230550', 0, 1);
 
 -- ----------------------------
 -- Table structure for menu
@@ -117,21 +124,22 @@ CREATE TABLE `menu`  (
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图标',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
+  `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (2, '全局概览', '/index/home', 'PieChart', '', NULL);
-INSERT INTO `menu` VALUES (5, '事务管理', NULL, 'SetUp', NULL, NULL);
-INSERT INTO `menu` VALUES (6, '系统管理', NULL, 'Setting', NULL, NULL);
-INSERT INTO `menu` VALUES (7, '书籍管理', '/index/book', 'Notebook', NULL, 5);
-INSERT INTO `menu` VALUES (8, '事件论坛', '/index/events', 'Ship', NULL, 5);
-INSERT INTO `menu` VALUES (9, '文件管理', '/index/file', 'Folder', NULL, 5);
-INSERT INTO `menu` VALUES (10, '成员管理', '/index/user', 'Avatar', NULL, 6);
-INSERT INTO `menu` VALUES (11, '角色管理', '/index/role', 'UserFilled', NULL, 6);
-INSERT INTO `menu` VALUES (12, '菜单管理', '/index/menu', 'Menu', NULL, 6);
+INSERT INTO `menu` VALUES (2, '全局概览', '/home', 'PieChart', '', NULL, 'Home');
+INSERT INTO `menu` VALUES (5, '事务管理', NULL, 'SetUp', NULL, NULL, NULL);
+INSERT INTO `menu` VALUES (6, '系统管理', NULL, 'Setting', NULL, NULL, NULL);
+INSERT INTO `menu` VALUES (7, '书籍管理', '/book', 'Notebook', NULL, 5, 'Book');
+INSERT INTO `menu` VALUES (8, '事件论坛', '/events', 'Ship', NULL, 5, 'Events');
+INSERT INTO `menu` VALUES (9, '文件管理', '/file', 'Folder', NULL, 5, 'File');
+INSERT INTO `menu` VALUES (10, '成员管理', '/user', 'Avatar', NULL, 6, 'User');
+INSERT INTO `menu` VALUES (11, '角色管理', '/role', 'UserFilled', NULL, 6, 'Role');
+INSERT INTO `menu` VALUES (12, '菜单管理', '/menu', 'List', NULL, 6, 'Menu');
 
 -- ----------------------------
 -- Table structure for permission
@@ -220,7 +228,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/bb7c0b5f4b644e46885fb9819f150984.jpeg', NULL, 'ROLE_ADMIN');
+INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0e77b99fe15a4912a8b2cefb6381b1dc.jpeg', NULL, 'ROLE_ADMIN');
 INSERT INTO `user` VALUES (20, 'sqy', '123', '沈奇亚', '1997-03-07', '女', NULL, NULL, 'ROLE_ADMIN');
 INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER');

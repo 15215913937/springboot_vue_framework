@@ -10,11 +10,9 @@
                         </div>
                         <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
                             <el-form-item prop="username">
-                                <!--                    <Avatar style="width: 1em; height: 1em; margin-right: 8px"></Avatar>-->
                                 <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
                             </el-form-item>
                             <el-form-item prop="password">
-                                <!--                    <Lock style="width: 1em; height: 1em; margin-right: 8px"></Lock>-->
                                 <el-input :prefix-icon="Lock" show-password placeholder="请输入密码"
                                           v-model="form.password"/>
                             </el-form-item>
@@ -48,6 +46,7 @@
     import {User, Lock, Key} from "@element-plus/icons-vue"
     import request from "../utils/request"
     import ValidCode from "@/components/ValidCode"
+    import {setRoutes} from "../router";
 
     export default {
         name: "Login",
@@ -101,10 +100,11 @@
                             // console.log(res)
                             if (res.code === '0') {
                                 this.$message.success("登录成功")
-                                console.log(res)
+                                // console.log(res)
                                 sessionStorage.setItem("user", JSON.stringify(res.data));  // 缓存用户信息
                                 sessionStorage.setItem("menus", JSON.stringify(res.data.menus));//缓存用户菜单
-                                this.$router.push("/index/") //登录成功后自动跳转到首页
+                                setRoutes()  //动态设置当前用户的路由
+                                this.$router.push("/") //登录成功后自动跳转到首页
                             } else {
                                 this.$message.error(res.msg)
                             }

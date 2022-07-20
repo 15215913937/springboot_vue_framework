@@ -116,7 +116,6 @@
         created() {
             let userStr = sessionStorage.getItem("user") || "{}";
             this.user = JSON.parse(userStr);
-            console.log()
             //请求服务端，确认当前用户的合法信息，避免本地缓存修改数据
             request.get("/user/" + this.user.id).then(res => {
                 if (res.code === '0') {
