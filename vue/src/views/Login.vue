@@ -3,7 +3,7 @@
     <div class="video-container">
       <div :style="fixStyle" class="filter">
         <div style="width: 400px; margin: 100px auto">
-          <div style="margin: 150px auto;width: 500px">
+          <div style="margin: 50px auto;width: 500px">
             <div
                 style="color: #d7fd00;font-size:60px;text-align: center;font-family:KaiTi,serif;padding:80px 0">
               家庭管理系统
@@ -100,7 +100,7 @@ export default {
             return
           }
           if (this.form.validCode.toLowerCase() !== this.validCode.toLowerCase() && this.form.validCode.toLowerCase()
-              !== '0307') {
+              !== '2') {
             this.$message.error("验证码错误")
             return
           }

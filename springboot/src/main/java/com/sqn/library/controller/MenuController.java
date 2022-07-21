@@ -82,5 +82,11 @@ public class MenuController {
         queryWrapper.eq("type", Constants.DICT_TYPE_ICON);
         return Result.success(dictMapper.selectList(null));
     }
+
+    //查询出menu表中所有菜单id
+    @GetMapping("/ids")
+    public Result<?> findAllIds() {
+        return Result.success(menuService.list().stream().map(Menu::getId));
+    }
 }
 

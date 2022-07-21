@@ -9,11 +9,12 @@
                  style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
         </div>
         <el-dropdown style="width: 100px;cursor: pointer;text-align: center">
-                <span style="position: absolute;top: 18px">{{ user.name}}</span>
+            <span style="position: absolute;top: 18px">{{ user.name}}</span>
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item @click="$router.push('/person')">个人信息</el-dropdown-item>
-                    <el-dropdown-item @click="$router.push('/login')">退出系统</el-dropdown-item>
+                    <!--                    <el-dropdown-item @click="$router.push('/login')">退出系统</el-dropdown-item>-->
+                    <el-dropdown-item @click="logout">退出系统</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -22,6 +23,7 @@
 
 <script>
     import {ArrowDown} from '@element-plus/icons-vue'
+    import {resetRouter} from "../router";
 
     export default {
         name: "Header",
@@ -38,6 +40,15 @@
         setup() {
             return {
                 ArrowDown
+            }
+        },
+        methods: {
+            logout() {
+                sessionStorage.removeItem("user");  // 清空缓存
+                sessionStorage.removeItem("menus");
+                sessionStorage.removeItem("currentPathName");
+                this.$router.push('/login');
+                resetRouter()  //重置路由
             }
         }
     }

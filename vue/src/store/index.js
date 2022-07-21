@@ -1,6 +1,4 @@
 import { createStore } from 'vuex'
-import Vuex from 'vuex'
-import router, {resetRouter} from "@/router";
 
 export default createStore({
   state: {
@@ -8,7 +6,7 @@ export default createStore({
   },
   mutations: {
     SET_USER(state, user) {
-      state.user = user
+      state.user = user;
     }
   },
   actions: {
@@ -18,24 +16,5 @@ export default createStore({
   },
   getters: {
     getUser: (state) => state.user
-  }
-})
-export const store = new Vuex.Store({
-  state: {
-    currentPathName: ''
-  },
-  mutations: {
-    // setPath (state) {
-    //   state.currentPathName = sessionStorage.getItem("currentPathName")
-    // },
-    logout() {
-      // 清空缓存
-      sessionStorage.removeItem("user")
-      sessionStorage.removeItem("menus")
-      router.push("/login")
-
-      // 重置路由
-      resetRouter()
-    }
   }
 })

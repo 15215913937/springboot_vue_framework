@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 21/07/2022 02:20:42
+ Date: 22/07/2022 01:56:08
 */
 
 SET NAMES utf8mb4;
@@ -112,6 +112,7 @@ CREATE TABLE `files`  (
 INSERT INTO `files` VALUES (28, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
 INSERT INTO `files` VALUES (27, '小手4.jpg', 'jpg', 252, 'http://localhost:9090/files/test/d2e79b368ea94da3b5b42a3bffc93624.jpg', 'ba73e12e42c99c33a0bc9f8d0d1a07fa', 0, 1);
 INSERT INTO `files` VALUES (29, 'tx2.jpeg', 'jpeg', 61, 'http://localhost:9090/files/test/0e77b99fe15a4912a8b2cefb6381b1dc.jpeg', 'baef13857388301f8e784ffeee230550', 0, 1);
+INSERT INTO `files` VALUES (30, 'tx1.jpeg', 'jpeg', 83, 'http://localhost:9090/files/test/073039f7053449eaafaba2bd01149911.jpeg', '3e647ca495ddad8d3c52f63eef8bec50', 0, 1);
 
 -- ----------------------------
 -- Table structure for menu
@@ -126,7 +127,7 @@ CREATE TABLE `menu`  (
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -140,28 +141,7 @@ INSERT INTO `menu` VALUES (9, '文件管理', '/file', 'Folder', NULL, 5, 'File'
 INSERT INTO `menu` VALUES (10, '成员管理', '/user', 'Avatar', NULL, 6, 'User');
 INSERT INTO `menu` VALUES (11, '角色管理', '/role', 'UserFilled', NULL, 6, 'Role');
 INSERT INTO `menu` VALUES (12, '菜单管理', '/menu', 'List', NULL, 6, 'Menu');
-
--- ----------------------------
--- Table structure for permission
--- ----------------------------
-DROP TABLE IF EXISTS `permission`;
-CREATE TABLE `permission`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `path` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源路径',
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-  `icon` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图标',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of permission
--- ----------------------------
-INSERT INTO `permission` VALUES (1, 'Home', '/home', '主页', 'el-icon-house');
-INSERT INTO `permission` VALUES (2, 'Book', '/book', '书籍管理', 'el-icon-files');
-INSERT INTO `permission` VALUES (5, 'Events', '/events', '事件管理', 'el-icon-news');
-INSERT INTO `permission` VALUES (9, 'User', '/user', '用户管理', 'el-icon-user');
-INSERT INTO `permission` VALUES (13, 'Person', '/person', '个人信息', '');
+INSERT INTO `menu` VALUES (14, '测试菜单', '/testPage', 'PieChart', '为了测试', NULL, 'TestPage');
 
 -- ----------------------------
 -- Table structure for role
@@ -180,6 +160,7 @@ CREATE TABLE `role`  (
 -- ----------------------------
 INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限', 'ROLE_ADMIN');
 INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容', 'ROLE_USER');
+INSERT INTO `role` VALUES (4, '测试员', '对系统进行测试', 'ROLE_TESTER');
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -204,9 +185,21 @@ INSERT INTO `role_menu` VALUES (1, 10);
 INSERT INTO `role_menu` VALUES (1, 11);
 INSERT INTO `role_menu` VALUES (1, 12);
 INSERT INTO `role_menu` VALUES (3, 2);
+INSERT INTO `role_menu` VALUES (3, 5);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
-INSERT INTO `role_menu` VALUES (3, 10);
+INSERT INTO `role_menu` VALUES (3, 9);
+INSERT INTO `role_menu` VALUES (4, 2);
+INSERT INTO `role_menu` VALUES (4, 5);
+INSERT INTO `role_menu` VALUES (4, 6);
+INSERT INTO `role_menu` VALUES (4, 7);
+INSERT INTO `role_menu` VALUES (4, 8);
+INSERT INTO `role_menu` VALUES (4, 9);
+INSERT INTO `role_menu` VALUES (4, 10);
+INSERT INTO `role_menu` VALUES (4, 11);
+INSERT INTO `role_menu` VALUES (4, 12);
+INSERT INTO `role_menu` VALUES (4, 14);
+INSERT INTO `role_menu` VALUES (4, 15);
 
 -- ----------------------------
 -- Table structure for user
@@ -230,11 +223,11 @@ CREATE TABLE `user`  (
 -- ----------------------------
 INSERT INTO `user` VALUES (18, 'sqn', '123', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0e77b99fe15a4912a8b2cefb6381b1dc.jpeg', NULL, 'ROLE_ADMIN');
 INSERT INTO `user` VALUES (20, 'sqy', '123', '沈奇亚', '1997-03-07', '女', NULL, NULL, 'ROLE_ADMIN');
-INSERT INTO `user` VALUES (22, 'dumeijun', '123456', '杜梅军', '1971-07-14', '女', NULL, NULL, 'ROLE_USER');
+INSERT INTO `user` VALUES (22, 'dumeijun', '123', '杜梅军', '1971-07-14', '女', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (23, 'shenjianxiang', '123456', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (24, 'shenjianying', '123456', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (25, 'shenronger', '123456', '沈蓉儿', '2000-11-19', '女', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (26, 'bianzhenyu', '123456', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER');
-INSERT INTO `user` VALUES (31, '测试1', '123456', '13', '2022-07-14', '男', NULL, '2022-07-19 01:35:13', 'ROLE_USER');
+INSERT INTO `user` VALUES (31, 'ts', '123', '小测试', '2022-07-14', '男', 'http://localhost:9090/files/test/073039f7053449eaafaba2bd01149911.jpeg', '2022-07-19 01:35:13', 'ROLE_TESTER');
 
 SET FOREIGN_KEY_CHECKS = 1;

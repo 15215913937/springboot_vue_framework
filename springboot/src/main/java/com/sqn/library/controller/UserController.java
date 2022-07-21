@@ -68,6 +68,7 @@ public class UserController {
         //筛选当前用户角色的菜单
         for (Menu menu : menus) {
             List<Menu> children = menu.getChildren();
+            //如果
             if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
                 roleMenus.add(menu);
             }

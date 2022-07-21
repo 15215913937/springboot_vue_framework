@@ -40,7 +40,7 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
-
+//注意，刷新页面会导致页面重置
 export const setRoutes = () => {
     const storeMenus = sessionStorage.getItem("menus");
     if (storeMenus) {
@@ -89,10 +89,9 @@ export const resetRouter = () => {
 }
 // 重置我就再set一次路由
 setRoutes()
-
+//路由守卫，路由跳转前进行操作
 router.beforeEach((to, from, next) => {
     sessionStorage.setItem("currentPathName", to.name)  // 设置当前的路由名称
-    // store.commit("setPath")
 
     // 未找到路由的情况
     if (!to.matched.length) {

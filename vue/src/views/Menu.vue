@@ -70,7 +70,7 @@
                         <el-input v-model="form.pagePath" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="图标">
-                        <el-select v-model="form.icon" clearable placeholder="选择图标">
+                        <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
                             <el-option
                                     v-for="item in options"
                                     :key="item.id"
@@ -144,8 +144,13 @@
             },
             add() {
                 this.dialogVisible = true;
-                // 清空表单域，点击取消后，下次打开就是清空内容了
-                this.form = {}
+                this.form = {}  // 清空表单域，点击取消后，下次打开就是清空内容了
+                request.get("/menu/icons").then(res=>{
+                    console.log(res.data)
+
+                    this.options = res.data;
+                })
+
             },
             save() {
                 if (this.form.id) {//若果id存在，更新

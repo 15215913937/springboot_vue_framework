@@ -200,8 +200,11 @@
                 })
             },
             selectMenu(roleId) {
-                this.menuDialogVis = true;
                 this.roleId = roleId;
+                request.get("/role/roleMenu/" + this.roleId).then(res => {
+                    this.checks = res.data;
+                })
+                this.menuDialogVis = true;  //写在下列代码前面，先渲染弹窗页面元素
                 //请求菜单数据
                 request.get("/menu").then(res => {
                     // console.log(res);
@@ -210,9 +213,7 @@
                     // 把后台返回的菜单数据处理成 id数组
                     this.expends = this.menuData.map(v => v.id)
                 })
-                request.get("/role/roleMenu/" + this.roleId).then(res => {
-                    this.checks = res.data;
-                })
+
             }
         }
     }
