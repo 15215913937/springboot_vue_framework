@@ -9,13 +9,6 @@
                 &nbsp新增
             </el-button>
         </div>
-        <!--    搜索区-->
-        <div style="margin: 10px 0;display: block;clear: both">
-            <el-input v-model="name" placeholder="请输入菜单名称" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                      clearable/>
-            <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-            <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-        </div>
         <!--    列表区-->
         <!--        stripe:斑马纹-->
         <el-table
@@ -148,10 +141,6 @@
                     this.loading = false;
                     this.tableData = res.data;
                 })
-            },
-            reset() {
-                this.name = '';
-                this.load();
             },
             add() {
                 this.dialogVisible = true;

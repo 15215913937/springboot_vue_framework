@@ -174,7 +174,6 @@
                 multipleSelection: [],
                 ids: [],
                 filesUploadUrl: 'http://localhost:9090/files/upload',
-                form: []
             }
         },
         created() {
