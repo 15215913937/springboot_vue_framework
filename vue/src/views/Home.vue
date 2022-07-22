@@ -1,53 +1,77 @@
 <template>
-    <div style="padding: 10px">
+    <div style="padding: 25px">
         <el-row :gutter="10" style="margin-bottom: 30px">
             <el-col :span="6">
-                <el-card style="color: #F56C6C">
+                <el-card style="color: #E6A23C">
                     <div>
                         <el-icon>
                             <HomeFilled/>
                         </el-icon>
-                        家族人数
+                        家族注册人数
                     </div>
-                    <div class="number">100
-                        <span>人</span></div>
+                    <div class="number"><span>{{userCount}} 人</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
-                <el-card style="color: #F56C6C">
+                <el-card style="color: #67C23A">
                     <div>
                         <el-icon>
                             <Reading/>
                         </el-icon>
                         现藏有书籍
                     </div>
-                    <div class="number">100<span>本</span></div>
+                    <div class="number"><span>{{bookCount}} 本</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
-                <el-card style="color: #F56C6C">
+                <el-card style="color: #67C23A">
                     <div>
                         <el-icon>
                             <DataLine/>
                         </el-icon>
                         事件总数
                     </div>
-                    <div class="number">100<span>件</span></div>
+                    <div class="number"><span>{{eventCount}} 件</span></div>
                 </el-card>
             </el-col>
             <el-col :span="6">
-                <el-card style="color: #F56C6C">
+                <el-card style="color: #67C23A">
                     <div>
                         <el-icon>
                             <Files/>
                         </el-icon>
                         文件总数
                     </div>
-                    <div class="number">100<span>件</span></div>
+                    <div class="number"><span>{{fileCount}} 份</span></div>
+                </el-card>
+            </el-col>
+
+        </el-row>
+        <el-row :gutter="50" style="margin-bottom: 30px">
+            <el-col :span="12">
+                <el-card style="color: #409EFF">
+                    <div>
+                        <el-icon>
+                            <Reading/>
+                        </el-icon>
+                        你拥有的书籍
+                    </div>
+                    <div class="userNumber"><span>{{userCount}} 本</span></div>
+                </el-card>
+            </el-col>
+            <el-col :span="12">
+                <el-card style="color: #409EFF">
+                    <div>
+                        <el-icon>
+                            <DataLine/>
+                        </el-icon>
+                        你的事件
+                    </div>
+                    <div class="userNumber"><span>{{userCount}} 件</span></div>
                 </el-card>
             </el-col>
         </el-row>
-
+        <!--        图表-->
         <el-row>
             <el-col :span="12">
                 <div id="main" style="width: 500px;height: 400px"/>
@@ -66,9 +90,32 @@
     export default {
         name: "Home",
         data() {
-            return {}
+            return {
+                userCount:"",
+                bookCount:"",
+                eventCount:"",
+                fileCount:""
+            }
         },
         mounted() {  //页面元素渲染完成后再触发mounted
+            //获取家族注册人数
+            request.get("/user").then(res=>{
+                this.userCount = res.data.records.length
+            })
+            //获取书籍总数
+            request.get("/book").then(res=>{
+                this.bookCount = res.data.records.length
+            })
+            //获取事件总数
+            request.get("/events").then(res=>{
+                // console.log(res.data.records.length)
+                this.eventCount = res.data.records.length
+            })
+            //获取文件总数
+            request.get("/files").then(res=>{
+                // console.log(res.data.records.length)
+                this.fileCount = res.data.records.length
+            })
             //折线图
             var chartDom1 = document.getElementById('main');
             var myChart1 = echarts.init(chartDom1);
@@ -162,7 +209,7 @@
                 myChart1.setOption(option1);
                 option2.series[0].data = [
                     {name: "1月", value: res.data[0]},
-                    {name: "2月", value: res.data[2]},
+                    {name: "2月", value: res.data[1]},
                     {name: "3月", value: res.data[2]},
                     {name: "4月", value: res.data[3]},
                     {name: "5月", value: res.data[4]},
@@ -178,7 +225,6 @@
             })
 
         },
-        methods: {}
     }
 
 </script>
@@ -189,5 +235,12 @@
         text-align: center;
         font-weight: bold;
         font-size: 20px
+    }
+
+    .userNumber {
+        padding: 10px 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 50px
     }
 </style>

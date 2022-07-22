@@ -16,7 +16,7 @@
                       clearable/>
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-            <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
+            <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
                 <template #reference>
                     <el-button type="danger" style="float: right;margin-right: 10px">
                         <el-icon>

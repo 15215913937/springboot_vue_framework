@@ -143,7 +143,7 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="save">提交</el-button>
+                        <el-button type="primary" @click="save" :loading="loading">提交</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -250,6 +250,11 @@
             },
             save() {
                 if (this.form.id) {//若果id存在，更新
+
+                    this.loading = true
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 1000)
                     request.put("/book", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {

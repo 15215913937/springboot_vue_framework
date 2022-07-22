@@ -1,5 +1,6 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.lang.hash.Hash;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,13 +14,16 @@ import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
+import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -85,17 +89,38 @@ public class UserController {
 
     //注册接口
     @PostMapping("/register")
-    public Result<?> register(@RequestBody User user) {
-        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
-        if (res != null) {
-            return Result.error("-1", "用户名已存在");
+    public HashMap register(@RequestBody User user) throws Exception{
+        HashMap map = new HashMap();
+        try{
+            User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+            if (res != null) {
+                map.put("msg", "用户名已存在");
+                return map;
+            }
+            if (user.getPassword() == null) {
+                user.setPassword(SecurityUtils.encodePassword("123456"));
+            }
+            user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
+            userMapper.insert(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            map.put("msg","error");
         }
-        if (user.getPassword() == null) {
-            user.setPassword("123456");
-        }
-        userMapper.insert(user);
-        return Result.success();
+        return map;
     }
+
+//    @PostMapping("/register")
+//    public Result<?> register(@RequestBody User user) throws Exception {
+//        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+//        if (res != null) {
+//            return Result.error("-1", "用户名已存在");
+//        }
+//        if (user.getPassword() == null) {
+//            user.setPassword("123456");
+//        }
+//        userMapper.insert(user);
+//        return Result.success();
+//    }
 
     //新增接口
     @PostMapping

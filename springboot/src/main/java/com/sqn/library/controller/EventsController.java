@@ -50,7 +50,6 @@ public class EventsController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String title,
                               @RequestParam(defaultValue = "") String author
-//                              @RequestParam(defaultValue = "") String createTime
     ) {
         LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
         if (StrUtil.isNotBlank(title) || StrUtil.isNotBlank(author)) {

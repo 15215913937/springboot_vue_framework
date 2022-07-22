@@ -66,7 +66,7 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="menuDialogVis = false">取消</el-button>
-                        <el-button type="primary" @click="saveRoleMenu">提交</el-button>
+                        <el-button type="primary" @click="saveRoleMenu" :loading="loading">提交</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -85,7 +85,7 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="save">提交</el-button>
+                        <el-button type="primary" @click="save" :loading="loading">提交</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -148,6 +148,11 @@
             },
             save() {
                 if (this.form.id) {//若果id存在，更新
+                    //提交加载效果设置，放置点击太快重复提交
+                    this.loading = true
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 1000)
                     request.post("/role", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {
@@ -172,6 +177,10 @@
                 }
             },
             saveRoleMenu() {
+                this.loading = true
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000)
                 // console.log(this.$refs.tree.getCheckedKeys());
                 request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
                     // console.log(res)

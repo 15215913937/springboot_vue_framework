@@ -33,7 +33,7 @@
                     </el-icon>
                 </template>
             </el-table-column>
-<!--            <el-table-column prop="icon" label="图标"/>-->
+            <!--            <el-table-column prop="icon" label="图标"/>-->
             <el-table-column prop="description" label="描述"/>
             <el-table-column fixed="right" label="操作" width="300px">
                 <template #default="scope">
@@ -92,7 +92,7 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="save">提交</el-button>
+                        <el-button type="primary" @click="save" :loading="loading">提交</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -145,7 +145,7 @@
             add() {
                 this.dialogVisible = true;
                 this.form = {}  // 清空表单域，点击取消后，下次打开就是清空内容了
-                request.get("/menu/icons").then(res=>{
+                request.get("/menu/icons").then(res => {
                     console.log(res.data)
 
                     this.options = res.data;
@@ -153,6 +153,10 @@
 
             },
             save() {
+                this.loading = true;
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000);
                 if (this.form.id) {//若果id存在，更新
                     request.post("/menu", this.form).then(res => {
                         // console.log(res);
@@ -209,7 +213,7 @@
     }
 </script>
 <style>
-    .fontSize12{
+    .fontSize12 {
         font-size: 20px;
     }
 </style>

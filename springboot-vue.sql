@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 22/07/2022 01:56:08
+ Date: 23/07/2022 00:14:30
 */
 
 SET NAMES utf8mb4;
@@ -39,10 +39,11 @@ CREATE TABLE `book`  (
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07', NULL, 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
-INSERT INTO `book` VALUES (30, '134', '143', '12341', '234143', '21243', '4312', 3142.00, '2022-03-09', NULL, NULL);
-INSERT INTO `book` VALUES (29, '123', '123', '123', '123', '1231', '32', 132.00, '2022-07-17', NULL, NULL);
-INSERT INTO `book` VALUES (28, '123', '132', '123', '123', '12312', '3', 213.00, '2022-05-18', NULL, NULL);
+INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '计算机/软件测试', NULL, '机械工业出版社', '沈奇男', 63.96, '2022-02-07', '从架构设计、工作原理、设计原则、代码实现、工程实践等维度，深入分析如何从0到1搭建自动化测试框架。\n', 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
+INSERT INTO `book` VALUES (31, '不战之困', '戴旭', '军事理论', NULL, '武汉出版社', '沈建祥', 45.00, '2012-04-23', '一部影响中国军队30年变革的思想库，\n50部改变中外军事格局的军事文件首度曝光。', 'http://localhost:9090/files/4e8cc550907640fd9aecd5111ca0a30f');
+INSERT INTO `book` VALUES (32, '全栈自动化测试实战', '卢家涛', '信息技术', '2020年3月第1版', '电子工业出版社', '沈奇男', 79.00, '2021-10-31', '基于TestNG、HttpClient、Selenium和Appium', 'http://localhost:9090/files/851c041f164b4a269afb2ae535384344');
+INSERT INTO `book` VALUES (33, '金融的价值', '黄益平', '金融理论', '2021年12月第1版', '中信出版集团', '沈建祥', 69.00, '2022-07-22', '与宏观分析趋势，于底层掌握逻辑', 'http://localhost:9090/files/36bac59e0cad4ba486b607f2c2e10606');
+INSERT INTO `book` VALUES (34, '李东生 向生而生', '李海东', '企业家研究丛书', NULL, '中国友谊出版公司', '沈建祥', 48.00, '2022-07-22', '经历痛苦的蜕变，才能如“鹰”般重生。', 'http://localhost:9090/files/1527646ef01140cdb33879e10321c591');
 
 -- ----------------------------
 -- Table structure for dict
@@ -104,7 +105,7 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of files
@@ -153,7 +154,7 @@ CREATE TABLE `role`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
@@ -199,7 +200,6 @@ INSERT INTO `role_menu` VALUES (4, 10);
 INSERT INTO `role_menu` VALUES (4, 11);
 INSERT INTO `role_menu` VALUES (4, 12);
 INSERT INTO `role_menu` VALUES (4, 14);
-INSERT INTO `role_menu` VALUES (4, 15);
 
 -- ----------------------------
 -- Table structure for user
@@ -229,5 +229,7 @@ INSERT INTO `user` VALUES (24, 'shenjianying', '123456', '沈建英', NULL, '女
 INSERT INTO `user` VALUES (25, 'shenronger', '123456', '沈蓉儿', '2000-11-19', '女', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (26, 'bianzhenyu', '123456', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (31, 'ts', '123', '小测试', '2022-07-14', '男', 'http://localhost:9090/files/test/073039f7053449eaafaba2bd01149911.jpeg', '2022-07-19 01:35:13', 'ROLE_TESTER');
+INSERT INTO `user` VALUES (33, '222', '$2a$10$IIoA6UmXEgLG7VfRPHTQ3upfQqfcm/F44TZ7PO18klWZS9vBJdiCO', NULL, NULL, NULL, NULL, '2022-07-23 00:04:59', NULL);
+INSERT INTO `user` VALUES (34, '222', '$2a$10$Qzl7ujnPfwqrWa1bIwcl4.Uny2Kbvpv76itRuhgJT2h7VjgMoNnBe', NULL, NULL, NULL, NULL, '2022-07-23 00:11:58', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
