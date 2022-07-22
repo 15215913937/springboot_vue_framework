@@ -137,7 +137,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    private Result<?> getById(@PathVariable Long id) {
+    public Result<?> getById(@PathVariable Long id) {
         User user = userMapper.selectById(id);
         return Result.success(user);
 

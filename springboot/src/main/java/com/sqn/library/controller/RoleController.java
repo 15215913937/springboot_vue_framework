@@ -73,13 +73,13 @@ public class RoleController {
      * 绑定角色和菜单的关系
      */
     @PostMapping("/roleMenu/{roleId}")
-    private Result<?> roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
+    public Result<?> roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
         roleService.setRoleMenu(roleId, menuIds);
         return Result.success();
     }
 
     @GetMapping("/roleMenu/{roleId}")
-    private Result<?> 图(@PathVariable Integer roleId) {
+    public Result<?> getRoleMenu(@PathVariable Integer roleId) {
         return Result.success(roleService.getRoleMenu(roleId));
     }
 

@@ -8,8 +8,7 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * <p>
@@ -19,8 +18,7 @@ import lombok.Setter;
  * @author shenqn
  * @since 2022-07-17
  */
-@Getter
-@Setter
+@Data
 @TableName("role")
 @ApiModel(value = "Role对象", description = "")
 public class Role implements Serializable {
