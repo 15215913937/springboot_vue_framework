@@ -56,7 +56,7 @@
                         </el-icon>
                         你拥有的书籍
                     </div>
-                    <div class="userNumber"><span>{{userCount}} 本</span></div>
+                    <div class="userNumber"><span>{{myBookCount}} 本</span></div>
                 </el-card>
             </el-col>
             <el-col :span="12">
@@ -67,7 +67,7 @@
                         </el-icon>
                         你的事件
                     </div>
-                    <div class="userNumber"><span>{{userCount}} 件</span></div>
+                    <div class="userNumber"><span>{{myEventCount}} 件</span></div>
                 </el-card>
             </el-col>
         </el-row>
@@ -91,28 +91,50 @@
         name: "Home",
         data() {
             return {
-                userCount:"",
-                bookCount:"",
-                eventCount:"",
-                fileCount:""
+                user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
+                userCount: 0,
+                bookCount: 0,
+                eventCount: 0,
+                fileCount: 0,
+                myBookCount: 0,
+                myEventCount: 0
             }
         },
+        created() {
+        },
         mounted() {  //页面元素渲染完成后再触发mounted
-            //获取家族注册人数
-            request.get("/user").then(res=>{
-                this.userCount = res.data.records.length
+            //获取家族注册人数和个人书籍数量
+            request.get("/user").then(res => {
+                this.userCount = res.data.records.length;
+                let myBooks = res.data.records
+                // console.log(this.user.name)
+                for (const myBook of myBooks) {
+                    // console.log(myBook)
+                    if (myBook.name === this.user.name) {
+                        this.myBookCount = myBook.bookList.length;
+                        break;
+                    }
+                }
             })
             //获取书籍总数
-            request.get("/book").then(res=>{
+            request.get("/book").then(res => {
                 this.bookCount = res.data.records.length
             })
-            //获取事件总数
-            request.get("/events").then(res=>{
-                // console.log(res.data.records.length)
+            //获取事件总数和个人事件
+            request.get("/events").then(res => {
+                console.log(res.data.records)
                 this.eventCount = res.data.records.length
+                let myEvents = res.data.records;
+                let count = 0
+                for (const myEvent of myEvents) {
+                    if (myEvent.author === this.user.name) {
+                        count += 1
+                    }
+                }
+                this.myEventCount = count
             })
             //获取文件总数
-            request.get("/files").then(res=>{
+            request.get("/files").then(res => {
                 // console.log(res.data.records.length)
                 this.fileCount = res.data.records.length
             })

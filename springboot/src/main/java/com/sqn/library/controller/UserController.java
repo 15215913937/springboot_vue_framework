@@ -1,16 +1,15 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.lang.hash.Hash;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
+import com.sqn.library.common.RoleEnum;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
-import com.sqn.library.mapper.MenuMapper;
 import com.sqn.library.mapper.RoleMapper;
 import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.mapper.UserMapper;
@@ -19,17 +18,11 @@ import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
-import org.apache.catalina.security.SecurityUtil;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -38,16 +31,16 @@ public class UserController {
     @Resource
     UserMapper userMapper;
 
-    @Autowired
+    @Resource
     IUserService iUserService;
 
-    @Autowired
+    @Resource
     RoleMapper roleMapper;
 
-    @Autowired
+    @Resource
     RoleMenuMapper roleMenuMapper;
 
-    @Autowired
+    @Resource
     IMenuService iMenuService;
 
     //登录接口
@@ -124,6 +117,7 @@ public class UserController {
             if (user.getPassword() == null) {
                 user.setPassword(SecurityUtils.encodePassword("123456"));
             }
+            user.setRole("ROLE_USER");
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
         } catch (Exception e) {
@@ -138,7 +132,7 @@ public class UserController {
     @PostMapping
     public Result<?> save(@RequestBody User user) {
         if (user.getPassword() == null) {
-            user.setPassword("123456");
+            user.setPassword(SecurityUtils.encodePassword("123456"));
         }
         userMapper.insert(user);
         return Result.success();
@@ -154,8 +148,6 @@ public class UserController {
     //删除接口
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
-//        userMapper.deleteById(id);
-//        return Result.success();
         iUserService.removeById(id);
         return Result.success();
     }

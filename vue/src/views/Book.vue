@@ -43,9 +43,9 @@
         <!--        stripe:斑马纹-->
         <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange"
                   highlight-current-row>
-            <el-table-column type="selection" width="40px"/>
+            <el-table-column type="selection"/>
             <!--            sortable:排序操作-->
-            <el-table-column prop="id" label="ID" sortable=""/>
+            <el-table-column prop="id" label="ID" sortable="" width="70px"/>
             <el-table-column label="封面">
                 <template #default="scope">
                     <el-image
@@ -120,7 +120,19 @@
                         <el-input v-model="form.publishingHouse" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="购买人">
-                        <el-input v-model="form.purchaser" style="width: 80%"/>
+                        <el-select v-model="form.purchaser" clearable placeholder="选择购买人" style="width: 80%">
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.name"
+                            >
+                                <el-icon>
+                                    <component :is="item.value"></component>
+                                </el-icon>
+                                <span>{{item.name}}</span>
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="价格">
                         <el-input v-model="form.price" style="width: 80%"/>
@@ -174,18 +186,19 @@
                 multipleSelection: [],
                 ids: [],
                 filesUploadUrl: 'http://localhost:9090/files/upload',
+                options:[]
             }
         },
         created() {
-            let userStr = sessionStorage.getItem("user") || "{}"
-            // console.log(userStr)
-            this.user = JSON.parse(userStr)
-            // 请求服务端，确认当前登录用户的 合法信息
-            request.get("/user/" + this.user.id).then(res => {
-                if (res.code === '0') {
-                    this.user = res.data
-                }
-            })
+            // let userStr = sessionStorage.getItem("user") || "{}"
+            // // console.log(userStr)
+            // this.user = JSON.parse(userStr)
+            // // 请求服务端，确认当前登录用户的 合法信息
+            // request.get("/user/" + this.user.id).then(res => {
+            //     if (res.code === '0') {
+            //         this.user = res.data
+            //     }
+            // })
             this.load();
         },
         setup() {
@@ -244,17 +257,20 @@
                 this.form = {}
                 this.$nextTick(() => {
                     if (this.$refs['upload']) {
-                        this.$refs['upload'].clearFiles() //清楚历史文件列表
+                        this.$refs['upload'].clearFiles() //清除历史文件列表
                     }
+                })
+                request.get("/user").then(res=>{
+                    // console.log(res.data.records)
+                    this.options = res.data.records;
                 })
             },
             save() {
+                this.loading = true
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000)
                 if (this.form.id) {//若果id存在，更新
-
-                    this.loading = true
-                    setTimeout(() => {
-                        this.loading = false
-                    }, 1000)
                     request.put("/book", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {
@@ -285,6 +301,10 @@
                     if (this.$refs['upload']) {
                         this.$refs['upload'].clearFiles() //清楚历史文件列表
                     }
+                })
+                request.get("/user").then(res=>{
+                    // console.log(res.data.records)
+                    this.options = res.data.records;
                 })
             },
             handleDelete(row) {

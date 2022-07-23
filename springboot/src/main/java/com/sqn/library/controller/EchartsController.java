@@ -9,11 +9,13 @@ import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.service.IBookService;
 import com.sun.corba.se.impl.resolver.SplitLocalResolverImpl;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +26,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/echarts")
+@Api(tags = {"图表管理"})
 public class EchartsController {
-    @Autowired
+    @Resource
     IBookService bookService;
 
     @GetMapping("/example")

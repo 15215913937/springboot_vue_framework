@@ -70,21 +70,20 @@
                         <el-input v-model="form.pagePath" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="图标">
-                        <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
-                            <el-option
-                                    v-for="item in options"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.value"
-                            >
-                                <el-icon>
-                                    <component :is="item.value"></component>
-                                </el-icon>
-                                <span>{{item.name}}</span>
-                            </el-option>
-
-                        </el-select>
-                    </el-form-item>
+                    <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
+                        <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.value"
+                        >
+                            <el-icon>
+                                <component :is="item.value"></component>
+                            </el-icon>
+                            <span>{{item.name}}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                     <el-form-item label="描述">
                         <el-input type="textarea" v-model="form.description" style="width: 80%"/>
                     </el-form-item>
@@ -146,8 +145,7 @@
                 this.dialogVisible = true;
                 this.form = {}  // 清空表单域，点击取消后，下次打开就是清空内容了
                 request.get("/menu/icons").then(res => {
-                    console.log(res.data)
-
+                    // console.log(res.data)
                     this.options = res.data;
                 })
 

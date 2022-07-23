@@ -17,7 +17,7 @@
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名">
-                    <el-input v-model="form.name" disabled></el-input>
+                    <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="出生日期">
                     <el-date-picker

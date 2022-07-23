@@ -1,7 +1,7 @@
 <template>
     <div style="height: 50px;line-height: 50px;border-bottom: 1px solid #ccc;display: flex">
         <div style="width: 100px;padding-left: 30px;font-weight: bold;color: dodgerblue"
-             @click="$router.push('/index')">后台管理
+             @click="$router.push('/')">后台管理
         </div>
         <div style="flex: 1"></div>
         <div>
@@ -9,7 +9,7 @@
                  style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
         </div>
         <el-dropdown style="width: 100px;cursor: pointer;text-align: center">
-            <span style="position: absolute;top: 18px">{{ user.name}}</span>
+            <span style="position: absolute;top: 18px">{{user.username}}({{ user.name}})</span>
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item @click="this.$router.push('/person')">个人信息</el-dropdown-item>

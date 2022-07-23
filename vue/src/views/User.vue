@@ -163,7 +163,7 @@
             showBooks(books) {
                 this.bookList = books;
                 this.bookVis = true
-                console.log(books.length)
+                // console.log(books.length)
             },
             load() {
                 this.loading = true;
@@ -174,7 +174,7 @@
                         name: this.name
                     }
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.loading = false;
                     this.tableData = res.data.records;
                     this.total = res.data.total;
@@ -193,7 +193,6 @@
                 this.form = {}
             },
             save() {
-
                 this.loading = true
                 setTimeout(() => {
                     this.loading = false

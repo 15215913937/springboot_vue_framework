@@ -21,6 +21,7 @@
 
 <script>
     import request from "../utils/request";
+    import {resetRouter} from "../router";
 
     export default {
         name: "Password",
@@ -64,6 +65,7 @@
                             if (res.code === '0') {
                                 this.$message.success("修改成功")
                                 this.$router.push("/login")
+                                sessionStorage.removeItem("menus")
                             } else {
                                 this.$message.error(res.msg)
                             }

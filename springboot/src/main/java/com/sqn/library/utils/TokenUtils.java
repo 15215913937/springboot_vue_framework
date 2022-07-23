@@ -12,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ import java.util.Date;
 @Component
 public class TokenUtils {
 
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     private static UserMapper staticUserMapper;

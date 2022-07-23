@@ -9,7 +9,7 @@ const { defineConfig } = require('@vue/cli-service')
 // 跨域配置
 module.exports = {
   devServer: {                //记住，别写错了devServer//设置本地默认端口  选填
-    port: 8080, //设置端口号
+    port: 80, //设置端口号
     host: 'localhost',
     proxy: {                 //设置代理，必须填
       '/api': {              //设置拦截器  拦截器格式   斜杠+拦截器名字，名字可以自己定
