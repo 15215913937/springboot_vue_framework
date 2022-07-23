@@ -24,7 +24,8 @@
                 </div>
               </el-form-item>
               <el-form-item>
-                <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login" @keyup.enter="keyDown(e)">登录
+                <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login" @keyup.enter="keyDown(e)"
+                           :loading="loading">登录
                 </el-button>
                 <el-button style="margin-bottom:20px" type="primary"
                            @click="$router.push('/register')">前往注册>>
@@ -93,6 +94,7 @@ export default {
       this.validCode = data
     },
     login() {
+
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (!this.form.validCode) {
@@ -104,6 +106,10 @@ export default {
             this.$message.error("验证码错误")
             return
           }
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
           request.post("/user/login", this.form).then(res => {
             // console.log(res)
             if (res.code === '0') {

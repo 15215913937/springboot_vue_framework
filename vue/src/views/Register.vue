@@ -17,7 +17,8 @@
                     <el-input show-password placeholder="请再次输入密码" v-model="form.confirm"/>
                 </el-form-item>
                 <el-form-item style="flex: auto">
-                    <el-button style="margin-bottom:20px;flex: 1" type="primary" @click="register">注册</el-button>
+                    <el-button style="margin-bottom:20px;flex: 1" type="primary" @click="register" :loading="loading">注册
+                    </el-button>
                     <el-button style="margin-bottom:20px" type="primary" @click="$router.push('/login')">已有账号？返回登录
                     </el-button>
                 </el-form-item>
@@ -55,6 +56,10 @@
                     this.$message.error("两次密码输入不一致")
                     return
                 }
+                this.loading = true
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000)
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
                         request.post("/user/register", this.form).then(res => {

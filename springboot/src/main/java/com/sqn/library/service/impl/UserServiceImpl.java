@@ -1,16 +1,15 @@
 package com.sqn.library.service.impl;
 
-import com.sqn.library.entity.Menu;
+import cn.hutool.log.Log;
+import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.entity.User;
-import com.sqn.library.mapper.RoleMapper;
-import com.sqn.library.mapper.RoleMenuMapper;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.UserMapper;
-import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -23,4 +22,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+    private static final Log LOG = Log.get();
+    @Resource
+    UserMapper userMapper;
+
+    @Override
+    public void updatePassword(UserPasswordDTO userPasswordDTO) {
+        int update = userMapper.updatePassword(userPasswordDTO);
+        if (update < 1) {
+            throw new CustomException("-1", "系统异常");
+        }
+    }
 }

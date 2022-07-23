@@ -1,6 +1,6 @@
 <template>
     <div style="padding: 25px">
-        <el-row :gutter="10" style="margin-bottom: 30px">
+        <el-row :gutter="10" style="margin-bottom: 15px">
             <el-col :span="6">
                 <el-card style="color: #E6A23C">
                     <div>
@@ -47,7 +47,7 @@
             </el-col>
 
         </el-row>
-        <el-row :gutter="50" style="margin-bottom: 30px">
+        <el-row :gutter="50" style="margin-bottom: 20px">
             <el-col :span="12">
                 <el-card style="color: #409EFF">
                     <div>
@@ -72,12 +72,12 @@
             </el-col>
         </el-row>
         <!--        图表-->
-        <el-row>
+        <el-row :gutter="50">
             <el-col :span="12">
-                <div id="main" style="width: 500px;height: 400px"/>
+                <div id="main" style="width: 400px;height: 300px"/>
             </el-col>
             <el-col :span="12">
-                <div id="pie" style="width: 500px;height: 400px"/>
+                <div id="pie" style="width: 400px;height: 300px"/>
             </el-col>
         </el-row>
     </div>
@@ -183,7 +183,7 @@
                         emphasis: {
                             label: {
                                 show: true,
-                                fontSize: '40',
+                                fontSize: '30',
                                 fontWeight: 'bold'
                             }
                         },
@@ -234,13 +234,13 @@
         padding: 10px 0;
         text-align: center;
         font-weight: bold;
-        font-size: 20px
+        font-size: 15px
     }
 
     .userNumber {
         padding: 10px 0;
         text-align: center;
         font-weight: bold;
-        font-size: 50px
+        font-size: 25px
     }
 </style>

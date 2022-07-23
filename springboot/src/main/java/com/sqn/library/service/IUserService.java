@@ -1,10 +1,8 @@
 package com.sqn.library.service;
 
-import com.sqn.library.entity.Menu;
+import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * <p>
@@ -16,4 +14,5 @@ import java.util.List;
  */
 public interface IUserService extends IService<User> {
 
+    void updatePassword(UserPasswordDTO userPasswordDTO);
 }

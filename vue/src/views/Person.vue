@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <el-card style="width: 40%;margin: 10px">
             <el-form label-width="80px">
                 <el-upload
@@ -20,11 +19,15 @@
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="form.password" show-password></el-input>
-                </el-form-item>
                 <el-form-item label="出生日期">
-                    <el-input v-model="form.birthday"></el-input>
+                    <el-date-picker
+                            v-model="form.birthday"
+                            type="date"
+                            clearable
+                            style="width: 100%"
+                            format="YYYY/MM/DD"
+                            value-format="YYYY-MM-DD"
+                    />
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-input v-model="form.sex"></el-input>
@@ -33,7 +36,7 @@
                     <el-input v-model="form.role" disabled></el-input>
                 </el-form-item>
                 <div style="text-align: center">
-                    <el-button type="primary" @click="update">保存</el-button>
+                    <el-button type="primary" @click="update" :loading="loading">保存</el-button>
                 </div>
 
             </el-form>
@@ -57,6 +60,10 @@
         },
         methods: {
             update() {
+                this.loading = true;
+                setTimeout(() => {
+                    this.loading = false
+                }, 1000)
                 request.put("/user", this.form).then(res => {
                     // console.log(res);
                     if (res.code === '0') {

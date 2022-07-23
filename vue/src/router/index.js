@@ -51,7 +51,8 @@ export const setRoutes = () => {
             component: () => import("@/layout/Layout"),
             redirect: '/home',
             children: [
-                {path: 'person', name: 'Person', component: () => import("@/views/Person")}]
+                {path: 'person', name: 'Person', component: () => import("@/views/Person")},
+                {path: 'password', name: 'Password', component: () => import("@/views/Password")},]
         };
         const menus = JSON.parse(storeMenus);
         menus.forEach(item => {

@@ -3,9 +3,11 @@ package com.sqn.library.controller;
 import cn.hutool.core.lang.hash.Hash;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
+import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.MenuMapper;
@@ -18,13 +20,16 @@ import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import org.apache.catalina.security.SecurityUtil;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -56,9 +61,8 @@ public class UserController {
 //        User res = userMapper.selectOne(queryWrapper);
         User res =
                 userMapper.selectOne(Wrappers.<User>lambdaQuery()
-                        .eq(User::getUsername, user.getUsername())
-                        .eq(User::getPassword, user.getPassword()));
-        if (res == null) {
+                        .eq(User::getUsername, user.getUsername()));
+        if (res == null || !SecurityUtils.matchesPassword(user.getPassword(), res.getPassword())) {
             return Result.error("-1", "用户名或密码错误！");
         }
         String role = res.getRole();
@@ -87,40 +91,48 @@ public class UserController {
         return Result.success(res);
     }
 
+    /**
+     * 修改密码
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/updatePwd")
+    public Result<?> updatePwd(@RequestBody UserPasswordDTO userPasswordDTO) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", userPasswordDTO.getUsername());
+        User res = userMapper.selectOne(queryWrapper);
+        if (!SecurityUtils.matchesPassword(userPasswordDTO.getPassword(), res.getPassword())) {
+            return Result.error("-1", "原密码错误");
+        }
+        //把前端传过来的新密码加密处理
+        userPasswordDTO.setNewPassword(SecurityUtils.encodePassword(userPasswordDTO.getNewPassword()));
+        iUserService.updatePassword(userPasswordDTO);
+        return Result.success();
+
+
+    }
+
     //注册接口
     @PostMapping("/register")
-    public HashMap register(@RequestBody User user) throws Exception{
-        HashMap map = new HashMap();
-        try{
+    public Result<?> register(@RequestBody User user) throws Exception {
+        try {
             User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
             if (res != null) {
-                map.put("msg", "用户名已存在");
-                return map;
+                return Result.error("-1", "用户名已存在");
             }
             if (user.getPassword() == null) {
                 user.setPassword(SecurityUtils.encodePassword("123456"));
             }
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            map.put("msg","error");
+            return Result.error("-1", "登录异常");
         }
-        return map;
+        return Result.success();
     }
 
-//    @PostMapping("/register")
-//    public Result<?> register(@RequestBody User user) throws Exception {
-//        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
-//        if (res != null) {
-//            return Result.error("-1", "用户名已存在");
-//        }
-//        if (user.getPassword() == null) {
-//            user.setPassword("123456");
-//        }
-//        userMapper.insert(user);
-//        return Result.success();
-//    }
 
     //新增接口
     @PostMapping
