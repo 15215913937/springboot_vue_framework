@@ -82,11 +82,11 @@
             </el-dialog>
 
             <el-dialog v-model="dialogVisible" title="家庭成员信息" width="30%">
-                <el-form model="form" label-width="120px">
-                    <el-form-item label="用户名">
-                        <el-input v-model="form.username" style="width: 80%"/>
+                <el-form model="form" label-width="120px" :rules="rules" ref="pass">
+                    <el-form-item label="用户名" prop="username">
+                        <el-input v-model="form.username" style="width: 80%" autocomplete="off"/>
                     </el-form-item>
-                    <el-form-item label="角色">
+                    <el-form-item label="角色" prop="role">
                         <el-select v-model="form.role" clearable placeholder="请选择角色" style="width: 80%">
                             <el-option
                                     v-for="item in roles"
@@ -96,10 +96,10 @@
                             />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="姓名">
+                    <el-form-item label="姓名" prop="name" autocomplete="off">
                         <el-input v-model="form.name" style="width: 80%"/>
                     </el-form-item>
-                    <el-form-item label="出生日期">
+                    <el-form-item label="出生日期" prop="birthday">
                         <el-date-picker
                                 v-model="form.birthday"
                                 type="date"
@@ -109,12 +109,12 @@
                                 value-format="YYYY-MM-DD"
                         />
                     </el-form-item>
-                    <el-form-item label="性别">
+                    <el-form-item label="性别" prop="sex">
                         <el-radio v-model="form.sex" label="男" size="large">男</el-radio>
                         <el-radio v-model="form.sex" label="女" size="large">女</el-radio>
                     </el-form-item>
-                    <el-form-item label="相册">
-                    </el-form-item>
+                    <!--                    <el-form-item label="相册" prop="avatar">-->
+                    <!--                    </el-form-item>-->
                 </el-form>
                 <template #footer>
                     <span class="dialog-footer">
@@ -147,7 +147,16 @@
                 total: '',
                 tableData: [],
                 bookList: [],
-                roles: []
+                roles: [],
+                rules: {
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                        {min: 3, max: 20, message: '限制输入3~20个字符哦', trigger: 'blur'}
+                    ],
+                    name: [
+                        {required: true, message: '请输入姓名', trigger: 'blur'},
+                    ],
+                }
             }
         },
         created() {
@@ -174,7 +183,7 @@
                         name: this.name
                     }
                 }).then(res => {
-                    // console.log(res);
+                    // console.log(res.data.records);
                     this.loading = false;
                     this.tableData = res.data.records;
                     this.total = res.data.total;
@@ -193,33 +202,38 @@
                 this.form = {}
             },
             save() {
-                this.loading = true
-                setTimeout(() => {
-                    this.loading = false
-                }, 1000)
-                if (this.form.id) {//若果id存在，更新
-                    request.put("/user", this.form).then(res => {
-                        // console.log(res);
-                        if (res.code === '0') {
-                            this.$message.success("修改成功")
-                        } else {
-                            this.$message.error(res.msg)
+                console.log(1)
+                this.$refs.pass.validate((valid) => {
+                    if (valid) {
+                        this.loading = true
+                        setTimeout(() => {
+                            this.loading = false
+                        }, 1000)
+                        if (this.form.id) {//若果id存在，更新
+                            request.put("/user", this.form).then(res => {
+                                // console.log(res);
+                                if (res.code === '0') {
+                                    this.$message.success("修改成功")
+                                } else {
+                                    this.$message.error(res.msg)
+                                }
+                                this.load();//刷新表格数据
+                                this.dialogVisible = false
+                            });
+                        } else {//如果id不存在，新增
+                            request.post("/user", this.form).then(res => {
+                                // console.log(res);
+                                if (res.code === '0') {
+                                    this.$message.success("新增成功")
+                                } else {
+                                    this.$message.error(res.msg)
+                                }
+                                this.load();//刷新表格数据
+                                this.dialogVisible = false
+                            });
                         }
-                        this.load();//刷新表格数据
-                        this.dialogVisible = false
-                    });
-                } else {//如果id不存在，新增
-                    request.post("/user", this.form).then(res => {
-                        // console.log(res);
-                        if (res.code === '0') {
-                            this.$message.success("新增成功")
-                        } else {
-                            this.$message.error(res.msg)
-                        }
-                        this.load();//刷新表格数据
-                        this.dialogVisible = false
-                    });
-                }
+                    }
+                })
             },
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));

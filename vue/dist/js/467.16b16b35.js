@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkspringboot_vue_shenqn"]=self["webpackChunkspringboot_vue_shenqn"]||[]).push([[467],{467:function(e,n,t){t.r(n),t.d(n,{default:function(){return h}});var r=t(6252);const s={style:{overflow:"hidden",height:"100vh"}};function u(e,n,t,u,o,i){return(0,r.wg)(),(0,r.iD)("div",s," testPage ")}var o={name:"TestPage"},i=t(3744);const a=(0,i.Z)(o,[["render",u]]);var h=a}}]);
+//# sourceMappingURL=467.16b16b35.js.map

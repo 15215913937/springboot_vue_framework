@@ -168,6 +168,7 @@
 
     import request from "../utils/request";
     import {Search, Delete, Upload} from "@element-plus/icons-vue";
+    import {serverIp} from "../../public/config";
 
     export default {
         name: 'Book',
@@ -185,7 +186,7 @@
                 tableData: [],
                 multipleSelection: [],
                 ids: [],
-                filesUploadUrl: 'http://localhost:9090/files/upload',
+                filesUploadUrl: 'http://'+serverIp+':9090/files/upload',
                 options:[]
             }
         },
@@ -328,7 +329,7 @@
                 this.load()
             },
             exportbooks() {
-                window.open("http://localhost:9090/book/export")
+                window.open('http://'+serverIp+':9090/book/export')
             }
         }
     }

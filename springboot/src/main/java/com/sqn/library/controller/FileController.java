@@ -42,8 +42,12 @@ public class FileController {
     //获取当前端口
     @Value("${server.port}")
     private String port;
+
+    //获取当前ip
+    @Value("${server.ip}")
+    private String ip;
     //定义返回接口的ip
-    private static final String ip = "http://localhost";
+//    private static final String ip = "http://localhost";
     //定义文件存储的路径
     @Value("${files.upload.path}")
     private String fileUploadPath;

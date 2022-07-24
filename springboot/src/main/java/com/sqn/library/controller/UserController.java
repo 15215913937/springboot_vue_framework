@@ -118,6 +118,7 @@ public class UserController {
                 user.setPassword(SecurityUtils.encodePassword("123456"));
             }
             user.setRole("ROLE_USER");
+            user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
         } catch (Exception e) {
@@ -133,6 +134,9 @@ public class UserController {
     public Result<?> save(@RequestBody User user) {
         if (user.getPassword() == null) {
             user.setPassword(SecurityUtils.encodePassword("123456"));
+        }
+        if(user.getRole()==null){
+            user.setRole("ROLE_USER");
         }
         userMapper.insert(user);
         return Result.success();

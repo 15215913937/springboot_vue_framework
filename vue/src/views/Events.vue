@@ -104,6 +104,7 @@
     import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
     import E from 'wangeditor'
+    import {serverIp} from "../../public/config";
     //设置全局变量
     let editor;
     let userStr = sessionStorage.getItem("user") || "{}"
@@ -172,8 +173,8 @@
                         //关联add弹窗里面的div，new一个editor对象
                         editor = new E('#div1');
                         //本地图片上传设置注意后端设置返回json格式
-                        editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'
-                        editor.config.uploadFileName = "file"
+                        editor.config.uploadImgServer = 'http://'+serverIp+':9090/files/editor/upload';
+                        editor.config.uploadFileName = "file";
                         editor.create()
                     }
                     editor.txt.html("")
@@ -184,7 +185,7 @@
                 this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
 
                 if (this.form.id) {//若果id存在，更新
-                    let userStr = sessionStorage.getItem("user") || "{}"
+                    let userStr = sessionStorage.getItem("user") || "{}";
                     let user = JSON.parse(userStr)
                     // console.log("原作者："+this.form.author+",新作者："+user.name)
                     if (this.form.author === user.name) {
@@ -224,8 +225,8 @@
                 this.$nextTick(() => {
                     if (!editor) {
                         editor = new E('#div1');
-                        editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'
-                        editor.config.uploadFileName = "file"
+                        editor.config.uploadImgServer = 'http://'+serverIp+':9090/files/editor/upload';
+                        editor.config.uploadFileName = "file";
                         editor.create()
                     }
                     editor.txt.html(row.content)

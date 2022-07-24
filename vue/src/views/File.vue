@@ -1,7 +1,7 @@
 <template>
     <div style="padding: 10px">
         <div style="margin: 10px 0">
-            <el-upload action="http://localhost:9090/files/testUpload" :show-file-list="false"
+            <el-upload :action="'http://'+serverIp+':9090/files/testUpload'" :show-file-list="false"
                        :on-success="handleFileUploadSuccess" style="display: inline">
                 <el-button type="primary">
                     <el-icon>
@@ -88,6 +88,7 @@
 <script>
     import request from "../utils/request";
     import {Search} from "@element-plus/icons-vue";
+    import {serverIp} from "../../public/config";
 
     export default {
         name: "File",
@@ -99,6 +100,7 @@
                 total: 10,
                 tableData: [],
                 multipleSelection: [],
+                serverIp:serverIp
             }
         },
         created() {
