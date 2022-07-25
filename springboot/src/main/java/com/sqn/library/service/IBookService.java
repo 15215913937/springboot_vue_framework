@@ -3,6 +3,8 @@ package com.sqn.library.service;
 import com.sqn.library.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 图书信息表 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBookService extends IService<Book> {
 
+    List<Book> OneList(Integer UId);
 }

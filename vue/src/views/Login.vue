@@ -17,19 +17,22 @@
                           v-model="form.password"/>
               </el-form-item>
               <el-form-item>
-                <div style="display: flex;margin-right: 20px">
+                <div style="display: flex">
                   <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
                             placeholder="请输入验证码"/>
-                  <ValidCode @input="createValidCode"/>
+                  <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
+                    <ValidCode @input="createValidCode"/>
+                  </div>
+
                 </div>
               </el-form-item>
               <el-form-item>
                 <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login" @keyup.enter="keyDown(e)"
                            :loading="loading">登录
                 </el-button>
-                <el-button style="margin-bottom:20px" type="primary"
-                           @click="$router.push('/register')">前往注册>>
-                </el-button>
+<!--                <el-button style="margin-bottom:20px" type="primary"-->
+<!--                           @click="$router.push('/register')">前往注册>>-->
+<!--                </el-button>-->
               </el-form-item>
             </el-form>
           </div>
@@ -94,7 +97,6 @@ export default {
       this.validCode = data
     },
     login() {
-
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (!this.form.validCode) {
@@ -145,7 +147,13 @@ export default {
 
 
 <style scoped>
-.homepage-hero-module,
+.homepage-hero-module{
+  /*background-image: url("../assets/背景1.jpg");*/
+  /*width: 100%;*/
+  /*height: 100vh;*/
+  /*position: relative;*/
+  /*overflow: hidden;*/
+}
 .video-container {
   position: relative;
   height: 100vh;

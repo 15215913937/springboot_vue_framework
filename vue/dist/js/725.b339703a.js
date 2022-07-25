@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkspringboot_vue_shenqn"]=self["webpackChunkspringboot_vue_shenqn"]||[]).push([[725],{1729:function(n,e,t){t.r(e),t.d(e,{default:function(){return d}});var r=t(6252),i=t.p+"img/404.c56e4f30.png";const s={style:{overflow:"hidden",height:"100vh"}},u=(0,r._)("img",{src:i,alt:"",style:{width:"100%",height:"100%"}},null,-1),o=[u];function h(n,e,t,i,u,h){return(0,r.wg)(),(0,r.iD)("div",s,o)}var c={name:"NotFound"},l=t(3744);const a=(0,l.Z)(c,[["render",h]]);var d=a}}]);
-//# sourceMappingURL=725.b339703a.js.map

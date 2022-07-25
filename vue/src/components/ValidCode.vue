@@ -1,7 +1,7 @@
 <template>
   <div
       class="ValidCode disabled-select"
-      :style="`width:${width}; height:${height};margin-left:${margin_left};`"
+      :style="`width:${width}; height:${height}`"
       @click="refreshCode"
   >
     <span
@@ -22,13 +22,9 @@ export default {
   props: {
     width: {
       type: String,
-      default: '100px'
+      default: '140px'
     },
     height: {
-      type: String,
-      default: '32px'
-    },
-    margin_left: {
       type: String,
       default: '30px'
     },

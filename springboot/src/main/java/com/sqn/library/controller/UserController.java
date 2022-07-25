@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
-import com.sqn.library.common.RoleEnum;
 import com.sqn.library.controller.dto.UserPasswordDTO;
+import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.RoleMapper;
@@ -69,7 +69,6 @@ public class UserController {
         //筛选当前用户角色的菜单
         for (Menu menu : menus) {
             List<Menu> children = menu.getChildren();
-            //如果
             if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
                 roleMenus.add(menu);
             }
@@ -102,8 +101,19 @@ public class UserController {
         userPasswordDTO.setNewPassword(SecurityUtils.encodePassword(userPasswordDTO.getNewPassword()));
         iUserService.updatePassword(userPasswordDTO);
         return Result.success();
+    }
 
-
+    //重置密码
+    @PostMapping("/resetPwd")
+    public Result<?> resetPwd(@RequestBody UserResetPwdDTO userResetPwdDTO) {
+        if (userResetPwdDTO.getNewPassword() == null) {
+            userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword("123456"));
+        }else {
+            //把前端传过来的新密码加密处理
+            userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword(userResetPwdDTO.getNewPassword()));
+        }
+        iUserService.resetPwd(userResetPwdDTO);
+        return Result.success();
     }
 
     //注册接口
@@ -114,9 +124,9 @@ public class UserController {
             if (res != null) {
                 return Result.error("-1", "用户名已存在");
             }
-            if (user.getPassword() == null) {
-                user.setPassword(SecurityUtils.encodePassword("123456"));
-            }
+//            if (user.getPassword() == null) {
+//                user.setPassword(SecurityUtils.encodePassword("123456"));
+//            }
             user.setRole("ROLE_USER");
             user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
@@ -132,11 +142,18 @@ public class UserController {
     //新增接口
     @PostMapping
     public Result<?> save(@RequestBody User user) {
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+        if (res != null) {
+            return Result.error("-1", "用户名已使用");
+        }
         if (user.getPassword() == null) {
             user.setPassword(SecurityUtils.encodePassword("123456"));
         }
-        if(user.getRole()==null){
+        if (user.getRole() == null) {
             user.setRole("ROLE_USER");
+        }
+        if (user.getName() == null) {
+            user.setName(user.getUsername());
         }
         userMapper.insert(user);
         return Result.success();
@@ -174,6 +191,10 @@ public class UserController {
         User user = userMapper.selectById(id);
         return Result.success(user);
 
+    }
+    @GetMapping("/all")
+    public Result<?> findAll() {
+        return Result.success(iUserService.list());
     }
 
 }
