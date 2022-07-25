@@ -3,7 +3,9 @@
         <div style="width: 100px;padding-left: 30px;font-weight: bold;color: dodgerblue"
              @click="$router.push('/')">后台管理
         </div>
-        <div style="flex: 1"></div>
+        <div style="flex: 1">
+            <div id="he-plugin-simple"></div>
+        </div>
         <div>
             <img :src="user.avatar" alt=""
                  style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
@@ -42,6 +44,36 @@
                 ArrowDown
             }
         },
+        mounted(){
+            window.WIDGET = {
+                "CONFIG": {
+                    "modules": "21034",
+                    "background": "1",
+                    "tmpColor": "FFFFFF",
+                    "tmpSize": "16",
+                    "cityColor": "4A86E8",
+                    "citySize": "16",
+                    "aqiColor": "FFFFFF",
+                    "aqiSize": "16",
+                    "weatherIconSize": "24",
+                    "alertIconSize": "18",
+                    "padding": "10px 10px 10px 10px",
+                    "shadow": "0",
+                    "language": "auto",
+                    "borderRadius": "5",
+                    "fixed": "true",
+                    "vertical": "center",
+                    "horizontal": "center",
+                    "left": "150",
+                    "top": "3",
+                    "key": "af9a153d00174b4682bd2acd5761b695"
+                }
+            }
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0";
+            document.getElementById('he-plugin-simple').appendChild(script);
+        },
         methods: {
             logout() {
                 sessionStorage.removeItem("user");  // 清空缓存
@@ -50,10 +82,9 @@
                 this.$router.push('/login');
                 resetRouter()  //重置路由
             }
-        }
+        },
     }
 </script>
-
 <style scoped>
 
 </style>

@@ -8,8 +8,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
+import com.sqn.library.entity.User;
 import com.sqn.library.mapper.BookMapper;
+import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
+import com.sqn.library.service.IUserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +32,11 @@ import static cn.hutool.core.date.LocalDateTimeUtil.parseDate;
 public class BookController {
     @Resource
     BookMapper bookMapper;
-    @Autowired
+    @Resource
     IBookService iBookService;
+
+    @Resource
+    IUserService iUserService;
 
     //图书新增接口
     @PostMapping
@@ -38,6 +44,7 @@ public class BookController {
         if (book.getBuyDate() == null) {
             book.setBuyDate(new Date());
         }
+
         bookMapper.insert(book);
         return Result.success();
     }
@@ -66,11 +73,19 @@ public class BookController {
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String author,
                               @RequestParam(defaultValue = "") String category) {
-        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
-        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(author) || StrUtil.isNotBlank(category)) {
-            wrapper.like(Book::getBookname, name).like(Book::getAuthor, author).like(Book::getCategory, category);
-        }
-        Page<Book> bookPage = bookMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+//        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
+//        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(author) || StrUtil.isNotBlank(category)) {
+//            wrapper.like(Book::getBookname, name).like(Book::getAuthor, author).like(Book::getCategory, category);
+//        }
+//        Page<Book> bookPage = bookMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+//        List<Book> records = bookPage.getRecords();
+//        for (Book record : records) {
+//            User user = iUserService.getById(record.getUid());
+//            if(user!=null){
+//                record.setUsername(user.getName());
+//            }
+//        }
+        Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
     }
 
@@ -91,12 +106,13 @@ public class BookController {
         //在内存操作，写出到浏览器
         ExcelWriter writer = ExcelUtil.getWriter(true);
         //自定义标题别名
+        writer.addHeaderAlias("id", "ID");
         writer.addHeaderAlias("bookname", "书名");
         writer.addHeaderAlias("author", "作者");
         writer.addHeaderAlias("category", "类别");
         writer.addHeaderAlias("version", "版本");
         writer.addHeaderAlias("publishingHouse", "出版社");
-        writer.addHeaderAlias("purchaser", "购买者");
+        writer.addHeaderAlias("uid", "购买者");
         writer.addHeaderAlias("price", "价格");
         writer.addHeaderAlias("buyDate", "购买日期");
         writer.addHeaderAlias("comment", "备注");

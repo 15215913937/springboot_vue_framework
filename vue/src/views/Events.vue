@@ -20,7 +20,8 @@
             <el-button type="primary" class="mb-10" @click="reset">重置</el-button>
             <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
                 <template #reference>
-                    <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px">
+                    <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px"
+                               v-if="user.role ==='ROLE_ADMIN'">
                         <el-icon>
                             <Delete/>
                         </el-icon>
@@ -76,6 +77,7 @@
                     <el-form-item label="标题">
                         <el-input v-model="form.title" style="width: 50%"/>
                     </el-form-item>
+                    <!--                    正文-->
                     <div id="div1">
 
                     </div>
@@ -107,8 +109,9 @@
     import {serverIp} from "../../public/config";
     //设置全局变量
     let editor;
-    let userStr = sessionStorage.getItem("user") || "{}"
-    let user = JSON.parse(userStr)
+    // let userStr = sessionStorage.getItem("user") || "{}"
+    // let user = JSON.parse(userStr)
+    // console.log(user)
 
     export default {
         name: 'Events',
@@ -126,7 +129,8 @@
                 detail: {},
                 vis: false,
                 editor: null,
-                ids: []
+                ids: [],
+                user: sessionStorage.getItem("user") ? sessionStorage.getItem("user") : "{}",
             }
         },
         created() {
@@ -173,7 +177,7 @@
                         //关联add弹窗里面的div，new一个editor对象
                         editor = new E('#div1');
                         //本地图片上传设置注意后端设置返回json格式
-                        editor.config.uploadImgServer = 'http://'+serverIp+':9090/files/editor/upload';
+                        editor.config.uploadImgServer = 'http://' + serverIp + ':9090/files/editor/upload';
                         editor.config.uploadFileName = "file";
                         editor.create()
                     }
@@ -185,10 +189,10 @@
                 this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
 
                 if (this.form.id) {//若果id存在，更新
-                    let userStr = sessionStorage.getItem("user") || "{}";
-                    let user = JSON.parse(userStr)
+                    // let userStr = sessionStorage.getItem("user") || "{}";
+                    // let user = JSON.parse(userStr)
                     // console.log("原作者："+this.form.author+",新作者："+user.name)
-                    if (this.form.author === user.name) {
+                    if (this.form.author === this.user.name) {
                         request.put("/events", this.form).then(res => {
                             // console.log(res);
                             if (res.code === '0') {
@@ -204,8 +208,7 @@
                     }
 
                 } else {//如果id不存在，新增
-
-                    this.form.author = user.name
+                    this.form.author = this.user.name
                     request.post("/events", this.form).then(res => {
                         // console.log(res);
                         if (res.code === '0') {
@@ -225,7 +228,7 @@
                 this.$nextTick(() => {
                     if (!editor) {
                         editor = new E('#div1');
-                        editor.config.uploadImgServer = 'http://'+serverIp+':9090/files/editor/upload';
+                        editor.config.uploadImgServer = 'http://' + serverIp + ':9090/files/editor/upload';
                         editor.config.uploadFileName = "file";
                         editor.create()
                     }
@@ -233,17 +236,21 @@
                 })
             },
             handleDelete(row) {
+                if (row.author === this.user.name) {
+                    this.id = row.id;
+                    // console.log(this.id);
+                    request.delete("/events/" + this.id).then(res => {
+                        if (res.code === '0') {
+                            this.$message.success("删除成功")
+                        } else {
+                            this.$message.error(res.msg)
+                        }
+                        this.load();//刷新表格数据
+                    })
+                } else {
+                    this.$message.error("不是你创建的不能删哦")
+                }
 
-                this.id = row.id;
-                // console.log(this.id);
-                request.delete("/events/" + this.id).then(res => {
-                    if (res.code === '0') {
-                        this.$message.success("删除成功")
-                    } else {
-                        this.$message.error(res.msg)
-                    }
-                    this.load();//刷新表格数据
-                })
             },
             handleSizeChange() {
                 //改变当前每页个数的触发
@@ -267,7 +274,7 @@
                     }
                 })
             },
-          handleSelectionChange(val) {
+            handleSelectionChange(val) {
                 this.ids = val.map(v => v.id)
             },
         }

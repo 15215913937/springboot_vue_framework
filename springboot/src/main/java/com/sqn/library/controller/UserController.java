@@ -10,6 +10,7 @@ import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
+import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.mapper.RoleMapper;
 import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.mapper.UserMapper;
@@ -42,6 +43,7 @@ public class UserController {
 
     @Resource
     IMenuService iMenuService;
+
 
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象

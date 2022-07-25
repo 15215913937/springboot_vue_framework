@@ -109,7 +109,7 @@ export default {
       let myBooks = res.data.records
       // console.log(this.user.name)
       for (const myBook of myBooks) {
-        // console.log(myBook)
+        console.log(myBook)
         if (myBook.name === this.user.name) {
           this.myBookCount = myBook.bookList.length;
           break;

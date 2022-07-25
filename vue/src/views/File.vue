@@ -18,7 +18,7 @@
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
       <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
         <template #reference>
-          <el-button type="danger" style="float: right;margin-right: 10px">
+          <el-button type="danger" style="float: right;margin-right: 10px" v-if="user.role==='ROLE_ADMIN'">
             <el-icon>
               <Delete/>
             </el-icon>
