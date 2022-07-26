@@ -129,7 +129,7 @@ public class UserController {
 //            if (user.getPassword() == null) {
 //                user.setPassword(SecurityUtils.encodePassword("123456"));
 //            }
-            user.setRole("ROLE_USER");
+            user.setRole("ROLE_VISITOR");
             user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
@@ -152,7 +152,7 @@ public class UserController {
             user.setPassword(SecurityUtils.encodePassword("123456"));
         }
         if (user.getRole() == null) {
-            user.setRole("ROLE_USER");
+            user.setRole("ROLE_VISITOR");
         }
         if (user.getName() == null) {
             user.setName(user.getUsername());

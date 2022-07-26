@@ -25,6 +25,8 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    驼峰自动识别
+    map-underscore-to-camel-case: true
 
 files:
   upload:

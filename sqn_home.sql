@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : mydata
+ Source Server         : test
  Source Server Type    : MySQL
  Source Server Version : 80012
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 26/07/2022 01:45:33
+ Date: 26/07/2022 20:46:44
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of book
@@ -45,6 +45,8 @@ INSERT INTO `book` VALUES (32, '全栈自动化测试实战', '卢家涛', '信�
 INSERT INTO `book` VALUES (33, '金融的价值', '黄益平', '金融理论', '2021年12月第1版', '中信出版集团', 23, 69.00, '2022-07-22', '与宏观分析趋势，于底层掌握逻辑', 'http://localhost:9090/files/36bac59e0cad4ba486b607f2c2e10606');
 INSERT INTO `book` VALUES (34, '李东生 向生而生', '李海东', '企业家研究丛书', NULL, '中国友谊出版公司', 23, 48.00, '2022-07-22', '经历痛苦的蜕变，才能如“鹰”般重生。', 'http://localhost:9090/files/1527646ef01140cdb33879e10321c591');
 INSERT INTO `book` VALUES (39, '123', '123', '123', '231', '231', 42, 123.00, '2022-07-24', NULL, 'http://localhost:9090/files/4848d8d0609c4d7e90a006d20e803d2f');
+INSERT INTO `book` VALUES (40, '123', '123', '123', '123', '123', 18, 123.00, '2022-07-26', NULL, NULL);
+INSERT INTO `book` VALUES (41, 'qqq', 'qwe', 'qwe', 'qwe', 'qwe', 18, 123123.00, '2022-07-26', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for dict
@@ -54,7 +56,7 @@ CREATE TABLE `dict`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型'
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dict
@@ -77,9 +79,9 @@ CREATE TABLE `events`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of events
@@ -104,7 +106,7 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
@@ -129,7 +131,7 @@ CREATE TABLE `menu`  (
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -155,7 +157,7 @@ CREATE TABLE `role`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
@@ -163,6 +165,7 @@ CREATE TABLE `role`  (
 INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限', 'ROLE_ADMIN');
 INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容', 'ROLE_USER');
 INSERT INTO `role` VALUES (4, '游客', '游客', 'ROLE_VISITOR');
+INSERT INTO `role` VALUES (5, '测试', '测试员', 'ROLE_TESTER');
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -172,7 +175,7 @@ CREATE TABLE `role_menu`  (
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `menu_id` int(11) NOT NULL COMMENT '菜单id',
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of role_menu
@@ -193,6 +196,16 @@ INSERT INTO `role_menu` VALUES (3, 10);
 INSERT INTO `role_menu` VALUES (4, 2);
 INSERT INTO `role_menu` VALUES (4, 7);
 INSERT INTO `role_menu` VALUES (4, 14);
+INSERT INTO `role_menu` VALUES (5, 2);
+INSERT INTO `role_menu` VALUES (5, 5);
+INSERT INTO `role_menu` VALUES (5, 6);
+INSERT INTO `role_menu` VALUES (5, 7);
+INSERT INTO `role_menu` VALUES (5, 8);
+INSERT INTO `role_menu` VALUES (5, 9);
+INSERT INTO `role_menu` VALUES (5, 10);
+INSERT INTO `role_menu` VALUES (5, 11);
+INSERT INTO `role_menu` VALUES (5, 12);
+INSERT INTO `role_menu` VALUES (5, 14);
 
 -- ----------------------------
 -- Table structure for user
@@ -206,10 +219,10 @@ CREATE TABLE `user`  (
   `birthday` date NULL DEFAULT NULL COMMENT '生日',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '性别',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 46 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
@@ -222,5 +235,6 @@ INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9
 INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER');
 INSERT INTO `user` VALUES (31, 'ts', '$2a$10$2UxwKEKcOFUn3bqG0/g/SOuwkqzF6hYRcvMkoVRFaOaQvOXwwG3AK', '游客1', '2022-07-14', '男', 'http://localhost:9090/files/test/073039f7053449eaafaba2bd01149911.jpeg', '2022-07-19 01:35:13', 'ROLE_VISITOR');
 INSERT INTO `user` VALUES (43, 'eee', '$2a$10$B.mKIab4IUgnmql/wx.iROxlq0rk8oXqrRPuYG17hHVovB5FDfF9W', '123', NULL, NULL, NULL, '2022-07-24 23:46:12', 'ROLE_USER');
+INSERT INTO `user` VALUES (45, 'test1', '$2a$10$CU2YPItFd5ZH4WAq2PMHPuC9O/DCSOTOH2OrL5gRhFiHdTbuRip66', '测试1', NULL, NULL, NULL, '2022-07-26 14:41:19', 'ROLE_TESTER');
 
 SET FOREIGN_KEY_CHECKS = 1;
