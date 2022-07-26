@@ -2,22 +2,6 @@ import {createRouter, createWebHistory} from 'vue-router'
 // import {forEach} from "wangeditor/dist/utils/util";
 
 const routes = [
-    // {
-    //     path: '/',
-    //     name: 'Layout',
-    //     component: () => import("@/layout/Layout"),
-    //     redirect: '/home',
-    //     children: [
-    //         {path: 'home', name: 'Home', component: () => import("@/views/Home")},
-    //         {path: 'book', name: 'Book', component: () => import("@/views/Book"),},
-    //         {path: 'user', name: 'User', component: () => import("@/views/User"),},
-    //         {path: 'events', name: 'Events', component: () => import("@/views/Events"),},
-    //         {path: 'person', name: 'Person', component: () => import("@/views/Person"),},
-    //         {path: 'file', name: 'File', component: () => import("@/views/File")},
-    //         {path: 'role', name: 'Role', component: () => import("@/views/Role")},
-    //         {path: 'menu', name: 'Menu', component: () => import("@/views/Menu")},
-    //     ]
-    // },
     {
         path: '/login',
         name: 'Login',
@@ -32,6 +16,18 @@ const routes = [
         path: '/404',
         name: '404',
         component: () => import('../views/404.vue')
+    },
+    {
+        path: '/front',
+        name: 'Front',
+        component: () => import('../views/front/Front'),
+        children: [
+            {
+                path: 'home',
+                name: 'FrontHome',
+                component: () => import('../views/front/Home'),
+            },
+        ]
     },
 
 ]
@@ -81,31 +77,38 @@ export const setRoutes = () => {
     }
 }
 // 提供一个重置路由的方法
-export const resetRouter = () => {
-    router.matcher = new VueRouter({
-        mode: 'history',
-        base: process.env.BASE_URL,
-        routes
-    })
-}
+// export const resetRouter = () => {
+//     router.matcher = new VueRouter({
+//         mode: 'history',
+//         base: process.env.BASE_URL,
+//         routes
+//     })
+// }
 // 重置我就再set一次路由
 setRoutes()
 //路由守卫，路由跳转前进行操作
 router.beforeEach((to, from, next) => {
-    sessionStorage.setItem("currentPathName", to.name)  // 设置当前的路由名称
-
+    let user = JSON.parse(sessionStorage.getItem("user")); //获取用户信息
+    // sessionStorage.setItem("currentPathName", to.name)
+    // let currentPath = JSON.parse(sessionStorage.getItem("currentPathName"));
+    // 设置当前的路由名称
     // 未找到路由的情况
-    if (!to.matched.length) {
-        const storeMenus = localStorage.getItem("menus")
-        if (storeMenus) {
-            next("/404")
-        } else {
-            // 跳回登录页面
-            next("/login")
-        }
+    // if (!to.matched.length) {
+    //     const storeMenus = sessionStorage.getItem("menus")
+    //     if (storeMenus) {
+    //         next("/404")
+    //     } else {
+    //         // 跳回登录页面
+    //         next("/login")
+    //     }
+    // }
+    if (!user && to.path !== '/login') {
+        next('/login')
+    } else {
+        // 其他的情况都放行
+        next()
     }
-    // 其他的情况都放行
-    next()
+
 
 })
 export default router

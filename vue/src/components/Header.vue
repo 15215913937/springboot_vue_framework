@@ -82,7 +82,7 @@ export default {
       sessionStorage.removeItem("menus");
       sessionStorage.removeItem("currentPathName");
       this.$router.push('/login');
-      resetRouter()  //重置路由
+      // resetRouter()  //重置路由
     }
   },
 }

@@ -1,16 +1,15 @@
 <template>
   <div>
-
-    <router-view></router-view>
+    这是一个前台页面
   </div>
 </template>
 
 <script>
 export default {
-  name: "App"
+  name: "FrontHome"
 }
 </script>
+
 <style scoped>
 
 </style>
-

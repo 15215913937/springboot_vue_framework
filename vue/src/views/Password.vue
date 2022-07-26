@@ -61,7 +61,7 @@
                             this.loading = false
                         }, 1000)
                         request.post("/user/updatePwd", this.form).then(res => {
-                            console.log(res);
+                            // console.log(res);
                             if (res.code === '0') {
                                 this.$message.success("修改成功")
                                 this.$router.push("/login")

@@ -2,7 +2,7 @@
   <div class="homepage-hero-module">
     <div class="video-container">
       <div :style="fixStyle" class="filter">
-        <div style="width: 400px; margin: 100px auto">
+        <div style="width: 600px; margin: 100px auto">
           <div style="margin: 50px auto;width: 500px">
             <div
                 style="color: #d7fd00;font-size:60px;text-align: center;font-family:KaiTi,serif;padding:80px 0">
@@ -30,24 +30,28 @@
                 <el-button style="flex:1;margin-bottom:20px" type="primary" @click="login" @keyup.enter="keyDown(e)"
                            :loading="loading">登录
                 </el-button>
-<!--                <el-button style="margin-bottom:20px" type="primary"-->
-<!--                           @click="$router.push('/register')">前往注册>>-->
-<!--                </el-button>-->
+                <!--                <el-button style="margin-bottom:20px" type="primary"-->
+                <!--                           @click="$router.push('/register')">前往注册>>-->
+                <!--                </el-button>-->
               </el-form-item>
             </el-form>
           </div>
+        </div>
+        <div :style="fixStyle" class="ivu-global-footer i-copyright">
+          <div class="ivu-global-footer-copyright">Copyright © {{ currentYear }} | 沈氏网络科技有限公司</div>
         </div>
       </div>
       <video :style="fixStyle" autoplay loop muted class="fillWidth" v-on:canplay="canplay">
         <source src="../assets/sea.mp4" type="video/mp4"/>
         <!--        浏览器不支持 video 标签，建议升级浏览器。-->
       </video>
+
     </div>
   </div>
 </template>
 
 <script>
-import {User, Lock, Key} from "@element-plus/icons-vue"
+import {Key, Lock, User} from "@element-plus/icons-vue"
 import request from "../utils/request"
 import ValidCode from "@/components/ValidCode"
 import {setRoutes} from "@/router";
@@ -70,11 +74,14 @@ export default {
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'}
         ]
-      }
+      },
+      // copyright: 'Copyright © 2022 | 沈氏网络科技有限公司',
+      currentYear: new Date().getFullYear()
     }
   },
   created() {
     sessionStorage.removeItem("user")
+    console.log(this.currentYear)
   },
   setup() {
     return {
@@ -147,13 +154,14 @@ export default {
 
 
 <style scoped>
-.homepage-hero-module{
+.homepage-hero-module {
   /*background-image: url("../assets/背景1.jpg");*/
   /*width: 100%;*/
   /*height: 100vh;*/
   /*position: relative;*/
   /*overflow: hidden;*/
 }
+
 .video-container {
   position: relative;
   height: 100vh;
@@ -170,9 +178,29 @@ export default {
   position: absolute;
   /*background: rgba(0, 0, 0, 0.4);*/
   width: 100%;
+  height: 100vh;
 }
 
 .fillWidth {
   width: 100%;
+}
+
+.ivu-global-footer {
+  /* margin: 48px 0 24px 0; */
+  /* padding: 0 16px; */
+  /*margin: 5px 0px;*/
+  text-align: center;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  bottom: 20px;
+}
+
+.i-copyright {
+  flex: 0 0 auto;
+}
+
+.ivu-global-footer-copyright {
+  color: #a0cfff;
+  font-size: 14px;
 }
 </style>

@@ -207,7 +207,7 @@ export default {
       });
       request.get("/role").then(res => {
         this.roles = res.data;
-        console.log(this.roles)
+        // console.log(this.roles)
       })
     },
     reset() {
@@ -220,7 +220,6 @@ export default {
       this.form = {}
     },
     save() {
-      console.log(1)
       this.loading = true
       setTimeout(() => {
         this.loading = false
@@ -280,7 +279,7 @@ export default {
       this.pwdVis = true;
     },
     saveNewPwd() {
-      console.log(this.form)
+      // console.log(this.form)
       request.post("/user/resetPwd", this.form).then(res => {
         if (res.code === '0') {
           this.$message.success("重置成功")
