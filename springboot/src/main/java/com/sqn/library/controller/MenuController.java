@@ -1,15 +1,19 @@
 package com.sqn.library.controller;
 
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.mapper.DictMapper;
+import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sqn.library.common.Result;
@@ -19,6 +23,7 @@ import com.sqn.library.service.IMenuService;
 import com.sqn.library.entity.Menu;
 
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * <p>
@@ -39,16 +44,23 @@ public class MenuController {
     @Resource
     DictMapper dictMapper;
 
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+
     // 新增或者更新
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
+
         menuService.saveOrUpdate(menu);
+        flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         menuService.removeById(id);
+        flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
@@ -60,7 +72,21 @@ public class MenuController {
 
     @GetMapping
     public Result<?> findAll(@RequestParam(defaultValue = "") String name) {
-        return Result.success(menuService.findMenus(name));
+//        1、从缓存中获取数据,返回的是一个json
+        String jsonStr = stringRedisTemplate.opsForValue().get(Constants.MENUS_KEY);
+        List<Menu> menus;
+        if (StrUtil.isBlank(jsonStr)) { //如果jsonStr是空的
+            menus = menuService.findMenus(name);
+            //再去缓存到redis
+            stringRedisTemplate.opsForValue().set(Constants.MENUS_KEY, JSONUtil.toJsonStr(menus));
+        } else {
+            //从redis缓存中获取数据
+//            通过TypeReference将jsonStr转化为任意一种class泛型
+            menus = JSONUtil.toBean(jsonStr, new TypeReference<List<Menu>>() {
+            }, true);
+        }
+
+        return Result.success(menus);
     }
 
     @GetMapping("/{id}")
@@ -89,6 +115,11 @@ public class MenuController {
     @GetMapping("/ids")
     public Result<?> findAllIds() {
         return Result.success(menuService.list().stream().map(Menu::getId));
+    }
+
+    //清空缓存
+    public void flushRedis(String key) {
+        stringRedisTemplate.delete(key);
     }
 }
 

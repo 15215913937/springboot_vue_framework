@@ -1,11 +1,11 @@
 <template>
 
   <div style="height: 50px;line-height: 50px;border-bottom: 1px solid #ccc;display: flex">
-    <div style="width: 100px;padding-left: 30px;font-weight: bold;color: dodgerblue"
-         @click="$router.push('/')">后台管理
+    <div style="width: 180px;  text-align: center;" @click="$router.push('/')">
+      <span class="titleName">后台管理</span>
     </div>
     <div style="flex: 1" class="weather">
-<!--      和风天气插件-->
+      <!--      和风天气插件-->
       <div id="he-plugin-simple"></div>
     </div>
     <div>
@@ -66,7 +66,7 @@ export default {
         "fixed": "true",
         "vertical": "center",
         "horizontal": "center",
-        "left": "150",
+        "left": "180",
         "top": "3",
         "key": "af9a153d00174b4682bd2acd5761b695"
       }
@@ -88,6 +88,13 @@ export default {
 }
 </script>
 <style scoped>
+.titleName {
+  font-size: 20px;
+  /*padding-left: 35px;*/
+  font-weight: bold;
+  color: dodgerblue;
+}
+
 .weather {
   z-index: 999999;
 }

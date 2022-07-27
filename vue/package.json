@@ -18,7 +18,9 @@
     "echarts": "^5.3.3",
     "element-plus": "^2.2.6",
     "vue": "^3.2.13",
+    "vue-amap": "^0.5.10",
     "vue-router": "^4.0.3",
+    "vue-video-player": "^5.0.2",
     "vuex": "^4.0.0",
     "wangeditor": "^4.7.15"
   },

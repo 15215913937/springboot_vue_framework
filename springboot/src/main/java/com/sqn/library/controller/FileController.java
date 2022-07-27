@@ -159,13 +159,14 @@ public class FileController {
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String name) {
+                              @RequestParam(defaultValue = "") String name,
+                              @RequestParam(defaultValue = "") String type) {
         QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
         //查询未删除的数据
         queryWrapper.eq("is_delete", false);
         queryWrapper.orderByDesc("id");
-        if (StrUtil.isNotBlank(name)) {
-            queryWrapper.like("name", name);
+        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(type)) {
+            queryWrapper.like("name", name).like("type",type);
         }
         return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
     }

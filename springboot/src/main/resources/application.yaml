@@ -21,6 +21,10 @@ spring:
   #设置session的有效时长 86400s=1天
   session:
     timeout: 86400
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
 
 mybatis-plus:
   configuration:

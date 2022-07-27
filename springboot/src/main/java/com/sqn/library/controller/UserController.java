@@ -1,10 +1,13 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
@@ -19,11 +22,15 @@ import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sqn.library.common.Constants.USER_KEY;
 
 @RestController
 @RequestMapping("/user")
@@ -43,6 +50,10 @@ public class UserController {
 
     @Resource
     IMenuService iMenuService;
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
 
 
     //登录接口
@@ -110,7 +121,7 @@ public class UserController {
     public Result<?> resetPwd(@RequestBody UserResetPwdDTO userResetPwdDTO) {
         if (userResetPwdDTO.getNewPassword() == null) {
             userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword("123456"));
-        }else {
+        } else {
             //把前端传过来的新密码加密处理
             userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword(userResetPwdDTO.getNewPassword()));
         }
@@ -165,6 +176,7 @@ public class UserController {
     @PutMapping
     public Result<?> update(@RequestBody User user) {
         userMapper.updateById(user);
+        flushRedis(USER_KEY);
         return Result.success();
     }
 
@@ -190,13 +202,28 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Long id) {
-        User user = userMapper.selectById(id);
+        String s = stringRedisTemplate.opsForValue().get(USER_KEY);
+        User user;
+        if(StrUtil.isBlank(s)){
+            user = userMapper.selectById(id);
+            stringRedisTemplate.opsForValue().set(USER_KEY, JSONUtil.toJsonStr(user));
+        }else {
+            user = JSONUtil.toBean(s, new TypeReference<User>() {
+            }, true);
+        }
         return Result.success(user);
 
     }
+
     @GetMapping("/all")
+    @Cacheable(value = "user", key = "'findUserAll'")
     public Result<?> findAll() {
         return Result.success(iUserService.list());
     }
 
+
+    //清空缓存
+    public void flushRedis(String key) {
+        stringRedisTemplate.delete(key);
+    }
 }

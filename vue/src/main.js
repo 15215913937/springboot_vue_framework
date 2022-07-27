@@ -9,9 +9,13 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //导入该路径下的css全局配置
 import '@/assets/css/global.css'
 import VueParticles from 'vue-particles'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 
 const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-app.use(store).use(router).use(ElementPlus, {locale: zhCn,}).use(VueParticles).mount('#app');
+
+app.use(store).use(router).use(ElementPlus, {locale: zhCn,}).use(VueParticles).use(mavonEditor).mount('#app');

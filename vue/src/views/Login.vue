@@ -38,7 +38,7 @@
           </div>
         </div>
         <div :style="fixStyle" class="ivu-global-footer i-copyright">
-          <div class="ivu-global-footer-copyright">Copyright © {{ currentYear }} | 沈氏网络科技有限公司</div>
+          <div class="ivu-global-footer-copyright">Copyright © {{ new Date().getFullYear() }} | 沈氏网络科技有限公司</div>
         </div>
       </div>
       <video :style="fixStyle" autoplay loop muted class="fillWidth" v-on:canplay="canplay">
@@ -67,6 +67,7 @@ export default {
       vedioCanPlay: false,
       fixStyle: '',
       form: {},
+      user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -75,13 +76,15 @@ export default {
           {required: true, message: '请输入密码', trigger: 'blur'}
         ]
       },
-      // copyright: 'Copyright © 2022 | 沈氏网络科技有限公司',
       currentYear: new Date().getFullYear()
     }
   },
   created() {
-    sessionStorage.removeItem("user")
-    console.log(this.currentYear)
+    if (this.user) {
+      // console.log(this.user)
+      sessionStorage.removeItem("user")
+      sessionStorage.removeItem("menus")
+    }
   },
   setup() {
     return {

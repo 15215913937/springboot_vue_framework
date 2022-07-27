@@ -14,6 +14,8 @@
     <div style="margin: 10px 0;display: block;clear: both">
       <el-input v-model="name" placeholder="请输入文件名称" style="width: 15%" class="mr-10" :prefix-icon="Search"
                 clearable/>
+      <el-input v-model="type" placeholder="请输入文件类型" style="width: 15%" class="mr-10" :prefix-icon="Search"
+                clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
       <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
@@ -100,6 +102,7 @@ export default {
   data() {
     return {
       name: '',
+      type: '',
       currentPage: 1,
       pageSize: 10,
       total: 10,
@@ -136,7 +139,7 @@ export default {
     download(url) {
       window.open(url)
     },
-    preview(url){
+    preview(url) {
       window.open('https://file.keking.cn/onlinePreview?url=' + encodeURIComponent(window.btoa((url))))
     },
     deleteBatch() {
@@ -162,6 +165,7 @@ export default {
     },
     reset() {
       this.name = '';
+      this.type = '';
       this.load();
     },
     load() {
@@ -170,6 +174,7 @@ export default {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
           name: this.name,
+          type: this.type
         }
       }).then(res => {
         // console.log(res);

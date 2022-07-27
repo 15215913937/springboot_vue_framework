@@ -15,6 +15,8 @@ import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IUserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -44,7 +46,6 @@ public class BookController {
         if (book.getBuyDate() == null) {
             book.setBuyDate(new Date());
         }
-
         bookMapper.insert(book);
         return Result.success();
     }
@@ -68,6 +69,7 @@ public class BookController {
 
     //查询接口
     @GetMapping
+//    @Cacheable(value = "book",key = "'findBooks'")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
