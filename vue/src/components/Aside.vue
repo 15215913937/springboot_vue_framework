@@ -37,65 +37,6 @@
                     </el-sub-menu>
                 </div>
             </div>
-            <!--            静态菜单-->
-            <!--            <el-menu-item index="/index/home">-->
-            <!--                <el-icon>-->
-            <!--                    <PieChart/>-->
-            <!--                </el-icon>-->
-            <!--                全局概览-->
-            <!--            </el-menu-item>-->
-            <!--            <el-sub-menu index="1">-->
-            <!--                <template #title>-->
-            <!--                    <el-icon>-->
-            <!--                        <SetUp/>-->
-            <!--                    </el-icon>-->
-            <!--                    <span>事务管理</span>-->
-            <!--                </template>-->
-            <!--                <el-menu-item index="/index/book">-->
-            <!--                    <el-icon>-->
-            <!--                        <Notebook/>-->
-            <!--                    </el-icon>-->
-            <!--                    书籍管理-->
-            <!--                </el-menu-item>-->
-            <!--                <el-menu-item index="/index/events">-->
-            <!--                    <el-icon>-->
-            <!--                        <Ship/>-->
-            <!--                    </el-icon>-->
-            <!--                    事件论坛-->
-            <!--                </el-menu-item>-->
-            <!--                <el-menu-item index="/index/file">-->
-            <!--                    <el-icon>-->
-            <!--                        <Folder/>-->
-            <!--                    </el-icon>-->
-            <!--                    文件管理-->
-            <!--                </el-menu-item>-->
-            <!--            </el-sub-menu>-->
-            <!--            <el-sub-menu index="2">-->
-            <!--                <template #title>-->
-            <!--                    <el-icon>-->
-            <!--                        <Setting/>-->
-            <!--                    </el-icon>-->
-            <!--                    <span>系统管理</span>-->
-            <!--                </template>-->
-            <!--                <el-menu-item index="/index/user">-->
-            <!--                    <el-icon>-->
-            <!--                        <Avatar/>-->
-            <!--                    </el-icon>-->
-            <!--                    成员管理-->
-            <!--                </el-menu-item>-->
-            <!--                <el-menu-item index="/index/role">-->
-            <!--                    <el-icon>-->
-            <!--                        <UserFilled/>-->
-            <!--                    </el-icon>-->
-            <!--                    角色管理-->
-            <!--                </el-menu-item>-->
-            <!--                <el-menu-item index="/index/menu">-->
-            <!--                    <el-icon>-->
-            <!--                        <Menu/>-->
-            <!--                    </el-icon>-->
-            <!--                    菜单管理-->
-            <!--                </el-menu-item>-->
-            <!--            </el-sub-menu>-->
         </el-menu>
     </div>
 </template>

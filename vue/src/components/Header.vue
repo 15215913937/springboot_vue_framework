@@ -2,7 +2,7 @@
 
   <div style="height: 50px;line-height: 50px;border-bottom: 1px solid #ccc;display: flex">
     <div style="width: 180px;  text-align: center;" @click="$router.push('/')">
-      <span class="titleName">后台管理</span>
+      <span class="titleName">SQN系统管理</span>
     </div>
     <div style="flex: 1" class="weather">
       <!--      和风天气插件-->

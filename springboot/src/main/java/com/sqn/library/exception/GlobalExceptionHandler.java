@@ -3,6 +3,7 @@ package com.sqn.library.exception;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     @ResponseBody//返回json串
     public Result<?> error(HttpServletRequest request, Exception e) {
         log.error("异常信息：", e);
-        return Result.error("-1", "系统异常");
+        return Result.error(Constants.CODE_INTERNAL_ERR, "系统异常");
     }
 
 

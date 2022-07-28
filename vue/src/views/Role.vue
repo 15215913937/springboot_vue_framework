@@ -21,17 +21,18 @@
     <el-table
         v-loading="loading"
         :data="tableData"
+        :header-cell-style="{'text-align':'center'}"
         border
         stripe
         style="width: 100%"
         @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"/>
+      <el-table-column type="selection" width="55" align="center"/>
       <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable=""/>
-      <el-table-column prop="role" label="角色"/>
-      <el-table-column prop="flag" label="唯一标识"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column fixed="right" label="操作" width="300px">
+      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column prop="role" label="角色" align="center"/>
+      <el-table-column prop="flag" label="唯一标识" align="center"/>
+      <el-table-column prop="description" label="描述" />
+      <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template #default="scope">
           <el-button plain type="success" @click="selectMenu(scope.row.id)">
             <el-icon>

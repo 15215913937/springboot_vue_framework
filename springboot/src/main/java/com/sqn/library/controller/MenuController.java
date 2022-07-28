@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.DictMapper;
 import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
@@ -50,11 +51,16 @@ public class MenuController {
 
     // 新增或者更新
     @PostMapping
-    public Result<?> save(@RequestBody Menu menu) {
+    public Result<?> save(@RequestBody Menu menu) throws Exception {
+        try {
+            menuService.saveOrUpdate(menu);
+            flushRedis(Constants.MENUS_KEY);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(Constants.CODE_INTERNAL_ERR, "系统错误");
+        }
 
-        menuService.saveOrUpdate(menu);
-        flushRedis(Constants.MENUS_KEY);
-        return Result.success();
     }
 
     @DeleteMapping("/{id}")
@@ -67,6 +73,7 @@ public class MenuController {
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         menuService.removeByIds(ids);
+        flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 

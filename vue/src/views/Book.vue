@@ -29,7 +29,8 @@
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
       <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
         <template #reference>
-          <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px" v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+          <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px"
+                     v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
             <el-icon>
               <Delete/>
             </el-icon>
@@ -41,15 +42,21 @@
     </div>
     <!--    列表区-->
     <!--        stripe:斑马纹-->
-    <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange"
-              highlight-current-row>
-      <el-table-column type="selection"/>
+    <el-table
+        :data="tableData"
+        border
+        stripe
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        highlight-current-row>
+      <el-table-column type="selection" align="center"/>
       <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable="" width="70px"/>
-      <el-table-column label="封面">
+      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column label="封面" align="center">
         <template #default="scope">
           <el-image
               style="width: 100%; height: 90px"
+              :header-cell-style="{'text-align':'center'}"
               :src="scope.row.cover"
               :preview-src-list="[scope.row.cover]"
               hide-on-click-modal="true"
@@ -57,18 +64,19 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="bookname" label="书名"/>
-      <el-table-column prop="author" label="作者"/>
-      <el-table-column prop="category" label="类别"/>
-      <el-table-column prop="version" label="版本"/>
-      <el-table-column prop="publishingHouse" label="出版社"/>
-      <el-table-column prop="username" label="购买人"/>
-      <el-table-column prop="price" label="价格"/>
-      <el-table-column prop="buyDate" label="购书日期"/>
+      <el-table-column prop="bookname" label="书名" align="center"/>
+      <el-table-column prop="author" label="作者" align="center"/>
+      <el-table-column prop="category" label="类别" align="center"/>
+      <el-table-column prop="version" label="版本" align="center"/>
+      <el-table-column prop="publishingHouse" label="出版社" align="center"/>
+      <el-table-column prop="username" label="购买人" align="center"/>
+      <el-table-column prop="price" label="价格" align="center"/>
+      <el-table-column prop="buyDate" label="购书日期" align="center"/>
       <el-table-column prop="comment" label="备注"/>
-      <el-table-column fixed="right" label="操作" width="150px">
+      <el-table-column fixed="right" label="操作" width="150px" align="center">
         <template #default="scope">
-          <el-button plain type="primary" @click="handleEdit(scope.row)" v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+          <el-button plain type="primary" @click="handleEdit(scope.row)"
+                     v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
             编辑
           </el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
@@ -257,29 +265,16 @@ export default {
       setTimeout(() => {
         this.loading = false
       }, 1000)
-      if (this.form.id) {//若果id存在，更新
-        request.put("/book", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("修改成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      } else {//如果id不存在，新增
-        request.post("/book", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("新增成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      }
+      request.post("/book", this.form).then(res => {
+        // console.log(res);
+        if (res.code === '0') {
+          this.$message.success("修改成功")
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.load();//刷新表格数据
+        this.dialogVisible = false
+      });
     },
     handleEdit(row) {
       // console.log(row)

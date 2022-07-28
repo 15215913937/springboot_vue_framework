@@ -1,7 +1,12 @@
 package com.sqn.library.controller;
 
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
+import com.sqn.library.exception.CustomException;
+import com.sqn.library.mapper.RoleMapper;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +37,18 @@ public class RoleController {
 
     @Resource
     private IRoleService roleService;
-
+    @Resource
+    RoleMapper roleMapper;
     // 新增或者更新
     @PostMapping
     public Result<?> save(@RequestBody Role role) {
+        final Role role1 = roleMapper.selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getRole, role.getRole()));
+        if(role1!=null && !role1.getId().equals(role.getId())){
+            throw new CustomException(Constants.CODE_COMMON_ERR,"角色已存在");
+        }
+        if (StrUtil.isBlank(role.getRole()) || StrUtil.isBlank(role.getFlag())) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "参数错误");
+        }
         roleService.saveOrUpdate(role);
         return Result.success();
     }
