@@ -38,20 +38,6 @@ public class EventsController {
         eventsService.saveOrUpdate(events);
         return Result.success();
     }
-    //事件新增接口
-//    @PostMapping
-//    public Result<?> save(@RequestBody Events events) {
-//        events.setCreateTime(new Date());
-//        eventsMapper.insert(events);
-//        return Result.success();
-//    }
-//
-//    //事件修改接口
-//    @PutMapping
-//    public Result<?> update(@RequestBody Events events) {
-//        eventsMapper.updateById(events);
-//        return Result.success();
-//    }
 
     //事件删除接口
     @DeleteMapping("/{id}")
