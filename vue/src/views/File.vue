@@ -37,37 +37,28 @@
         stripe
         style="width: 100%"
         @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"/>
+      <el-table-column type="selection" width="55" align="center"/>
       <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable=""/>
-      <el-table-column prop="name" label="文件名称"/>
-      <el-table-column prop="type" label="类型"/>
-      <el-table-column prop="size" label="文件大小（kb）"/>
-      <el-table-column label="预览">
-        <template v-slot="scope">
-          <el-button type="primary" @click="preview(scope.row.url)">预览</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="下载">
-        <template v-slot="scope">
-          <el-button type="primary" @click="download(scope.row.url)">下载</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="启用">
+      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column prop="name" label="文件名称" align="center"/>
+      <el-table-column prop="type" label="类型" align="center"/>
+      <el-table-column prop="size" label="文件大小（kb）" align="center"/>
+      <el-table-column label="启用" align="center">
         <template v-slot="scope">
           <el-switch v-model="scope.row.enable" active-color="#13ce66" inactive-color="#ccc"
                      @change="changeEnable(scope.row)"/>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="150px">
+      <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template v-slot="scope">
+          <el-button type="primary" @click="preview(scope.row.url)">预览</el-button>
+          <el-button type="primary" @click="download(scope.row.url)">下载</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
               <el-button type="danger">
                 <el-icon>
-                  <Remove/>
+                  <Delete/>
                 </el-icon>
-                &nbsp&nbsp删除
               </el-button>
             </template>
           </el-popconfirm>

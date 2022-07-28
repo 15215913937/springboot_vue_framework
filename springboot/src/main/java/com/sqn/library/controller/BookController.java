@@ -1,14 +1,17 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.lang.intern.InternUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.entity.User;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
@@ -40,24 +43,24 @@ public class BookController {
     @Resource
     IUserService iUserService;
 
-    //图书新增接口
+    //图书新增或修改接口
     @PostMapping
     public Result<?> save(@RequestBody Book book) {
+        if (StrUtil.isBlank(book.getBookname()) || StrUtil.isBlank(book.getAuthor()) || StrUtil.isBlank(book.getUid()) || book.getPrice() == null) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "必填项不能为空！");
+        }
+        Book res = bookMapper.selectOne(Wrappers.<Book>lambdaQuery().eq(Book::getBookname,
+                book.getBookname()));
+        if (res != null) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "已经有这本书啦！");
+        }
         if (book.getBuyDate() == null) {
             book.setBuyDate(new Date());
         }
-        bookMapper.insert(book);
-        return Result.success();
-    }
 
-    //图书信息修改接口
-    @PutMapping
-    public Result<?> update(@RequestBody Book book) {
-        if (book.getBuyDate() == null) {
-            book.setBuyDate(new Date());
-        }
-        bookMapper.updateById(book);
+        iBookService.saveOrUpdate(book);
         return Result.success();
+
     }
 
     //删除接口

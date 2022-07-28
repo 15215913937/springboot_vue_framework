@@ -4,13 +4,17 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Events;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.EventsMapper;
+import com.sqn.library.service.IEventsService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,21 +25,33 @@ public class EventsController {
 
     @Resource
     EventsMapper eventsMapper;
+    @Resource
+    IEventsService eventsService;
 
-    //事件新增接口
-    @PostMapping
+    //事件新增或修改接口
+    @PostMapping()
     public Result<?> save(@RequestBody Events events) {
+        if (StrUtil.isBlank(events.getTitle()) || StrUtil.isBlank(events.getContent())) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "必填项不能为空！");
+        }
         events.setCreateTime(new Date());
-        eventsMapper.insert(events);
+        eventsService.saveOrUpdate(events);
         return Result.success();
     }
-
-    //事件修改接口
-    @PutMapping
-    public Result<?> update(@RequestBody Events events) {
-        eventsMapper.updateById(events);
-        return Result.success();
-    }
+    //事件新增接口
+//    @PostMapping
+//    public Result<?> save(@RequestBody Events events) {
+//        events.setCreateTime(new Date());
+//        eventsMapper.insert(events);
+//        return Result.success();
+//    }
+//
+//    //事件修改接口
+//    @PutMapping
+//    public Result<?> update(@RequestBody Events events) {
+//        eventsMapper.updateById(events);
+//        return Result.success();
+//    }
 
     //事件删除接口
     @DeleteMapping("/{id}")

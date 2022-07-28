@@ -72,7 +72,7 @@
       </el-col>
     </el-row>
     <!--        图表-->
-    <el-row :gutter="50">
+    <el-row :gutter="50" style="text-align: center">
       <el-col :span="12">
         <div id="main" style="width: 400px;height: 300px"/>
       </el-col>

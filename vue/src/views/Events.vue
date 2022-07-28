@@ -36,16 +36,18 @@
         <!--        stripe:斑马纹-->
         <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange"
                   highlight-current-row>
-            <el-table-column type="selection" width="40px"/>
+            <el-table-column type="selection" width="40px" align="center"/>
             <!--            sortable:排序操作-->
-            <el-table-column prop="id" label="ID" sortable=""/>
-            <el-table-column prop="title" label="标题"/>
-            <el-table-column prop="author" label="作者"/>
-            <el-table-column prop="createTime" label="创建时间"/>
-            <el-table-column fixed="right" label="操作" width="300px">
+            <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+            <el-table-column prop="title" label="标题" align="center"/>
+            <el-table-column prop="author" label="作者" align="center"/>
+            <el-table-column prop="createTime" label="创建时间" align="center"/>
+            <el-table-column fixed="right" label="操作" width="300px" align="center">
                 <template #default="scope">
                     <el-button plain type="success" @click="details(scope.row)">详情</el-button>
-                    <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button plain type="primary" @click="handleEdit(scope.row)"
+                               v-if="scope.row.author===this.user.name">编辑
+                    </el-button>
                     <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
                         <template #reference>
                             <el-button type="danger">
@@ -109,9 +111,6 @@
     import {serverIp} from "../../public/config";
     //设置全局变量
     let editor;
-    // let userStr = sessionStorage.getItem("user") || "{}"
-    // let user = JSON.parse(userStr)
-    // console.log(user)
 
     export default {
         name: 'Events',
@@ -187,39 +186,22 @@
             },
             save() {
                 this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
-
-                if (this.form.id) {//若果id存在，更新
-                    // let userStr = sessionStorage.getItem("user") || "{}";
-                    // let user = JSON.parse(userStr)
-                    // console.log("原作者："+this.form.author+",新作者："+user.name)
-                    if (this.form.author === this.user.name) {
-                        request.put("/events", this.form).then(res => {
-                            // console.log(res);
-                            if (res.code === '0') {
-                                this.$message.success("编辑成功")
-                            } else {
-                                this.$message.error(res.msg)
-                            }
-                            this.load();//刷新表格数据
-                            this.dialogVisible = false
-                        });
+                this.form.author = this.user.name;
+                request.post("/events/", this.form).then(res => {
+                    // console.log(res);
+                    if (res.code === '0') {
+                        this.$message.success("编辑成功")
                     } else {
-                        this.$message.error("不是作者本人，编辑无效！")
+                        this.$message.error(res.msg)
                     }
+                    this.load();//刷新表格数据
+                    this.dialogVisible = false
+                });
 
-                } else {//如果id不存在，新增
-                    this.form.author = this.user.name
-                    request.post("/events", this.form).then(res => {
-                        // console.log(res);
-                        if (res.code === '0') {
-                            this.$message.success("发表成功")
-                        } else {
-                            this.$message.error(res.msg)
-                        }
-                        this.load();//刷新表格数据
-                        this.dialogVisible = false
-                    });
-                }
+                // else {
+                //     this.$message.error("不是作者本人，编辑无效！")
+                // }
+
             },
             handleEdit(row) {
                 this.form = JSON.parse(JSON.stringify(row));
@@ -234,7 +216,8 @@
                     }
                     editor.txt.html(row.content)
                 })
-            },
+            }
+            ,
             handleDelete(row) {
                 if (row.author === this.user.name) {
                     this.id = row.id;
@@ -251,15 +234,18 @@
                     this.$message.error("不是你创建的不能删哦")
                 }
 
-            },
+            }
+            ,
             handleSizeChange() {
                 //改变当前每页个数的触发
                 this.load()
-            },
+            }
+            ,
             handleCurrentChange() {
                 //改变当前页数的触发
                 this.load()
-            },
+            }
+            ,
             deleteBatch() {
                 if (!this.ids.length) {
                     this.$message.warning("请选择要删除的事件");
@@ -273,10 +259,12 @@
                         this.$message.error(res.msg)
                     }
                 })
-            },
+            }
+            ,
             handleSelectionChange(val) {
                 this.ids = val.map(v => v.id)
-            },
+            }
+            ,
         }
     }
 </script>

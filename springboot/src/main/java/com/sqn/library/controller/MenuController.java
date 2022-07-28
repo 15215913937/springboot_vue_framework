@@ -4,9 +4,12 @@ package com.sqn.library.controller;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.DictMapper;
+import com.sqn.library.mapper.MenuMapper;
 import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,15 +49,20 @@ public class MenuController {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
-
+    @Resource
+    MenuMapper menuMapper;
 
     // 新增或者更新
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
-
+        Menu res = menuMapper.selectOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getName, menu.getName()));
+        if (res != null) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "菜单名称已存在");
+        }
         menuService.saveOrUpdate(menu);
         flushRedis(Constants.MENUS_KEY);
         return Result.success();
+
     }
 
     @DeleteMapping("/{id}")
@@ -67,6 +75,7 @@ public class MenuController {
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         menuService.removeByIds(ids);
+        flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 

@@ -3,6 +3,7 @@ package com.sqn.library.controller;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,6 +14,8 @@ import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
+import com.sqn.library.exception.CustomException;
+import com.sqn.library.exception.GlobalExceptionHandler;
 import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.mapper.RoleMapper;
 import com.sqn.library.mapper.RoleMenuMapper;
@@ -27,6 +30,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.security.cert.CertStoreException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,21 +59,13 @@ public class UserController {
     StringRedisTemplate stringRedisTemplate;
 
 
-
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象
     @PostMapping("/login")
     public Result<?> login(@RequestBody User user) {
-//        User userPwd = userMapper.selectByName(user.getUsername());
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("username", user.getUsername());
-//        queryWrapper.eq("password", userPwd.getPassword());
-//        User res = userMapper.selectOne(queryWrapper);
-        User res =
-                userMapper.selectOne(Wrappers.<User>lambdaQuery()
-                        .eq(User::getUsername, user.getUsername()));
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
         if (res == null || !SecurityUtils.matchesPassword(user.getPassword(), res.getPassword())) {
-            return Result.error("-1", "用户名或密码错误！");
+            return Result.error(Constants.CODE_COMMON_ERR, "用户名或密码错误！");
         }
         String role = res.getRole();
         Integer roleId = roleMapper.selectByFlag(role);
@@ -93,6 +89,7 @@ public class UserController {
         // 生成token
         String token = TokenUtils.genToken(res);
         res.setToken(token);
+        flushRedis(USER_KEY);
         return Result.success(res);
     }
 
@@ -108,7 +105,7 @@ public class UserController {
         queryWrapper.eq("username", userPasswordDTO.getUsername());
         User res = userMapper.selectOne(queryWrapper);
         if (!SecurityUtils.matchesPassword(userPasswordDTO.getPassword(), res.getPassword())) {
-            return Result.error("-1", "原密码错误");
+            return Result.error(Constants.CODE_COMMON_ERR, "原密码错误");
         }
         //把前端传过来的新密码加密处理
         userPasswordDTO.setNewPassword(SecurityUtils.encodePassword(userPasswordDTO.getNewPassword()));
@@ -135,29 +132,26 @@ public class UserController {
         try {
             User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
             if (res != null) {
-                return Result.error("-1", "用户名已存在");
+                return Result.error(Constants.CODE_COMMON_ERR, "用户名已存在");
             }
-//            if (user.getPassword() == null) {
-//                user.setPassword(SecurityUtils.encodePassword("123456"));
-//            }
             user.setRole("ROLE_VISITOR");
             user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.error("-1", "登录异常");
+            return Result.error(Constants.CODE_INTERNAL_ERR, "登录异常");
         }
         return Result.success();
     }
 
 
-    //新增接口
+    //新增或更新接口
     @PostMapping
     public Result<?> save(@RequestBody User user) {
-        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
-        if (res != null) {
-            return Result.error("-1", "用户名已使用");
+
+        if (StrUtil.isBlank(user.getUsername())) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "用户名未填写");
         }
         if (user.getPassword() == null) {
             user.setPassword(SecurityUtils.encodePassword("123456"));
@@ -168,22 +162,25 @@ public class UserController {
         if (user.getName() == null) {
             user.setName(user.getUsername());
         }
-        userMapper.insert(user);
-        return Result.success();
-    }
-
-    //修改接口
-    @PutMapping
-    public Result<?> update(@RequestBody User user) {
-        userMapper.updateById(user);
+        iUserService.saveOrUpdate(user);
         flushRedis(USER_KEY);
         return Result.success();
+
     }
+
+//    //修改接口
+//    @PutMapping
+//    public Result<?> update(@RequestBody User user) {
+//        userMapper.updateById(user);
+//        flushRedis(USER_KEY);
+//        return Result.success();
+//    }
 
     //删除接口
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         iUserService.removeById(id);
+        flushRedis(USER_KEY);
         return Result.success();
     }
 
@@ -204,10 +201,10 @@ public class UserController {
     public Result<?> getById(@PathVariable Long id) {
         String s = stringRedisTemplate.opsForValue().get(USER_KEY);
         User user;
-        if(StrUtil.isBlank(s)){
+        if (StrUtil.isBlank(s)) {
             user = userMapper.selectById(id);
             stringRedisTemplate.opsForValue().set(USER_KEY, JSONUtil.toJsonStr(user));
-        }else {
+        } else {
             user = JSONUtil.toBean(s, new TypeReference<User>() {
             }, true);
         }

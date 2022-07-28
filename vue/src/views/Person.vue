@@ -67,13 +67,13 @@
                 setTimeout(() => {
                     this.loading = false
                 }, 1000)
-                request.put("/user", this.form).then(res => {
+                request.post("/user", this.form).then(res => {
                     // console.log(res);
                     if (res.code === '0') {
-                        this.$message.success("保存成功")
+                        this.$message.success("保存成功");
                         //更新浏览器存储的用户信息
-                        sessionStorage.setItem("user", JSON.stringify(this.form))
-                        //出发父级更新user方法
+                        sessionStorage.setItem("user", JSON.stringify(this.form));
+                        //触发父级更新user方法
                         this.$emit("userInfo")
                     } else {
                         this.$message.error(res.msg)

@@ -81,9 +81,8 @@ export default {
   },
   created() {
     if (this.user) {
-      // console.log(this.user)
-      sessionStorage.removeItem("user")
-      sessionStorage.removeItem("menus")
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("menus");
     }
   },
   setup() {
@@ -110,15 +109,15 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (!this.form.validCode) {
-            this.$message.error("请填写验证码")
+            this.$message.error("请填写验证码");
             return
           }
           if (this.form.validCode.toLowerCase() !== this.validCode.toLowerCase() && this.form.validCode.toLowerCase()
               !== '2') {
-            this.$message.error("验证码错误")
+            this.$message.error("验证码错误");
             return
           }
-          this.loading = true
+          this.loading = true;
           setTimeout(() => {
             this.loading = false
           }, 1000)
@@ -157,13 +156,6 @@ export default {
 
 
 <style scoped>
-.homepage-hero-module {
-  /*background-image: url("../assets/背景1.jpg");*/
-  /*width: 100%;*/
-  /*height: 100vh;*/
-  /*position: relative;*/
-  /*overflow: hidden;*/
-}
 
 .video-container {
   position: relative;

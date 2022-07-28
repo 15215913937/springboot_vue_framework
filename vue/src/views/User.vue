@@ -15,28 +15,20 @@
                 clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-      <!--            <el-button type="danger" style="float: right;margin-right: 10px">-->
-      <!--                <el-icon>-->
-      <!--                    <Delete/>-->
-      <!--                </el-icon>-->
-      <!--                &nbsp批量删除-->
-      <!--            </el-button>-->
-
     </div>
-    <!--    列表区-->
-    <!--        stripe:斑马纹-->
     <el-table
         v-loading="loading"
         :data="tableData"
+        :header-cell-style="{'text-align':'center'}"
         border
         stripe
         style="width: 100%"
         @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"/>
+      <el-table-column type="selection" width="55" align="center"/>
       <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable="" width="70px"/>
-      <el-table-column prop="username" label="用户名"/>
-      <el-table-column prop="role" label="角色">
+      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column prop="username" label="用户名" align="center"/>
+      <el-table-column prop="role" label="角色" align="center">
         <template #default="scope">
           <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
           <el-tag type="warning" v-if="scope.row.role === 'ROLE_USER'">普通用户</el-tag>
@@ -44,11 +36,11 @@
           <el-tag type="error" v-if="scope.row.role === 'ROLE_TESTER'">测试用户</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="姓名"/>
-      <el-table-column prop="birthday" label="出生日期"/>
-      <el-table-column prop="sex" label="性别" width="70px"/>
+      <el-table-column prop="name" label="姓名" align="center"/>
+      <el-table-column prop="birthday" label="出生日期" align="center"/>
+      <el-table-column prop="sex" label="性别" width="70px" align="center"/>
 
-      <el-table-column fixed="right" label="操作" width="400px">
+      <el-table-column fixed="right" label="操作" width="400px" align="center">
         <template #default="scope">
           <!--                  后端也要有个bookList属性-->
           <el-button plain type="success" @click="showBooks(scope.row.bookList)">查看图书列表
@@ -83,13 +75,13 @@
           @current-change="handleCurrentChange"
       />
 
-      <el-dialog title="拥有图书列表" v-model="bookVis" width="30%">
+      <el-dialog title="拥有图书列表" v-model="bookVis" width="60%">
         <el-table :data="bookList" stripe border>
-          <el-table-column prop="id" label="ID"></el-table-column>
-          <el-table-column prop="bookname" label="名称"></el-table-column>
-          <el-table-column prop="author" label="作者"></el-table-column>
-          <el-table-column prop="price" label="价格"></el-table-column>
-          <el-table-column prop="buyDate" label="购买日期"></el-table-column>
+          <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+          <el-table-column prop="bookname" label="名称" align="center"/>
+          <el-table-column prop="author" label="作者" align="center"/>
+          <el-table-column prop="price" label="价格" align="center"/>
+          <el-table-column prop="buyDate" label="购买日期" align="center"/>
         </el-table>
       </el-dialog>
 
@@ -224,29 +216,17 @@ export default {
       setTimeout(() => {
         this.loading = false
       }, 1000)
-      if (this.form.id) {//若果id存在，更新
-        request.put("/user", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("修改成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      } else {//如果id不存在，新增
-        request.post("/user", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("新增成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      }
+      // if (this.form.id) {//若果id存在，更新
+      request.post("/user", this.form).then(res => {
+        // console.log(res);
+        if (res.code === '0') {
+          this.$message.success("操作成功")
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.load();//刷新表格数据
+        this.dialogVisible = false
+      });
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
