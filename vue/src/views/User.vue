@@ -101,7 +101,7 @@
       </el-dialog>
 
       <el-dialog v-model="dialogVisible" title="家庭成员信息" width="30%">
-        <el-form model="form" label-width="120px">
+        <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="form.username" style="width: 80%" autocomplete="off"/>
           </el-form-item>
@@ -167,6 +167,12 @@ export default {
       roles: [],
       pwdVis: false,
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
+      rules: {
+        username: [
+          {required: true, message: '用户名不能为空', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在3~20位之间', trigger: 'blur'},
+        ],
+      }
     }
   },
   created() {
@@ -211,22 +217,27 @@ export default {
       // 清空表单域，点击取消后，下次打开就是清空内容了
       this.form = {}
     },
+
     save() {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
-      // if (this.form.id) {//若果id存在，更新
-      request.post("/user", this.form).then(res => {
-        // console.log(res);
-        if (res.code === '0') {
-          this.$message.success("操作成功")
-        } else {
-          this.$message.error(res.msg)
+      this.$refs.pass.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+          // if (this.form.id) {//若果id存在，更新
+          request.post("/user", this.form).then(res => {
+            // console.log(res);
+            if (res.code === '0') {
+              this.$message.success("操作成功")
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.load();//刷新表格数据
+            this.dialogVisible = false
+          });
         }
-        this.load();//刷新表格数据
-        this.dialogVisible = false
-      });
+      })
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));

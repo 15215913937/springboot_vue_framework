@@ -59,6 +59,9 @@ public class MenuController {
         if (res != null) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "菜单名称已存在");
         }
+        if (StrUtil.isBlank(menu.getPagePath())) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
+        }
         menuService.saveOrUpdate(menu);
         flushRedis(Constants.MENUS_KEY);
         return Result.success();

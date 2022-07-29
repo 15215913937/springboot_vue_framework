@@ -38,7 +38,7 @@
           </div>
         </div>
         <div :style="fixStyle" class="ivu-global-footer i-copyright">
-          <div class="ivu-global-footer-copyright">Copyright © {{ new Date().getFullYear() }} | 沈氏网络科技有限公司</div>
+          <div class="ivu-global-footer-copyright">Copyright © 2022-{{ new Date().getFullYear() }} | 沈氏网络科技有限公司</div>
         </div>
       </div>
       <video :style="fixStyle" autoplay loop muted class="fillWidth" v-on:canplay="canplay">

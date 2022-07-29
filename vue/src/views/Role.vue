@@ -31,7 +31,7 @@
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="role" label="角色" align="center"/>
       <el-table-column prop="flag" label="唯一标识" align="center"/>
-      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="description" label="描述"/>
       <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template #default="scope">
           <el-button plain type="success" @click="selectMenu(scope.row.id)">
@@ -72,15 +72,15 @@
         </template>
       </el-dialog>
       <el-dialog v-model="dialogVisible" title="角色信息" width="30%">
-        <el-form model="form" label-width="120px">
-          <el-form-item label="角色">
-            <el-input v-model="form.role" style="width: 80%"/>
+        <el-form :model="roles" label-width="120px" ref="pass" :rules="rules">
+          <el-form-item label="角色" prop="role">
+            <el-input v-model="roles.role" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="唯一标识">
-            <el-input v-model="form.flag" style="width: 80%"/>
+          <el-form-item label="唯一标识" prop="flag">
+            <el-input v-model="roles.flag" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input type="textarea" v-model="form.description" style="width: 80%"/>
+            <el-input type="textarea" v-model="roles.description" style="width: 80%"/>
           </el-form-item>
         </el-form>
         <template #footer>
@@ -110,6 +110,7 @@ export default {
       menuDialogVis: false,
       dialogVisible: false,
       role: '',
+      roles:{},
       tableData: [],
       menuData: [],
       props: {
@@ -117,7 +118,18 @@ export default {
       },
       roleId: 0,
       expends: [],
-      checks: []
+      checks: [],
+      user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
+      rules: {
+        role: [
+          {required: true, message: '角色名称不能为空', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在2~20位之间', trigger: 'blur'},
+        ],
+        flag: [
+          {required: true, message: '角色标志不能为空', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在3~20位之间', trigger: 'blur'},
+        ],
+      }
     }
   },
   created() {
@@ -145,37 +157,28 @@ export default {
     add() {
       this.dialogVisible = true;
       // 清空表单域，点击取消后，下次打开就是清空内容了
-      this.form = {}
+      this.roles = {}
     },
     save() {
-      if (this.form.id) {//若果id存在，更新
-        //提交加载效果设置，放置点击太快重复提交
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-        }, 1000)
-        request.post("/role", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("修改成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      } else {//如果id不存在，新增
-        request.post("/role", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("新增成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      }
+      this.$refs.pass.validate((valid) => {
+        if (valid) {
+          //提交加载效果设置，放置点击太快重复提交
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+          request.post("/role", this.roles).then(res => {
+            // console.log(res);
+            if (res.code === '0') {
+              this.$message.success("修改成功")
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.load();//刷新表格数据
+            this.dialogVisible = false
+          });
+        }
+      })
     },
     saveRoleMenu() {
       this.loading = true
@@ -186,16 +189,16 @@ export default {
       request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
         // console.log(res)
         if (res.code === '0') {
+          // console.log(this.role)
+          this.menuDialogVis = false;
           this.$message.success("分配成功");
-          // this.menuDialogVis = false
-          this.$router.push('/login');
         } else {
           this.$message.error(res.msg)
         }
       })
     },
     handleEdit(row) {
-      this.form = JSON.parse(JSON.stringify(row));
+      this.roles = JSON.parse(JSON.stringify(row));
       this.dialogVisible = true
     },
     handleDelete(row) {
@@ -224,7 +227,6 @@ export default {
         // 把后台返回的菜单数据处理成 id数组
         this.expends = this.menuData.map(v => v.id)
       })
-
     }
   }
 }

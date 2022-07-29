@@ -1,7 +1,7 @@
 #启动端口配置
 server:
-#  ip: http://39.108.101.167
-  ip: http://localhost
+  ip: http://39.108.101.167
+#  ip: http://localhost
   port: 9090
 #数据库配置
 spring:
@@ -10,9 +10,9 @@ spring:
       matching-strategy: ant_path_matcher #Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+#    url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
 #   服务器的数据库
-#    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
     username: root
     password: root
     hikari.max-lifetime: 120000
@@ -26,6 +26,16 @@ spring:
       max-file-size: 200MB
       max-request-size: 200MB
 
+  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    password: ''
+      # 连接超时时间
+    timeout: 3000
+#    服务器的redis
+    host: 39.108.101.167
+    port: 7000
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -35,5 +45,5 @@ mybatis-plus:
 files:
   upload:
 #    服务器上的路径
-#    path: /home/files/
-    path: D:/springbootspace/springboot_vue_framework/springboot/src/main/resources/files/
+    path: /home/files/
+#    path: D:/springbootspace/springboot_vue_framework/springboot/src/main/resources/files/

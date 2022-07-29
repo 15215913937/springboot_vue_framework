@@ -105,8 +105,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
       />
+
       <el-dialog v-model="dialogVisible" title="书籍信息" width="30%">
-        <el-form model="form" label-width="120px">
+        <el-form :model="form" label-width="120px" ref="pass" :rules="rules">
           <el-form-item label="封面">
             <el-upload ref="upload" :action="filesUploadUrl"
                        :on-success="fileUploadSuccess">
@@ -114,10 +115,10 @@
             </el-upload>
             <div slot="tip" style="font-size: 13px">只能上传jpg/png文件，且不超过1M</div>
           </el-form-item>
-          <el-form-item label="书名">
+          <el-form-item label="书名" prop="bookname">
             <el-input v-model="form.bookname" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="作者">
+          <el-form-item label="作者" prop="author">
             <el-input v-model="form.author" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="类别">
@@ -129,16 +130,16 @@
           <el-form-item label="出版社">
             <el-input v-model="form.publishingHouse" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="购买人">
+          <el-form-item label="购买人" prop="uid">
             <el-select v-model="form.uid" clearable placeholder="选择购买人" style="width: 80%">
               <el-option v-for="item in users" :key="item.id" :label="item.name"
                          :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="价格">
-            <el-input v-model="form.price" style="width: 80%"/>
+          <el-form-item label="价格" prop="price">
+            <el-input v-model.number="form.price" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="购书日期">
+          <el-form-item label="购书日期" prop="buyDate">
             <el-date-picker
                 v-model="form.buyDate"
                 type="date"
@@ -190,6 +191,24 @@ export default {
       filesUploadUrl: 'http://' + serverIp + ':9090/files/upload',
       users: [],
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
+      rules: {
+        bookname: [
+          {required: true, message: '书名不能为空', trigger: 'blur'},
+          {min: 1, max: 30, message: '长度在1~30位之间', trigger: 'blur'},
+        ],
+        author: [
+          {required: true, message: '作者不能为空', trigger: 'blur'},
+          {min: 1, max: 30, message: '长度在1~30位之间', trigger: 'blur'},
+        ],
+        price: [
+          {required: true, message: '价格不能为空', trigger: 'blur'},
+          { type: 'number', message: '只能输入整数' },
+          {min: 1, max: 5, message: '长度在1~5位之间', trigger: 'blur'},
+        ],
+        uid: [
+          {required: true, message: '未选择购买人', trigger: 'blur'},
+        ]
+      }
     }
   },
   created() {
@@ -261,20 +280,25 @@ export default {
 
     },
     save() {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
-      request.post("/book", this.form).then(res => {
-        // console.log(res);
-        if (res.code === '0') {
-          this.$message.success("操作成功")
-        } else {
-          this.$message.error(res.msg)
+      this.$refs.pass.validate((valid)=>{
+        if(valid){
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+          request.post("/book", this.form).then(res => {
+            // console.log(res);
+            if (res.code === '0') {
+              this.$message.success("操作成功")
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.load();//刷新表格数据
+            this.dialogVisible = false
+          });
         }
-        this.load();//刷新表格数据
-        this.dialogVisible = false
-      });
+      })
+
     },
     handleEdit(row) {
       // console.log(row)

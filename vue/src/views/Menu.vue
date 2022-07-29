@@ -23,7 +23,7 @@
         @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column prop="id" label="ID" sortable="" align="center" width="100px"/>
       <el-table-column prop="name" label="菜单名称" align="center"/>
       <el-table-column prop="path" label="路径" align="center"/>
       <el-table-column prop="pagePath" label="页面路径" align="center"/>
@@ -38,7 +38,7 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template #default="scope">
-          <el-button plain type="primary" @click="handleAdd(scope.row.id)"
+          <el-button plain type="success" @click="handleAdd(scope.row.id)"
                      v-if="!scope.row.pid && !scope.row.path">
             <el-icon>
               <Plus/>
@@ -60,17 +60,17 @@
     </el-table>
     <div style="margin: 10px 0">
       <el-dialog v-model="dialogVisible" title="菜单信息" width="30%">
-        <el-form model="form" label-width="120px">
-          <el-form-item label="菜单名称">
+        <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
+          <el-form-item label="菜单名称" prop="name">
             <el-input v-model="form.name" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="路径">
+          <el-form-item label="路径" prop="path">
             <el-input v-model="form.path" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="页面路径">
+          <el-form-item label="页面路径" prop="pagePath">
             <el-input v-model="form.pagePath" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="图标">
+          <el-form-item label="图标" prop="icon">
             <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
               <el-option
                   v-for="item in options"
@@ -85,7 +85,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="描述" prop="description">
             <el-input type="textarea" v-model="form.description" style="width: 80%"/>
           </el-form-item>
         </el-form>
@@ -115,9 +115,18 @@ export default {
       loading: true,
       form: {},
       dialogVisible: false,
-      name: '',
       tableData: [],
-      options: []
+      options: [],
+      rules: {
+        name: [
+          {required: true, message: '菜单名称不能为空', trigger: 'blur'},
+          {min: 2, max: 10, message: '长度在2~10位之间', trigger: 'blur'},
+        ],
+        pathPage: [
+          {required: true, message: '菜单路径不能为空', trigger: 'blur'},
+          {min: 3, max: 10, message: '长度在3~10位之间', trigger: 'blur'},
+        ]
+      }
     }
   },
   created() {
@@ -152,33 +161,24 @@ export default {
 
     },
     save() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false
-      }, 1000);
-      if (this.form.id) {//若果id存在，更新
-        request.post("/menu", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("修改成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();//刷新表格数据
-          this.dialogVisible = false
-        });
-      } else {//如果id不存在，新增
-        request.post("/menu", this.form).then(res => {
-          // console.log(res);
-          if (res.code === '0') {
-            this.$message.success("新增成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load(); //刷新表格数据
-          this.dialogVisible = false
-        });
-      }
+      this.$refs.pass.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false
+          }, 1000);
+          request.post("/menu", this.form).then(res => {
+            // console.log(res);
+            if (res.code === '0') {
+              this.$message.success("修改成功")
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.load();//刷新表格数据
+            this.dialogVisible = false
+          });
+        }
+      })
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
