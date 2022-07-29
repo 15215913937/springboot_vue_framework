@@ -51,11 +51,8 @@ public class BookController {
         if (StrUtil.isBlank(book.getBookname()) || StrUtil.isBlank(book.getAuthor()) || StrUtil.isBlank(book.getUid()) || book.getPrice() == null) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "必填项不能为空！");
         }
-        Book res = bookMapper.selectOne(Wrappers.<Book>lambdaQuery().eq(Book::getBookname,
-                book.getBookname()));
-        if (res != null) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "已经有这本书啦！");
-        }
+//        Book res = bookMapper.selectOne(Wrappers.<Book>lambdaQuery().eq(Book::getBookname,
+//                book.getBookname()));
         if (book.getBuyDate() == null) {
             book.setBuyDate(new Date());
         }

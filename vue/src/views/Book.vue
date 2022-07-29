@@ -203,7 +203,6 @@ export default {
         price: [
           {required: true, message: '价格不能为空', trigger: 'blur'},
           { type: 'number', message: '只能输入整数' },
-          {min: 1, max: 5, message: '长度在1~5位之间', trigger: 'blur'},
         ],
         uid: [
           {required: true, message: '未选择购买人', trigger: 'blur'},
