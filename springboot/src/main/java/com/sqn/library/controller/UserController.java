@@ -188,12 +188,13 @@ public class UserController {
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String name) {
+                              @RequestParam(defaultValue = "") String name,
+                              @RequestParam(defaultValue = "") String role) {
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
-        if (StrUtil.isNotBlank(name)) {
-            wrapper.like(User::getName, name);
+        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(role)) {
+            wrapper.like(User::getName, name).like(User::getRole,role);
         }
-        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name);
+        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name,role);
         return Result.success(userPage);
     }
 

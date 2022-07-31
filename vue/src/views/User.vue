@@ -11,8 +11,8 @@
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                clearable/>
+      <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search" clearable/>
+      <el-input v-model="role" placeholder="请输入角色" style="width: 20%" class="mr-10" :prefix-icon="Search" clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
     </div>
@@ -159,6 +159,7 @@ export default {
       dialogVisible: false,
       bookVis: false,
       name: '',
+      role:'',
       currentPage: 1,
       pageSize: 10,
       total: '',
@@ -195,7 +196,8 @@ export default {
         params: {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
-          name: this.name
+          name: this.name,
+          role:this.role,
         }
       }).then(res => {
         // console.log(res.data.records);
@@ -210,6 +212,7 @@ export default {
     },
     reset() {
       this.name = '';
+      this.role = '';
       this.load();
     },
     add() {
