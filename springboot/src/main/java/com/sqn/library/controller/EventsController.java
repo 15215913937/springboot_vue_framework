@@ -11,6 +11,7 @@ import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.EventsMapper;
 import com.sqn.library.service.IEventsService;
 import io.swagger.annotations.Api;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -51,11 +52,16 @@ public class EventsController {
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String title,
-                              @RequestParam(defaultValue = "") String author
+                              @RequestParam(defaultValue = "") String author,
+                              @RequestParam(defaultValue = "") String startTime,
+                              @RequestParam(defaultValue = "") String endTime
     ) {
         LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
         if (StrUtil.isNotBlank(title) || StrUtil.isNotBlank(author)) {
             wrapper.like(Events::getTitle, title).like(Events::getAuthor, author);
+        }
+        if (StrUtil.isNotEmpty(startTime) || StrUtil.isNotEmpty(endTime)) {
+            wrapper.between(Events::getCreateTime, startTime, endTime);
         }
         Page<Events> eventsPage = eventsMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
         return Result.success(eventsPage);
