@@ -24,6 +24,7 @@ public class User {
     private String sex;
     private String avatar;
     private String role;
+    private String phone;
     @TableField(exist = false)
     private String token;
 

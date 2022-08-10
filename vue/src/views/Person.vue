@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <el-card style="width: 40%;margin: 10px">
@@ -20,6 +19,9 @@
                 <el-form-item label="姓名">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
+                <el-form-item label="电话">
+                    <el-input v-model="form.phone"></el-input>
+                </el-form-item>
                 <el-form-item label="出生日期">
                     <el-date-picker
                             v-model="form.birthday"
@@ -34,7 +36,10 @@
                     <el-input v-model="form.sex"></el-input>
                 </el-form-item>
                 <el-form-item label="角色">
-                    <el-input v-model="form.role" disabled></el-input>
+                    <text type="primary" v-if="form.role === 'ROLE_ADMIN'">管理员</text>
+                    <text type="warning" v-if="form.role === 'ROLE_USER'">普通用户</text>
+                    <text type="success" v-if="form.role === 'ROLE_VISITOR'">游客</text>
+                    <text type="error" v-if="form.role === 'ROLE_TESTER'">测试用户</text>
                 </el-form-item>
                 <div style="text-align: center">
                     <el-button type="primary" @click="update" :loading="loading">保存</el-button>
@@ -52,9 +57,11 @@
     export default {
         name: "Person",
         data() {
+
             return {
                 form: {},
-                serverIp:serverIp
+                serverIp: serverIp,
+                loading: false,
             }
         },
         created() {
@@ -64,9 +71,6 @@
         methods: {
             update() {
                 this.loading = true;
-                setTimeout(() => {
-                    this.loading = false
-                }, 1000)
                 request.post("/user", this.form).then(res => {
                     // console.log(res);
                     if (res.code === '0') {
@@ -78,7 +82,11 @@
                     } else {
                         this.$message.error(res.msg)
                     }
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 1000)
                 })
+
             }
             ,
             handleAvatarSuccess(res) {
