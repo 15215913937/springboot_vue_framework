@@ -23,7 +23,6 @@ import javax.annotation.Resource;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-    private static final Log LOG = Log.get();
     @Resource
     UserMapper userMapper;
 

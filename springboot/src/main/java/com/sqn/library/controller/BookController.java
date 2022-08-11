@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,6 @@ public class BookController {
 
     //查询接口
     @GetMapping
-//    @Cacheable(value = "book",key = "'findBooks'")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
@@ -135,10 +135,12 @@ public class BookController {
         writer.setFreezePane(1);
         //一次性写出list内的对象到excel，使用默认样式，强制输出标题
         writer.write(list, true);
-
+//        设置时间戳
+        SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timeStamp = timestamp.format(new Date());
         //设置浏览器响应格式
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        String fileName = URLEncoder.encode("书籍信息", "UTF-8");
+        String fileName = URLEncoder.encode("所有书籍", "UTF-8") + timeStamp;
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
 
         ServletOutputStream out = response.getOutputStream();

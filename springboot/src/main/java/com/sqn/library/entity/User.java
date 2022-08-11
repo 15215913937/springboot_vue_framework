@@ -6,8 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.w3c.dom.ls.LSInput;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class User {
     private String sex;
     private String avatar;
     private String role;
+    @Length(min = 11, max = 11, message = "手机号只能是11位")
+    @Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "手机号格式有误")
     private String phone;
     @TableField(exist = false)
     private String token;
@@ -33,6 +36,5 @@ public class User {
 
     @TableField(exist = false)
     private List<Menu> menus;
-
 
 }

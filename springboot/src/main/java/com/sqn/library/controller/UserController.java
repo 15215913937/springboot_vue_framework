@@ -27,15 +27,17 @@ import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.security.cert.CertStoreException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.sqn.library.common.Constants.USER_KEY;
-
+@Validated
 @RestController
 @RequestMapping("/user")
 @Api(tags = {"成员管理"})
@@ -148,8 +150,7 @@ public class UserController {
 
     //新增或更新接口
     @PostMapping
-    public Result<?> save(@RequestBody User user) {
-
+    public Result<?> save(@Valid @RequestBody User user) {
         if (StrUtil.isBlank(user.getUsername())) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "用户名未填写");
         }
@@ -167,14 +168,6 @@ public class UserController {
         return Result.success();
 
     }
-
-//    //修改接口
-//    @PutMapping
-//    public Result<?> update(@RequestBody User user) {
-//        userMapper.updateById(user);
-//        flushRedis(USER_KEY);
-//        return Result.success();
-//    }
 
     //删除接口
     @DeleteMapping("/{id}")
