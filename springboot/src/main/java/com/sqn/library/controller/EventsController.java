@@ -67,6 +67,14 @@ public class EventsController {
         return Result.success(eventsPage);
     }
 
+    @GetMapping("/{id}")
+    public Result<?> findOneEvent(@PathVariable Integer id) {
+//        LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
+//        wrapper.eq(Events::getId,id);
+        Events events = eventsMapper.selectById(id);
+        return Result.success(events);
+    }
+
     //事件批量删除
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
