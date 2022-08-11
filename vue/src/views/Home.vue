@@ -118,12 +118,12 @@ export default {
     })
     //获取书籍总数
     request.get("/book").then(res => {
-      this.bookCount = res.data.records.length
+      this.bookCount = res.data.total
     })
     //获取事件总数和个人事件
     request.get("/events").then(res => {
       // console.log(res.data.records)
-      this.eventCount = res.data.records.length
+      this.eventCount = res.data.total
       let myEvents = res.data.records;
       let count = 0
       for (const myEvent of myEvents) {
@@ -136,7 +136,7 @@ export default {
     //获取文件总数
     request.get("/files").then(res => {
       // console.log(res.data.records.length)
-      this.fileCount = res.data.records.length
+      this.fileCount = res.data.total
     })
     //折线图
     var chartDom1 = document.getElementById('main');

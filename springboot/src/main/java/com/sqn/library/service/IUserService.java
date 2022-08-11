@@ -4,6 +4,7 @@ import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * <p>
@@ -13,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author shenqn
  * @since 2022-07-08
  */
+
 public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
