@@ -108,13 +108,18 @@ export default {
       this.userCount = res.data.records.length;
       let myBooks = res.data.records
       // console.log(this.user.name)
-      for (const myBook of myBooks) {
-        // console.log(myBook)
-        if (myBook.name === this.user.name) {
-          this.myBookCount = myBook.bookList.length;
-          break;
-        }
-      }
+      // for (const myBook of myBooks) {
+      //   // console.log(myBook)
+      //   if (myBook.name === this.user.name) {
+      //     this.myBookCount = myBook.bookList.length;
+      //     break;
+      //   }
+      // }
+    })
+    //获取个人书籍
+    request.get("/book/" + this.user.id).then(res => {
+      // console.log("个人书籍：", res)
+      this.myBookCount = res.data.length
     })
     //获取书籍总数
     request.get("/book").then(res => {
@@ -233,7 +238,7 @@ export default {
 
     })
     //个人购书折线图
-    request.post("/echarts/booksNumberOne",this.user).then(res=>{
+    request.post("/echarts/booksNumberOne", this.user).then(res => {
       option1.series[1].data = res.data;
       myChart1.setOption(option1);
       option2.series[0].data = [

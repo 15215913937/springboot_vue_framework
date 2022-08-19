@@ -207,7 +207,6 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    @Cacheable(value = "user", key = "'findUserAll'")
     public Result<?> findAll() {
         return Result.success(iUserService.list());
     }

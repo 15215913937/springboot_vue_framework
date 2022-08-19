@@ -17,6 +17,8 @@ import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IUserService;
 import io.swagger.annotations.Api;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,6 +28,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.sql.Wrapper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -91,6 +94,13 @@ public class BookController {
 //        }
         Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
+    }
+//按购买人id查询
+    @GetMapping("/{uid}")
+    public Result<?> findPageById(@PathVariable Integer uid) {
+        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery().eq(Book::getUid, uid);
+        List<Book> list = bookMapper.selectList(wrapper);
+        return Result.success(list);
     }
 
     //批量删除

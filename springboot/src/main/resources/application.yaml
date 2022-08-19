@@ -47,3 +47,8 @@ files:
 #    服务器上的路径
 #    path: /home/files/
     path: D:/springbootspace/springboot_vue_framework/springboot/src/main/resources/files/
+
+wechat:
+#  微信小程序
+  appid: 'wx220d24d59fe2c1ff'
+  secret: '21a515e56bb07a177732db8f85cf6bab'
