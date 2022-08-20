@@ -164,7 +164,7 @@
                 const isPhone = reg.test(value);
                 // value = Number(value); //转换为数字
                 // value = value.toString(); //转换成字符串
-                if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
+                if (value.length < 0 || value.length > 11 || !isPhone) { //判断是否为11位手机号
                     callback(new Error("手机号码格式不正确"));
                 } else {
                     callback();
