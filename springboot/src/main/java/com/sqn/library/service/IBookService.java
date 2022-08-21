@@ -19,6 +19,13 @@ import java.util.List;
 public interface IBookService extends IService<Book> {
 
     List<Book> OneList(Integer UId);
+
     //@Param  取别名，和xml文件里的参数一致
-    Page<Book> findPage(Page<Book> tPage, @Param("name") String name,@Param("author") String author,@Param("category") String category);
+    Page<Book> findPage(Page<Book> tPage, @Param("name") String name, @Param("author") String author, @Param(
+            "category") String category);
+
+    Page<Book> findPageByUid(Page<Book> page, @Param("uid") Integer uid, @Param("name") String name,
+                             @Param("author") String author,
+                             @Param("category") String category);
+
 }

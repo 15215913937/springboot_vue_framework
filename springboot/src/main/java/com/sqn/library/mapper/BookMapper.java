@@ -13,4 +13,6 @@ public interface BookMapper extends BaseMapper<Book> {
 
     Page<Book> findPage(Page<Book> page, String name, String author, String category);
 
+    Page<Book> findPageByUid(Page<Book> page, Integer uid, String name, String author, String category);
+
 }

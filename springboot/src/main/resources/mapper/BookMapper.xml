@@ -18,4 +18,23 @@
             </if>
         </where>
     </select>
+    <select id="findPageByUid" resultType="com.sqn.library.entity.Book">
+        select book.*,user.name as username from book
+        left join user
+        on book.uid=user.id
+        <where>
+            <if test="uid != null and uid != ''">
+                and book.uid = #{uid}
+            </if>
+            <if test="name != null and name != ''">
+                and book.bookname like concat('%',#{name},'%')
+            </if>
+            <if test="author != null and author != ''">
+                and book.author like concat('%',#{author},'%')
+            </if>
+            <if test="category != null and category != ''">
+                and book.category like concat('%',#{category},'%')
+            </if>
+        </where>
+    </select>
 </mapper>
