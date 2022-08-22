@@ -1,6 +1,5 @@
 <template>
     <div style="padding: 10px">
-        <!--    功能区-->
         <div style="margin: 10px 0">
             <el-button type="primary" @click="add">
                 <el-icon>
@@ -9,11 +8,8 @@
                 &nbsp新增
             </el-button>
         </div>
-        <!--    搜索区-->
         <div style="margin: 10px 0;display: block;clear: both">
-            <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                      clearable/>
-            <el-input v-model="role" placeholder="请输入角色" style="width: 20%" class="mr-10" :prefix-icon="Search"
+            <el-input v-model="name" placeholder="请输入类别名称" style="width: 20%" class="mr-10" :prefix-icon="Search"
                       clearable/>
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
@@ -24,7 +20,10 @@
                 :header-cell-style="{'text-align':'center'}"
                 border
                 stripe
-                style="width: 100%">
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" align="center"/>
+            <!--            sortable:排序操作-->
             <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
             <el-table-column prop="username" label="用户名" align="center"/>
             <el-table-column prop="role" label="角色" align="center">

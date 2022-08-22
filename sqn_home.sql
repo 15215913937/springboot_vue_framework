@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 17/08/2022 00:58:57
+ Date: 22/08/2022 23:40:22
 */
 
 SET NAMES utf8mb4;
@@ -53,7 +53,7 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 53 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
@@ -63,13 +63,21 @@ INSERT INTO `book` VALUES (31, '不战之困', '戴旭', '军事理论', NULL, '
 INSERT INTO `book` VALUES (32, '全栈自动化测试实战', '卢家涛', '信息技术', '2020年3月第1版', '电子工业出版社', 18, 79.00, '2021-10-31', '基于TestNG、HttpClient、Selenium和Appium', 'http://localhost:9090/files/851c041f164b4a269afb2ae535384344');
 INSERT INTO `book` VALUES (33, '金融的价值', '黄益平', '金融理论', '2021年12月第1版', '中信出版集团', 23, 69.00, '2022-07-22', '与宏观分析趋势，于底层掌握逻辑', 'http://localhost:9090/files/36bac59e0cad4ba486b607f2c2e10606');
 INSERT INTO `book` VALUES (34, '李东生 向生而生', '李海东', '企业家研究丛书', NULL, '中国友谊出版公司', 23, 48.00, '2022-07-22', '经历痛苦的蜕变，才能如“鹰”般重生。', 'http://localhost:9090/files/1527646ef01140cdb33879e10321c591');
-INSERT INTO `book` VALUES (46, '6', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (47, '7', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (48, '8', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (49, '9', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (50, '10', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (51, '11', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
-INSERT INTO `book` VALUES (52, '12', '123', '123', '123', '312', 26, 123.00, '2022-07-29', NULL, NULL);
+
+-- ----------------------------
+-- Table structure for category_list
+-- ----------------------------
+DROP TABLE IF EXISTS `category_list`;
+CREATE TABLE `category_list`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '书籍类别',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of category_list
+-- ----------------------------
+INSERT INTO `category_list` VALUES (1, '	\r\n企业家研究丛书');
 
 -- ----------------------------
 -- Table structure for dict
@@ -149,6 +157,8 @@ INSERT INTO `files` VALUES (38, '1.mp4', 'mp4', 664, 'http://localhost:9090/file
 INSERT INTO `files` VALUES (39, '开工头像照片1.jpg', 'jpg', 38, 'http://localhost:9090/files/test/558e5156abca439390031516f382946f.jpg', 'ef9af9eb00145fd42bdaf24524660f77', 0, 1);
 INSERT INTO `files` VALUES (40, '开工头像照片1.jpg', 'jpg', 38, 'http://localhost:9090/files/test/558e5156abca439390031516f382946f.jpg', 'ef9af9eb00145fd42bdaf24524660f77', 1, 1);
 INSERT INTO `files` VALUES (41, '身份证.jpg', 'jpg', 189, 'http://localhost:9090/files/test/36a8695fe03a4f51a6f13b02cac82b32.jpg', 'c774aa7d6856f5d460f528f17d743392', 0, 1);
+INSERT INTO `files` VALUES (42, 'default.jpg', 'jpg', 13, 'http://localhost:9090/files/test/e216d505a5694a00973eb1391b776ddc.jpg', '834c7fa1fa9c8b62610250717e7b25c8', 0, 1);
+INSERT INTO `files` VALUES (43, '默认头像.png', 'png', 9, 'http://localhost:9090/files/test/f776fde4b0e34c0e8cb43c6fa8b765dd.png', 'ac6bf2e6db9b9969eb8bde298c8bf9ec', 0, 1);
 
 -- ----------------------------
 -- Table structure for menu
@@ -180,6 +190,7 @@ INSERT INTO `menu` VALUES (12, '菜单管理', '/menu', 'List', NULL, 6, 'Menu')
 INSERT INTO `menu` VALUES (14, '测试菜单', '/testPage', 'PieChart', '为了测试', NULL, 'TestPage');
 INSERT INTO `menu` VALUES (22, '地图使用', '', 'MapLocation', '集成高德地图使用', NULL, 'AMap');
 INSERT INTO `menu` VALUES (23, '当前位置', '/mapPath', 'Aim', '规划路线', 22, 'MapPath');
+INSERT INTO `menu` VALUES (27, '书籍类别', '/category', 'Notebook', NULL, 6, 'Category');
 
 -- ----------------------------
 -- Table structure for role
@@ -200,8 +211,6 @@ INSERT INTO `role` VALUES (1, '管理员', '拥有系统最高操作权限', 'RO
 INSERT INTO `role` VALUES (3, '普通成员', '一般成员，可操作事务管理内容', 'ROLE_USER');
 INSERT INTO `role` VALUES (4, '游客', '游客', 'ROLE_VISITOR');
 INSERT INTO `role` VALUES (5, '测试', '测试员', 'ROLE_TESTER');
-INSERT INTO `role` VALUES (8, '1234', NULL, '1324');
-INSERT INTO `role` VALUES (9, '123', NULL, '123');
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -227,7 +236,7 @@ INSERT INTO `role_menu` VALUES (1, 11);
 INSERT INTO `role_menu` VALUES (1, 12);
 INSERT INTO `role_menu` VALUES (1, 22);
 INSERT INTO `role_menu` VALUES (1, 23);
-INSERT INTO `role_menu` VALUES (1, 24);
+INSERT INTO `role_menu` VALUES (1, 27);
 INSERT INTO `role_menu` VALUES (3, 2);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
@@ -267,21 +276,22 @@ CREATE TABLE `user`  (
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
+  `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 56 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (18, 'sqn', '$2a$10$h09qF5uNmdlsmcCjFMyU/OkIDExEt69zpX/Ghs8d4rnNB6KhDZIZe', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937');
-INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/558e5156abca439390031516f382946f.jpg', NULL, 'ROLE_USER', '13819545627');
-INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728');
-INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810');
-INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 'ROLE_ADMIN', '15868180225');
-INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER', NULL);
-INSERT INTO `user` VALUES (31, 'ts', '$2a$10$2UxwKEKcOFUn3bqG0/g/SOuwkqzF6hYRcvMkoVRFaOaQvOXwwG3AK', '游客1', '2022-07-14', '男', '', '2022-07-19 01:35:13', 'ROLE_VISITOR', NULL);
-INSERT INTO `user` VALUES (45, 'test11', '$2a$10$CU2YPItFd5ZH4WAq2PMHPuC9O/DCSOTOH2OrL5gRhFiHdTbuRip66', '测试11', NULL, NULL, NULL, '2022-07-26 14:41:19', 'ROLE_TESTER', NULL);
-INSERT INTO `user` VALUES (52, '123', '$2a$10$Xs0LkkjEer4zLatmo.g5d.R2KewtO102pCCWhKZfhAsMIlXQAXjya', '123', NULL, NULL, NULL, '2022-07-29 11:17:40', 'ROLE_VISITOR', NULL);
-INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 'ROLE_USER', NULL);
+INSERT INTO `user` VALUES (18, 'sqn', '$2a$10$9rmVXRmsRuO1FbbjqMPGl.tdIkZDvQ8FoNf5/Fat1W2NMRivX1Cn6', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL);
+INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/558e5156abca439390031516f382946f.jpg', NULL, 'ROLE_USER', '13819545627', NULL);
+INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL);
+INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL);
+INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 'ROLE_ADMIN', '15868180225', NULL);
+INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER', NULL, NULL);
+INSERT INTO `user` VALUES (31, 'ts', '$2a$10$s9EXA7z4XgkdUGKg7hZAL.tk5o4BSJHC8V6jUKdAyzGN4ugt9FkuW', '游客1', '2022-07-14', '女', '', '2022-07-19 01:35:13', 'ROLE_VISITOR', '15215913933', NULL);
+INSERT INTO `user` VALUES (45, 'test11', '$2a$10$CU2YPItFd5ZH4WAq2PMHPuC9O/DCSOTOH2OrL5gRhFiHdTbuRip66', '测试11', NULL, NULL, NULL, '2022-07-26 14:41:19', 'ROLE_TESTER', NULL, NULL);
+INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, NULL, '', '2022-08-22 22:42:11', 'ROLE_ADMIN', '15215913937', NULL);
+INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 'ROLE_USER', NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

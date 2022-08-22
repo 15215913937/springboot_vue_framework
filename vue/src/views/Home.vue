@@ -106,7 +106,7 @@
             var that = this;
             //获取家族注册人数和个人书籍数量
             request.get("/user").then(res => {
-                this.userCount = res.data.records.total;
+                this.userCount = res.data.total;
             })
             //获取个人书籍
             request.get("/book/byUid", {
@@ -114,7 +114,6 @@
                     uid: that.user.id,
                 }
             }).then(res => {
-                console.log("个人书籍：", res);
                 this.myBookCount = res.data.total;
             })
             //获取书籍总数
@@ -126,7 +125,7 @@
                 // console.log(res.data.records)
                 this.eventCount = res.data.total
                 let myEvents = res.data.records;
-                let count = 0
+                let count = 0;
                 for (const myEvent of myEvents) {
                     if (myEvent.author === this.user.name) {
                         count += 1

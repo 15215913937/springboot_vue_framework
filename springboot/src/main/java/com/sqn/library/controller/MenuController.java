@@ -56,7 +56,7 @@ public class MenuController {
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
         Menu res = menuMapper.selectOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getName, menu.getName()));
-        if (res != null) {
+        if (res != null && !res.getId().equals(menu.getId())) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "菜单名称已存在");
         }
         if (StrUtil.isBlank(menu.getPagePath())) {

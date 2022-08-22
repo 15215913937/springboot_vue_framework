@@ -12,7 +12,7 @@
             <img :src="user.avatar" alt=""
                  style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
         </div>
-        <el-dropdown style="width: 100px;cursor: pointer;text-align: center">
+        <el-dropdown style="width: 150px;cursor: pointer;text-align: center">
             <span style="position: absolute;top: 18px">{{ user.username }}({{ user.name }})</span>
             <template #dropdown>
                 <el-dropdown-menu>
@@ -27,19 +27,17 @@
 
 <script>
     import {ArrowDown} from '@element-plus/icons-vue'
-    // import {resetRouter} from "../router";
 
     export default {
         name: "Header",
         props: ['user'],
         data() {
             return {
-                avater: ''
+                avatar: "",
             }
         },
         created() {
-            console.log(this.user);
-            let str = sessionStorage.getItem("user") || "{}";
+            let str = sessionStorage.getItem("user") || {};
             this.form = JSON.parse(str);
         },
         setup() {
@@ -91,7 +89,6 @@
 <style scoped>
     .titleName {
         font-size: 20px;
-        /*padding-left: 35px;*/
         font-weight: bold;
         color: dodgerblue;
     }

@@ -24,9 +24,7 @@
         :header-cell-style="{'text-align':'center'}"
         border
         stripe
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+        style="width: 100%">
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="role" label="角色" align="center"/>

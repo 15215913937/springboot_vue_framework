@@ -19,10 +19,7 @@
         default-expand-all
         border
         stripe
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <!--            sortable:排序操作-->
+        style="width: 100%">
       <el-table-column prop="id" label="ID" sortable="" align="center" width="100px"/>
       <el-table-column prop="name" label="菜单名称" align="center"/>
       <el-table-column prop="path" label="路径" align="center"/>
