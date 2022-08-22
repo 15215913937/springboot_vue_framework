@@ -106,7 +106,7 @@
             var that = this;
             //获取家族注册人数和个人书籍数量
             request.get("/user").then(res => {
-                this.userCount = res.data.records.length;
+                this.userCount = res.data.records.total;
             })
             //获取个人书籍
             request.get("/book/byUid", {
