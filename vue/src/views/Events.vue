@@ -144,7 +144,7 @@
                 rules: {
                     title: [
                         {required: true, message: '标题不能为空', trigger: 'blur'},
-                        {min: 2, max: 10, message: '长度在1~200位之间', trigger: 'blur'},
+                        {min: 1, max: 10, message: '长度在1~100位之间', trigger: 'blur'},
                     ],
                 }
             }
@@ -223,11 +223,11 @@
                             // console.log(res);
                             if (res.code === '0') {
                                 this.$message.success("编辑成功")
+                                this.load();//刷新表格数据
+                                this.dialogVisible = false
                             } else {
                                 this.$message.error(res.msg)
                             }
-                            this.load();//刷新表格数据
-                            this.dialogVisible = false
                         });
                     }
                 })

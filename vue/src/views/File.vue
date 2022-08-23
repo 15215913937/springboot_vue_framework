@@ -179,10 +179,10 @@ export default {
       request.delete("/files/" + this.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")
+          this.load();//刷新表格数据
         } else {
           this.$message.error(res.msg)
         }
-        this.load();//刷新表格数据
       })
     },
     handleSizeChange() {

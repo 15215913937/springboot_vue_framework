@@ -297,12 +297,12 @@
                         request.post("/book", this.form).then(res => {
                             console.log(res);
                             if (res.code === '0') {
-                                this.$message.success("操作成功")
+                                this.$message.success("操作成功");
+                                this.load();//刷新表格数据
+                                this.dialogVisible = false
                             } else {
                                 this.$message.error(res.msg)
                             }
-                            this.load();//刷新表格数据
-                            this.dialogVisible = false
                         });
                     }
                 })

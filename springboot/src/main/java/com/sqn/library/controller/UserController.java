@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sqn.library.common.Constants.USER_KEY;
+
 @Validated
 @RestController
 @RequestMapping("/user")
@@ -151,6 +152,10 @@ public class UserController {
     //新增或更新接口
     @PostMapping
     public Result<?> save(@Valid @RequestBody User user) {
+        User one = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+        if ((one != null && user.getId() == null) || (one != null && !one.getId().equals(user.getId()))) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "该用户已存在");
+        }
         if (StrUtil.isBlank(user.getUsername())) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "用户名未填写");
         }
@@ -185,9 +190,9 @@ public class UserController {
                               @RequestParam(defaultValue = "") String role) {
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
         if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(role)) {
-            wrapper.like(User::getName, name).like(User::getRole,role);
+            wrapper.like(User::getName, name).like(User::getRole, role);
         }
-        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name,role);
+        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name, role);
         return Result.success(userPage);
     }
 

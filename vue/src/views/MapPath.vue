@@ -12,9 +12,6 @@
 </template>
 
 <script>
-var content = [
-  "<div style='font-size: 14px; color: red; width: 200px; height: 50px'>这是信息窗口</div>"
-];
 
 export default {
   name: "MapPath",

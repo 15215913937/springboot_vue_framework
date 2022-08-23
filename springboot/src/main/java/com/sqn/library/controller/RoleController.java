@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
+import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.RoleMapper;
 import io.swagger.annotations.Api;
@@ -39,17 +40,21 @@ public class RoleController {
     private IRoleService roleService;
     @Resource
     RoleMapper roleMapper;
+
     // 新增或者更新
     @PostMapping
     public Result<?> save(@RequestBody Role role) {
         if (StrUtil.isBlank(role.getRole()) || StrUtil.isBlank(role.getFlag())) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "必填项不能为空！");
         }
-        Role res = roleMapper.selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getRole, role.getRole()));
-        if(res!=null && !res.getFlag().equals(role.getFlag())){
-            throw new CustomException(Constants.CODE_COMMON_ERR,"角色或标记已存在");
+        Role res =
+                roleMapper.selectOne(Wrappers.<Role>lambdaQuery()
+                        .eq(Role::getRole, role.getRole())
+                        .or()
+                        .eq(Role::getFlag, role.getFlag()));
+        if ((res != null && role.getId() == null) || (res != null && !res.getId().equals(role.getId()))) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "该角色或标记已存在");
         }
-
         roleService.saveOrUpdate(role);
         return Result.success();
     }

@@ -56,10 +56,10 @@ public class MenuController {
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
         Menu res = menuMapper.selectOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getName, menu.getName()));
-        if (res != null && !res.getId().equals(menu.getId())) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "菜单名称已存在");
+        if ((res != null && menu.getId() == null) || (res != null && !res.getId().equals(menu.getId()))) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "该菜单名称已存在");
         }
-        if (StrUtil.isBlank(menu.getPagePath())) {
+        if (StrUtil.isBlank(menu.getPath()) && StrUtil.isBlank(menu.getPagePath())) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
         }
         menuService.saveOrUpdate(menu);

@@ -1,14 +1,17 @@
 package com.sqn.library.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.CategoryListMapper;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.sqn.library.common.Result;
 
 
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author shenqn
@@ -38,7 +41,14 @@ public class CategoryListController {
     // 新增或者更新
     @PostMapping
     public Result<?> save(@RequestBody CategoryList categoryList) {
-        CategoryList res = categoryListMapper.selectById(categoryList.getId());
+        LambdaQueryWrapper<CategoryList> wrapper = Wrappers.<CategoryList>lambdaQuery()
+                .eq(CategoryList::getName, categoryList.getName())
+                .or()
+                .eq(CategoryList::getFlag, categoryList.getFlag());
+        CategoryList one = categoryListMapper.selectOne(wrapper);
+        if ((one != null && categoryList.getId() == null) || (one != null && !one.getId().equals(categoryList.getId()))) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "该类别或标识已存在");
+        }
         categoryListService.saveOrUpdate(categoryList);
         return Result.success();
     }
@@ -49,11 +59,6 @@ public class CategoryListController {
         return Result.success();
     }
 
-//    @PostMapping("/deleteBatch")
-//    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
-//        categoryListService.removeByIds(ids);
-//        return Result.success();
-//    }
 
     @GetMapping
     public Result<?> findAll() {
@@ -62,9 +67,14 @@ public class CategoryListController {
 
 
     @GetMapping("/search")
-    public Result<?> searchTo(@RequestParam(defaultValue = "") String name){
-        List<CategoryList> lists = categoryListMapper.selectList(Wrappers.<CategoryList>lambdaQuery().like(CategoryList::getName, name));
-        return  Result.success(lists);
+    public Result<?> searchTo(@RequestParam(defaultValue = "") String name,
+                              @RequestParam(defaultValue = "") String flag) {
+        List<CategoryList> lists =
+                categoryListMapper.selectList(Wrappers.<CategoryList>lambdaQuery()
+                        .like(CategoryList::getName, name)
+                        .like(CategoryList::getFlag, flag)
+                        .orderByAsc(CategoryList::getId));
+        return Result.success(lists);
     }
 
 }

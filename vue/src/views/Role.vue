@@ -121,7 +121,7 @@ export default {
       rules: {
         role: [
           {required: true, message: '角色名称不能为空', trigger: 'blur'},
-          {min: 3, max: 20, message: '长度在2~20位之间', trigger: 'blur'},
+          {min: 2, max: 20, message: '长度在2~20位之间', trigger: 'blur'},
         ],
         flag: [
           {required: true, message: '角色标志不能为空', trigger: 'blur'},
@@ -169,11 +169,11 @@ export default {
             // console.log(res);
             if (res.code === '0') {
               this.$message.success("修改成功")
+              this.load();//刷新表格数据
+              this.dialogVisible = false
             } else {
               this.$message.error(res.msg)
             }
-            this.load();//刷新表格数据
-            this.dialogVisible = false
           });
         }
       })

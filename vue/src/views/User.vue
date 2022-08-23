@@ -242,17 +242,16 @@
                         this.loading = true
                         // if (this.form.id) {//若果id存在，更新
                         request.post("/user", this.form).then(res => {
-                            // console.log(res);
-                            if (res.code === '0') {
-                                this.$message.success("操作成功")
-                            } else {
-                                this.$message.error(res.msg)
-                            }
                             setTimeout(() => {
                                 this.loading = false
                             }, 1000)
-                            this.load();//刷新表格数据
-                            this.dialogVisible = false
+                            if (res.code === '0') {
+                                this.$message.success("操作成功")
+                                this.load();//刷新表格数据
+                                this.dialogVisible = false
+                            } else {
+                                this.$message.error(res.msg)
+                            }
                         });
                     }
                 })
