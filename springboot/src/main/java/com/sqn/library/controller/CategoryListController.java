@@ -70,11 +70,6 @@ public class CategoryListController {
     public Result<?> searchTo(@RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String flag) {
         List<CategoryList> lists =  categoryListMapper.findBooks(name,flag);
-//        List<CategoryList> lists =
-//                categoryListMapper.selectList(Wrappers.<CategoryList>lambdaQuery()
-//                        .like(CategoryList::getName, name)
-//                        .like(CategoryList::getFlag, flag)
-//                        .orderByAsc(CategoryList::getId));
         return Result.success(lists);
     }
 

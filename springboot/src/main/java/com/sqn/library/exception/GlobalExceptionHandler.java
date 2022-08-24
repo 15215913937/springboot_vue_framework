@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody//返回json串
     public Result<?> error(HttpServletRequest request, Exception e) {
-        log.error("异常信息：", e);
+        log.error("异常信息---------------------", e);
         return Result.error(Constants.CODE_INTERNAL_ERR, "系统异常");
     }
 

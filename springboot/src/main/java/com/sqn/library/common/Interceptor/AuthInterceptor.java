@@ -8,16 +8,18 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 登录拦截器
+ */
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Autowired(required = false)
+    @Resource
     UserMapper userMapper;
 
     @Override

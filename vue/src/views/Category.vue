@@ -29,7 +29,7 @@
             <el-table-column fixed="right" label="操作" width="500px" align="center">
                 <template #default="scope">
                     <!--                  后端也要有个bookList属性-->
-                    <el-button plain type="success" @click="showBooks(scope.row.cBookList)">查看图书列表
+                    <el-button plain type="success" @click="showBooks(scope.row.cbookList)">查看图书列表
                     </el-button>
                     <el-button plain type="primary" @click="handleEdit(scope.row)" v-if="user.role==='ROLE_ADMIN'">编辑
                     </el-button>
@@ -48,7 +48,7 @@
         </el-table>
         <div style="margin: 10px 0">
             <el-dialog title="图书列表" v-model="bookVis" width="60%">
-                <el-table :data="bookList" stripe border>
+                <el-table :data="cbookList" stripe border>
                     <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
                     <el-table-column prop="bookname" label="名称" align="center"/>
                     <el-table-column prop="author" label="作者" align="center"/>
@@ -90,9 +90,9 @@
                 dialogVisible: false,
                 bookVis: false,
                 name: '',
-                flag:'',
+                flag: '',
                 tableData: [],
-                cBookList: [],
+                cbookList: [],
                 user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
                 rules: {
                     name: [
@@ -116,15 +116,16 @@
             }
         },
         methods: {
-            showBooks(books) {
-                this.cBookList = books;
-                this.bookVis = true
+            showBooks(cbookList) {
+                this.bookVis = true;
+                this.cbookList = cbookList;
+
             },
             search() {
                 request.get("/category-list/search", {
                     params: {
                         name: this.name,
-                        flag:this.flag,
+                        flag: this.flag,
                     }
                 }).then(res => {
                     // console.log(res);
@@ -133,7 +134,7 @@
             },
             reset() {
                 this.name = '';
-                this.flag='';
+                this.flag = '';
                 this.search();
             },
             add() {
