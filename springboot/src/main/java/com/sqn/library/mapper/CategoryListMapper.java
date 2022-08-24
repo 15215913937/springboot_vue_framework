@@ -2,6 +2,9 @@ package com.sqn.library.mapper;
 
 import com.sqn.library.entity.CategoryList;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CategoryListMapper extends BaseMapper<CategoryList> {
 
+    List<CategoryList> findBooks(@Param("name")String name,@Param("flag") String flag);
 }

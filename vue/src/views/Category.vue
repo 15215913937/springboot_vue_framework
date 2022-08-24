@@ -26,10 +26,10 @@
             <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
             <el-table-column prop="name" label="类别名称" align="center"/>
             <el-table-column prop="flag" label="唯一标识" align="center"/>
-            <el-table-column fixed="right" label="操作" width="800px" align="center">
+            <el-table-column fixed="right" label="操作" width="500px" align="center">
                 <template #default="scope">
                     <!--                  后端也要有个bookList属性-->
-                    <el-button plain type="success" @click="showBooks(scope.row.bookList)">查看图书列表
+                    <el-button plain type="success" @click="showBooks(scope.row.cBookList)">查看图书列表
                     </el-button>
                     <el-button plain type="primary" @click="handleEdit(scope.row)" v-if="user.role==='ROLE_ADMIN'">编辑
                     </el-button>
@@ -92,7 +92,7 @@
                 name: '',
                 flag:'',
                 tableData: [],
-                bookList: [],
+                cBookList: [],
                 user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
                 rules: {
                     name: [
@@ -117,7 +117,7 @@
         },
         methods: {
             showBooks(books) {
-                this.bookList = books;
+                this.cBookList = books;
                 this.bookVis = true
             },
             search() {

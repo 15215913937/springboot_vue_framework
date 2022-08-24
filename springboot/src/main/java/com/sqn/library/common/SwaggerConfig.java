@@ -14,13 +14,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 @SpringBootConfiguration
 @EnableOpenApi
 public class SwaggerConfig {
-
+//url:http://localhost:9090/swagger-ui/
     /**
      * ture 启用Swagger3.0， false 禁用（生产环境要禁用）
      */
-    Boolean swaggerEnabled=true;
+    Boolean swaggerEnabled = true;
+
     @Bean
-    public Docket createRestApi(){
+    public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())
                 // 是否开启
@@ -33,12 +34,12 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("小沈家庭管理系统")
                 .description("管理系统接口文档")
                 //作者信息
-                .contact(new Contact("沈奇男","www.baidu.com","1124253529@qq.com"))
+                .contact(new Contact("沈奇男", "www.baidu.com", "1124253529@qq.com"))
                 .version("1.0")
                 .build();
     }

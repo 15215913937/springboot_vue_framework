@@ -101,13 +101,6 @@ public class BookController {
         return Result.success(bookPage);
     }
 
-    //按购买人id查询
-//    @GetMapping("/{uid}")
-//    public Result<?> findPageById(@PathVariable Integer uid) {
-//        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery().eq(Book::getUid, uid);
-//        List<Book> list = bookMapper.selectList(wrapper);
-//        return Result.success(list);
-//    }
     @GetMapping("/byUid")
     public Result<?> findPageById(@RequestParam Integer uid,
                                   @RequestParam(defaultValue = "1") Integer pageNum,
@@ -115,8 +108,7 @@ public class BookController {
                                   @RequestParam(defaultValue = "") String name,
                                   @RequestParam(defaultValue = "") String author,
                                   @RequestParam(defaultValue = "") String category) {
-//        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery().eq(Book::getUid, uid);
-//        List<Book> list = bookMapper.selectList(wrapper);
+
         Page<Book> bookPage = iBookService.findPageByUid(new Page<>(pageNum, pageSize), uid, name, author, category);
         return Result.success(bookPage);
     }

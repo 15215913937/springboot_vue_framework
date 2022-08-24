@@ -5,12 +5,10 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.DictMapper;
 import com.sqn.library.mapper.MenuMapper;
-import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +63,6 @@ public class MenuController {
         menuService.saveOrUpdate(menu);
         flushRedis(Constants.MENUS_KEY);
         return Result.success();
-
     }
 
     @DeleteMapping("/{id}")
@@ -106,15 +103,6 @@ public class MenuController {
         return Result.success(menuService.getById(id));
     }
 
-    @GetMapping("/page")
-    public Result<?> findPage(@RequestParam(defaultValue = "") String name,
-                              @RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", name);
-        queryWrapper.orderByDesc("id");
-        return Result.success(menuService.page(new Page<>(pageNum, pageSize), queryWrapper));
-    }
 
     @GetMapping("/icons")
     public Result<?> getIcons() {
