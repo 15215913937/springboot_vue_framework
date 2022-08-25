@@ -78,7 +78,7 @@ export default {
           {min: 3, max: 20, message: '长度在3~20位之间', trigger: 'blur'},
         ],
         phone: [
-          // {required: true, message: '用户名不能为空', trigger: 'blur'},
+          {required: true, message: '用户名不能为空', trigger: 'blur'},
           {validator: isMobileNumber, trigger: 'blur'},
         ],
       }

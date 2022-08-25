@@ -2,16 +2,12 @@ package com.sqn.library.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Month;
-import cn.hutool.core.date.Quarter;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.entity.User;
 import com.sqn.library.service.IBookService;
-import com.sun.corba.se.impl.resolver.SplitLocalResolverImpl;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,6 +32,12 @@ public class EchartsController {
         map.put("x", CollUtil.newArrayList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"));
         map.put("y", CollUtil.newArrayList(150, 230, 224, 218, 135, 147, 260));
         return Result.success(map);
+    }
+//新冠数据
+    @GetMapping("/COVID-19_pandemic")
+    public void getC19() {
+//        final HttpRequest request = new HttpRequest();
+//        request.getUrl("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t="+);
     }
 
     @GetMapping("/booksNumber")
