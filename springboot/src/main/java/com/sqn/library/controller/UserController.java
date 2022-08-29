@@ -38,6 +38,9 @@ import java.util.List;
 
 import static com.sqn.library.common.Constants.USER_KEY;
 
+/**
+ * Rest模式
+ */
 @Validated
 @RestController
 @RequestMapping("/user")

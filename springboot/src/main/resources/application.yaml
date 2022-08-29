@@ -1,6 +1,6 @@
 #启动端口配置
 server:
-#  ip: http://39.108.101.167
+  #  ip: http://39.108.101.167
   ip: http://localhost
   port: 9090
 #数据库配置
@@ -11,8 +11,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
-#   服务器的数据库
-#    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+    #   服务器的数据库
+    #    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
     username: root
     password: root
     hikari.max-lifetime: 120000
@@ -27,10 +27,10 @@ spring:
       max-request-size: 200MB
 
   redis:
-#    host: 127.0.0.1
-#    port: 6379
-#    password: ''
-      # 连接超时时间
+    #    host: 127.0.0.1
+    #    port: 6379
+    #    password: ''
+    # 连接超时时间
     timeout: 3000
 #    服务器的redis
 #    host: 39.108.101.167
@@ -39,16 +39,18 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#    驼峰自动识别
+    #    驼峰自动识别
     map-underscore-to-camel-case: true
 
 files:
   upload:
-#    服务器上的路径
-#    path: /home/files/
+    #    服务器上的路径
+    #    path: /home/files/
     path: D:/springbootspace/springboot_vue_framework/springboot/src/main/resources/files/
 
 wechat:
-#  微信小程序
+  #  微信小程序
   appid: 'wx220d24d59fe2c1ff'
   secret: '21a515e56bb07a177732db8f85cf6bab'
+
+

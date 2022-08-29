@@ -3,6 +3,7 @@ package com.sqn.library.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.Month;
+import cn.hutool.http.HttpUtil;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.entity.User;
@@ -34,10 +35,9 @@ public class EchartsController {
         return Result.success(map);
     }
 //新冠数据
-    @GetMapping("/COVID-19_pandemic")
-    public void getC19() {
-//        final HttpRequest request = new HttpRequest();
-//        request.getUrl("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t="+);
+    @GetMapping("/epidemic")
+    public String getC19() {
+        return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t="+System.currentTimeMillis());
     }
 
     @GetMapping("/booksNumber")
