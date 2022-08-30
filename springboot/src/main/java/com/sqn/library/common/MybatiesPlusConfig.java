@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("com/sqn/library/mapper")
 public class MybatiesPlusConfig {
     /**
-     * 分页插件
+     * 创建拦截器容器
      */
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+//        添加分页拦截器
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }

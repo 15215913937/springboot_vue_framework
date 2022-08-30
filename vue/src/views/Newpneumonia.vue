@@ -42,7 +42,7 @@
       </el-col>
 
       <el-col :span="12">
-        <div id="main" style="width: 100%; height: 500px"></div>
+        <div id="main" style="width: 90%; height: 500px"></div>
       </el-col>
 
     </el-row>

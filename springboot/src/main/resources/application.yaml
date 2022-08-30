@@ -9,15 +9,15 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher #Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
-    #   服务器的数据库
-    #    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
-    username: root
-    password: root
-    hikari.max-lifetime: 120000
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+      #   服务器的数据库
+      #    url: jdbc:mysql://39.108.101.167:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+      username: root
+      password: root
   #格式化购书日期格式:方式一：以下配置开启；方式二：entity-Book中的Date类型字段上添加@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")注解
-  #spring.jackson.date-format=yyyy-MM-dd
+#  spring.jackson.date-format=yyyy-MM-dd
   #设置session的有效时长 86400s=1天
   session:
     timeout: 86400
@@ -32,15 +32,26 @@ spring:
     #    password: ''
     # 连接超时时间
     timeout: 3000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#    切换配置版本
+#  profiles:
+#    active: prop
 #    服务器的redis
 #    host: 39.108.101.167
 #    port: 7000
 
 mybatis-plus:
   configuration:
+    #    开启MP的日志，标准输出
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #    驼峰自动识别
     map-underscore-to-camel-case: true
+#  global-config:
+#    db-config:
+#      id自增策略，默认为雪花算法，也可由其他方式设置
+#      id-type: auto
 
 files:
   upload:
