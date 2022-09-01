@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <router-view></router-view>
-    </div>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "App"
-    }
+export default {
+  name: "App"
+}
 </script>
 <style scoped>
-    /*@import url("//unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css");*/
+
 </style>
 

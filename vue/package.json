@@ -1,5 +1,5 @@
 {
-  "name": "springboot-vue-demo",
+  "name": "springboot-vue-shenqn",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,10 +13,15 @@
     "@wangeditor/editor-for-react": "^1.0.4",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^0.27.2",
+    "build": "^0.1.4",
     "core-js": "^3.8.3",
+    "echarts": "^5.3.3",
     "element-plus": "^2.2.6",
+    "mavon-editor": "^2.10.4",
     "vue": "^3.2.13",
+    "vue-amap": "^0.5.10",
     "vue-router": "^4.0.3",
+    "vue-video-player": "^5.0.2",
     "vuex": "^4.0.0",
     "wangeditor": "^4.7.15"
   },
@@ -26,7 +31,8 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "unplugin-icons": "^0.14.5",
-    "unplugin-vue-components": "^0.19.9"
+    "unplugin-vue-components": "^0.19.9",
+    "vue-particles": "^1.0.9"
   },
   "browserslist": [
     "> 1%",

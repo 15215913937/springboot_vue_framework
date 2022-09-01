@@ -1,6 +1,7 @@
 package com.sqn.library.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,10 +20,13 @@ public class Book {
     private String category;
     private String version;
     private String publishingHouse;
-    private String purchaser;
+    private String uid;
     private BigDecimal price;
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date buyDate;
     private String comment;
     private String cover;
+
+    @TableField(exist = false)
+    private String username;
 }

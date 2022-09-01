@@ -12,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ import java.util.Date;
 @Component
 public class TokenUtils {
 
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     private static UserMapper staticUserMapper;
@@ -31,6 +32,7 @@ public class TokenUtils {
 
     /**
      * 生成token
+     *
      * @param user
      * @return
      */
@@ -41,11 +43,13 @@ public class TokenUtils {
 
     /**
      * 获取token中的用户信息
+     *
      * @return
      */
     public static User getUser() {
         try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String token = request.getHeader("token");
             String aud = JWT.decode(token).getAudience().get(0);
             Integer userId = Integer.valueOf(aud);
