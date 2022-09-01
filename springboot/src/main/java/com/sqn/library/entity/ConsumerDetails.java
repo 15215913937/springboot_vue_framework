@@ -33,7 +33,7 @@ public class ConsumerDetails implements Serializable {
     private Integer uid;
 
     @ApiModelProperty("金额")
-    private Float cost;
+    private Double cost;
 
     @ApiModelProperty("消费类型")
     private String type;

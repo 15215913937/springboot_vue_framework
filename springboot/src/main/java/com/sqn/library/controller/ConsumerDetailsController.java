@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.mapper.ConsumerDetailsMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,13 +34,22 @@ public class ConsumerDetailsController {
 
     @Resource
     private IConsumerDetailsService consumerDetailsService;
+    @Resource
+    ConsumerDetailsMapper consumerDetailsMapper;
 
-    // 新增或者更新
+    // 新增消费记录
     @PostMapping
     public Result<?> save(@RequestBody ConsumerDetails consumerDetails) {
-        consumerDetailsService.saveOrUpdate(consumerDetails);
+        List<ConsumerDetails> old_list = consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid, consumerDetails.getUid()));
+        consumerDetailsService.save(consumerDetails);
+        List<ConsumerDetails> new_list = consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid, consumerDetails.getUid()).orderByDesc(ConsumerDetails::getCreatetime));
+        if (old_list.size() < new_list.size()) {
+            ConsumerDetails new_detail = new_list.get(0);
+            return Result.success(new_detail.getCost());
+        }
         return Result.success();
     }
+
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
@@ -58,10 +68,6 @@ public class ConsumerDetailsController {
         return Result.success(consumerDetailsService.list());
     }
 
-    @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
-        return Result.success(consumerDetailsService.getById(id));
-    }
 
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,

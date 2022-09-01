@@ -35,6 +35,8 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  main:
+    allow-circular-references: true
 #    切换配置版本
 #  profiles:
 #    active: prop
@@ -63,5 +65,6 @@ wechat:
   #  微信小程序
   appid: 'wx220d24d59fe2c1ff'
   secret: '21a515e56bb07a177732db8f85cf6bab'
+
 
 

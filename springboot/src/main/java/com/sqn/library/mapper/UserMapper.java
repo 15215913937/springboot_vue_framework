@@ -26,4 +26,5 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Update("update user set password = #{newPassword} where username = #{username}")
     int resetPwd(UserResetPwdDTO userResetPwdDTO);
+
 }

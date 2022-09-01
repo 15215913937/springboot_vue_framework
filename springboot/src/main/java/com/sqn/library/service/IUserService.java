@@ -19,4 +19,6 @@ public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
+
+    Double updateBalance(Integer id,Double new_bill);
 }

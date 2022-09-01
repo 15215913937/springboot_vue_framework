@@ -14,7 +14,30 @@
         </div>
       </div>
       <div style="flex: 1">
-        4
+        <el-card>
+          <div style="margin: 20px">
+            <div style="width: 200px;font-size: 25px;margin-bottom: 10px">
+              <el-icon>
+                <WalletFilled/>
+              </el-icon>
+              我的钱包
+            </div>
+            <el-card style="width: 400px">
+              <div style="display: flex">
+                <div style="flex: 1">可用余额</div>
+                <div style="flex: 1">
+                  <!--                  toFixed(2),展示两位小数-->
+                  ￥{{ this.user.balance.toFixed(2) }}
+                </div>
+
+              </div>
+            </el-card>
+          </div>
+          <div style="margin: 10px">
+            <el-card style="margin: 10px;font-size: 20px">本月消费</el-card>
+            <el-card style="margin: 10px;font-size: 10px">上月消费</el-card>
+          </div>
+        </el-card>
       </div>
     </div>
     <div style="flex: 1;display: flex;flex-direction: column">
@@ -281,12 +304,6 @@ export default {
   font-size: 25px
 
 }
-
-/*.e-container {*/
-/*  width: 100%;*/
-/*  height: 500px;*/
-/*  text-align: center;*/
-/*}*/
 
 
 .chart {

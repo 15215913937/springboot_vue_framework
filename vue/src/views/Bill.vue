@@ -116,7 +116,7 @@
 import request from '@/utils/request'
 
 export default {
-  name: "wallet",
+  name: "bill",
   created() {
     this.load();
   },
@@ -158,7 +158,7 @@ export default {
           uid: this.user.id,
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.code === '0') {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -190,14 +190,23 @@ export default {
       })
     },
     save() {
-      console.log(this.form)
       this.loading = true;
+      var that = this;
       request.post("/consumer-details", this.form).then(res => {
         setTimeout(() => {
           this.loading = false;
         }, 1000)
         if (res.code === '0') {
+          console.log(typeof res.data)
           this.$message.success("提交成功")
+          request.post('user/updateBalance', {
+            params: {
+              id: that.user.id,
+              new_bill: (res.data)
+            }
+          }).then(res => {
+            console.log(res)
+          })
           this.load();
         } else {
           this.$message.error(res.msg)

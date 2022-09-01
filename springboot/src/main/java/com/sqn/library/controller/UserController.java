@@ -95,7 +95,7 @@ public class UserController {
         // 生成token
         String token = TokenUtils.genToken(res);
         res.setToken(token);
-        flushRedis(USER_KEY);
+//        flushRedis(USER_KEY);
         return Result.success(res);
     }
 
@@ -172,7 +172,7 @@ public class UserController {
             user.setName(user.getUsername());
         }
         iUserService.saveOrUpdate(user);
-        flushRedis(USER_KEY);
+//        flushRedis(USER_KEY);
         return Result.success();
 
     }
@@ -181,7 +181,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         iUserService.removeById(id);
-        flushRedis(USER_KEY);
+//        flushRedis(USER_KEY);
         return Result.success();
     }
 
@@ -200,18 +200,24 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> getById(@PathVariable Long id) {
-        String s = stringRedisTemplate.opsForValue().get(USER_KEY);
-        User user;
-        if (StrUtil.isBlank(s)) {
-            user = userMapper.selectById(id);
-            stringRedisTemplate.opsForValue().set(USER_KEY, JSONUtil.toJsonStr(user));
-        } else {
-            user = JSONUtil.toBean(s, new TypeReference<User>() {
-            }, true);
-        }
-        return Result.success(user);
+    public Result<?> getById(@PathVariable Integer id) {
+//        String s = stringRedisTemplate.opsForValue().get(USER_KEY);
+//        User user;
+//        if (StrUtil.isBlank(s)) {
+//            user = userMapper.selectById(id);
+//            stringRedisTemplate.opsForValue().set(USER_KEY, JSONUtil.toJsonStr(user));
+//        } else {
+//            user = JSONUtil.toBean(s, new TypeReference<User>() {
+//            }, true);
+//        }
+        return Result.success(userMapper.selectById(id));
 
+    }
+
+    //    更新余额
+    @PostMapping("/updateBalance")
+    public Result<?> updateBalance(@RequestBody Integer id, @RequestBody Double new_bill) {
+        return Result.success(iUserService.updateBalance(id,new_bill));
     }
 
     @GetMapping("/all")
