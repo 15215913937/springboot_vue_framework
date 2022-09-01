@@ -13,6 +13,9 @@
             <Plus/>
           </el-icon>
         </el-upload>
+        <el-form-item label="余额" prop="balance">
+          <el-input v-model="form.balance" disabled></el-input>
+        </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>

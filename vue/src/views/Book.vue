@@ -360,12 +360,6 @@ export default {
     },
     exportBooks() {
       window.open('http://' + serverIp + ':9090/book/export')
-    },
-    querySearch() {
-
-    },
-    handleSelect() {
-
     }
   }
 }
