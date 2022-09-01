@@ -264,9 +264,8 @@ export default {
       this.dialogVisible = true
     },
     handleDelete(row) {
-      this.id = row.id
-      // console.log(this.id);
-      request.delete("/user/" + this.id).then(res => {
+      //row,绑定当前行数据
+      request.delete("/user/" + row.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")
         } else {
