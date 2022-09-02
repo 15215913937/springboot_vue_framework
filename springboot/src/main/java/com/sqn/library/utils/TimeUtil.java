@@ -1,9 +1,7 @@
 package com.sqn.library.utils;
 
-import com.sqn.library.common.Result;
 import com.sqn.library.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Constants;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,38 +17,44 @@ public class TimeUtil {
      * yyyy-MM-dd HH:mm:ss
      */
     private static final String FORMAT_STRAND = "yyyy-MM-dd HH:mm:ss";
-    private static final Pattern REG_STRAND = Pattern.compile("^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
+    private static final Pattern REG_STRAND = Pattern.compile("^[1-9]\\d{3}-(0[1-9]|1[0-2])-" +
+            "(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
 
     /**
      * yyyy-M-d HH:mm:ss
      */
     private static final String FORMAT_STRAND_SIMPLE = "yyyy-M-d HH:mm:ss";
-    private static final Pattern REG_STRAND_SIMPLE = Pattern.compile("^[1-9]\\d{3}-([1-9]|1[0-2])-([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
+    private static final Pattern REG_STRAND_SIMPLE = Pattern.compile("^[1-9]\\d{3}-([1-9]|1[0-2])-" +
+            "([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
 
 
     /**
      * yyyy/MM/dd HH:mm:ss
      */
     private static final String FORMAT_SLASH = "yyyy/MM/dd HH:mm:ss";
-    private static final Pattern REG_SLASH = Pattern.compile("^[1-9]\\d{3}/(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
+    private static final Pattern REG_SLASH = Pattern.compile("^[1-9]\\d{3}/(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[0-1])" +
+            "\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
 
     /**
      * yyyy/M/d HH:mm:ss
      */
     private static final String FORMAT_SLASH_SIMPLE = "yyyy/M/d HH:mm:ss";
-    private static final Pattern REG_SLASH_SIMPLE = Pattern.compile("^[1-9]\\d{3}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
+    private static final Pattern REG_SLASH_SIMPLE = Pattern.compile("^[1-9]\\d{3}/([1-9]|1[0-2])/" +
+            "([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$");
 
     /**
      * yyyy/MM/dd HH:mm
      */
     private static final String FORMAT_SLASH_NOT_SECOND = "yyyy/MM/dd HH:mm";
-    private static final Pattern REG_SLASH_NOT_SECOND = Pattern.compile("^[1-9]\\d{3}/(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d$");
+    private static final Pattern REG_SLASH_NOT_SECOND = Pattern.compile("^[1-9]\\d{3}/(0[1-9]|1[0-2])/" +
+            "(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d$");
 
     /**
      * yyyy/M/d HH:mm
      */
     private static final String FORMAT_SLASH_NOT_SECOND_SIMPLE = "yyyy/M/d HH:mm";
-    private static final Pattern REG_SLASH_NOT_SECOND_SIMPLE = Pattern.compile("^[1-9]\\d{3}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d$");
+    private static final Pattern REG_SLASH_NOT_SECOND_SIMPLE = Pattern.compile("^[1-9]\\d{3}/([1-9]|1[0-2])/" +
+            "([1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d$");
 
 
     public static int getNow() {
@@ -104,4 +108,5 @@ public class TimeUtil {
         String[] point = format.split(":");
         return Integer.parseInt(point[0]) * 10000 + Integer.parseInt(point[1]) * 100 + Integer.parseInt(point[2]);
     }
+
 }

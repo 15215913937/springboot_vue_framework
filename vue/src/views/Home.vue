@@ -28,7 +28,7 @@
           </div>
         </el-card>
       </div>
-      <div style="flex: 1">z
+      <div style="flex: 1">
         <el-row style="margin-top: 30px">
           <el-col :span="12">
             <div id="main" style="height: 300px"/>
