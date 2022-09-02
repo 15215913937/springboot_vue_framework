@@ -201,6 +201,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
+//        设置缓存
 //        String s = stringRedisTemplate.opsForValue().get(USER_KEY);
 //        User user;
 //        if (StrUtil.isBlank(s)) {
@@ -215,10 +216,11 @@ public class UserController {
     }
 
     //    更新余额
-    @PostMapping("/updateBalance")
-    public Result<?> updateBalance(@RequestBody Integer id, @RequestBody Double new_bill) {
-        return Result.success(iUserService.updateBalance(id,new_bill));
-    }
+//    @PostMapping("/updateBalance")
+//    public Result<?> updateBalance(@RequestBody Integer id, @RequestBody Double new_bill) {
+//        return Result.success(iUserService.updateBalance(id,new_bill));
+//    }
+
 
     @GetMapping("/all")
     public Result<?> findAll() {

@@ -148,7 +148,6 @@ export default {
       this.form.uid = this.user.id
     },
     load() {
-      // console.log(this.category + ";" + this.type)
       request.get("/consumer-details/page", {
         params: {
           pageNum: this.currentPage,
@@ -158,7 +157,6 @@ export default {
           uid: this.user.id,
         }
       }).then(res => {
-        // console.log(res)
         if (res.code === '0') {
           this.tableData = res.data.records;
           this.total = res.data.total;
@@ -197,16 +195,15 @@ export default {
           this.loading = false;
         }, 1000)
         if (res.code === '0') {
-          console.log(typeof res.data)
           this.$message.success("提交成功")
-          request.post('user/updateBalance', {
-            params: {
-              id: that.user.id,
-              new_bill: (res.data)
-            }
-          }).then(res => {
-            console.log(res)
-          })
+          // request.post('user/updateBalance', {
+          //   params: {
+          //     id: that.user.id,
+          //     new_bill: (res.data)
+          //   }
+          // }).then(res => {
+          //   console.log(res)
+          // })
           this.load();
         } else {
           this.$message.error(res.msg)

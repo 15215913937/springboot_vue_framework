@@ -9,6 +9,7 @@ import com.sqn.library.mapper.ConsumerDetailsMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsumerDetailsController {
 
     @Resource
-    private IConsumerDetailsService consumerDetailsService;
+    IConsumerDetailsService consumerDetailsService;
     @Resource
     ConsumerDetailsMapper consumerDetailsMapper;
 
@@ -82,6 +83,17 @@ public class ConsumerDetailsController {
                     .like(ConsumerDetails::getCategory, category);
         }
         return Result.success(consumerDetailsService.page(new Page<>(pageNum, pageSize), wrapper));
+    }
+
+    //    查询当月账单
+    @PostMapping("/findCurrentBill/{id}")
+    public Result<?> findCurrentBillById(@PathVariable Integer id, @RequestBody Timestamp currentMonth) {
+        LambdaQueryWrapper<ConsumerDetails> wrapper = Wrappers.<ConsumerDetails>lambdaQuery();
+        wrapper.eq(ConsumerDetails::getUid, id)
+                .ge(ConsumerDetails::getCreatetime,currentMonth)
+                .orderByDesc(ConsumerDetails::getId);
+        List<ConsumerDetails> list = consumerDetailsService.list(wrapper);
+        return Result.success(list);
     }
 
 }
