@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 02/09/2022 23:54:27
+ Date: 03/09/2022 13:55:36
 */
 
 SET NAMES utf8mb4;
@@ -142,13 +142,16 @@ CREATE TABLE `consumer_details`  (
 INSERT INTO `consumer_details` VALUES (2, 18, 300, '支出', 'aa', '理财', '2022-08-29 23:30:08');
 INSERT INTO `consumer_details` VALUES (3, 18, 15, '收入', 'aa', '购物', '2022-08-29 23:30:11');
 INSERT INTO `consumer_details` VALUES (13, 18, 2000, '收入', '132', '工资', '2022-08-31 14:53:50');
-INSERT INTO `consumer_details` VALUES (11, 62, 123, '收入', '132', '餐饮', '2022-08-31 14:45:43');
 INSERT INTO `consumer_details` VALUES (14, 62, 123, '支出', '132', '转账', '2022-08-31 17:29:35');
 INSERT INTO `consumer_details` VALUES (15, 62, 11, '支出', '1324', '餐饮', '2022-08-31 17:30:11');
 INSERT INTO `consumer_details` VALUES (16, 62, 33, '收入', '124', '服务', '2022-08-31 17:30:19');
 INSERT INTO `consumer_details` VALUES (17, 62, 124, '支出', '1243', '购物', '2022-08-31 17:30:26');
 INSERT INTO `consumer_details` VALUES (18, 62, 1234, '支出', '1243', '购物', '2022-08-31 17:30:41');
-INSERT INTO `consumer_details` VALUES (21, 62, 54, '支出', NULL, '交通', '2022-08-31 17:30:58');
+INSERT INTO `consumer_details` VALUES (29, 62, 123, '支出', '312', '服务', '2022-09-03 09:37:02');
+INSERT INTO `consumer_details` VALUES (30, 62, 321, '支出', '132', '服饰', '2022-09-03 09:37:06');
+INSERT INTO `consumer_details` VALUES (26, 62, 2131, '支出', '213', '餐饮', '2022-09-03 09:31:29');
+INSERT INTO `consumer_details` VALUES (28, 62, 213, '支出', '132', '购物', '2022-09-03 09:36:57');
+INSERT INTO `consumer_details` VALUES (31, 62, 123, '支出', '132', '购物', '2022-09-03 09:37:11');
 
 -- ----------------------------
 -- Table structure for consumption_category
@@ -305,7 +308,7 @@ INSERT INTO `menu` VALUES (14, '测试菜单', '/testPage', 'PieChart', '为了�
 INSERT INTO `menu` VALUES (22, '地图使用', '', 'MapLocation', '集成高德地图使用', NULL, 'AMap');
 INSERT INTO `menu` VALUES (23, '当前位置', '/mapPath', 'Aim', '规划路线', 22, 'MapPath');
 INSERT INTO `menu` VALUES (28, '新冠疫情', '/newpneumonia', 'PieChart', NULL, NULL, 'Newpneumonia');
-INSERT INTO `menu` VALUES (30, '我的钱包', '/bill', 'Wallet', NULL, 5, 'Bill');
+INSERT INTO `menu` VALUES (30, '我的账单', '/bill', 'Wallet', NULL, 5, 'Bill');
 
 -- ----------------------------
 -- Table structure for role

@@ -82,19 +82,19 @@ public class MenuController {
     @GetMapping
     public Result<?> findAll(@RequestParam(defaultValue = "") String name) {
 //        1、从缓存中获取数据,返回的是一个json
-        String jsonStr = stringRedisTemplate.opsForValue().get(Constants.MENUS_KEY);
-        List<Menu> menus;
-        if (StrUtil.isBlank(jsonStr)) { //如果jsonStr是空的
-            menus = menuService.findMenus(name);
-            //再去缓存到redis
-            stringRedisTemplate.opsForValue().set(Constants.MENUS_KEY, JSONUtil.toJsonStr(menus));
-        } else {
-            //从redis缓存中获取数据
-//            通过TypeReference将jsonStr转化为任意一种class泛型
-            menus = JSONUtil.toBean(jsonStr, new TypeReference<List<Menu>>() {
-            }, true);
-        }
-
+//        String jsonStr = stringRedisTemplate.opsForValue().get(Constants.MENUS_KEY);
+//        List<Menu> menus;
+//        if (StrUtil.isBlank(jsonStr)) { //如果jsonStr是空的
+//            menus = menuService.findMenus(name);
+//            //再去缓存到redis
+//            stringRedisTemplate.opsForValue().set(Constants.MENUS_KEY, JSONUtil.toJsonStr(menus));
+//        } else {
+//            //从redis缓存中获取数据
+////            通过TypeReference将jsonStr转化为任意一种class泛型
+//            menus = JSONUtil.toBean(jsonStr, new TypeReference<List<Menu>>() {
+//            }, true);
+//        }
+        List<Menu> menus = menuService.findMenus(name);
         return Result.success(menus);
     }
 

@@ -40,7 +40,7 @@
                 border
                 stripe
                 style="width: 100%">
-            <el-table-column prop="cost" label="费用" align="center"/>
+            <el-table-column prop="cost" label="费用（元）" align="center"/>
             <el-table-column prop="category" label="消费类别" align="center"/>
             <el-table-column prop="type" label="类型" align="center">
                 <template #default="scope">

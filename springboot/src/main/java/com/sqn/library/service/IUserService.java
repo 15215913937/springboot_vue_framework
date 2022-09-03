@@ -1,7 +1,9 @@
 package com.sqn.library.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
+import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,7 @@ public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
+
 
 //    Double updateBalance(Integer id,Double new_bill);
 }

@@ -12,6 +12,7 @@ import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
+import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
@@ -191,13 +192,14 @@ public class UserController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String role) {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
-        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(role)) {
-            wrapper.like(User::getName, name).like(User::getRole, role);
-        }
+//        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
+//        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(role)) {
+//            wrapper.like(User::getName, name).like(User::getRole, role);
+//        }
         Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name, role);
         return Result.success(userPage);
     }
+
 
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {

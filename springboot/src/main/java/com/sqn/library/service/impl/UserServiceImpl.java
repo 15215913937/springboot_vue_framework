@@ -1,13 +1,15 @@
 package com.sqn.library.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.sqn.library.common.Result;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.controller.ConsumerDetailsController;
 import com.sqn.library.controller.UserController;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
+import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.ConsumerDetails;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
@@ -15,6 +17,7 @@ import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IConsumerDetailsService;
 import com.sqn.library.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     UserMapper userMapper;
     @Resource
-    IConsumerDetailsService iConsumerDetailsService;
+    IUserService iUserService;
 
     @Override
     public void updatePassword(UserPasswordDTO userPasswordDTO) {
@@ -52,7 +55,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new CustomException("-1", "系统异常");
         }
     }
-
 //    @Override
 //    public Double updateBalance(Integer id, Double new_bill) {
 //        User one = userMapper.selectById(id);
