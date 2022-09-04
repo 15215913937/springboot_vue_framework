@@ -5,15 +5,18 @@ import cn.hutool.log.LogFactory;
 
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+@Slf4j
 @RestControllerAdvice
 //@ControllerAdvice(basePackages = "com.sqn.library.controller")
 public class GlobalExceptionHandler {
     //打印错误日志
-    private static final Log log = LogFactory.get();
+//    private static final Log log = LogFactory.get();
 
     //统一异常处理@ExceptionHandler,主要用于Exception
     @ExceptionHandler(CustomException.class)
