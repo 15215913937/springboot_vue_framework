@@ -26,7 +26,9 @@ import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +66,6 @@ public class UserController {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
-
 
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象
