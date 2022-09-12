@@ -16,6 +16,7 @@ import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IUserService;
+import com.sqn.service.IpCountService;
 import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -45,9 +46,9 @@ public class BookController {
     IBookService iBookService;
 
     @Resource
-    IUserService iUserService;
-    @Resource
     UserMapper userMapper;
+    @Autowired
+    IpCountService ipCountService;
 
     //图书新增或修改接口
     @PostMapping
@@ -97,6 +98,8 @@ public class BookController {
 //                record.setUsername(user.getName());
 //            }
 //        }
+//        自定义starter
+        ipCountService.count();
         Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
     }

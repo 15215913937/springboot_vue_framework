@@ -1,10 +1,11 @@
 #通用环境
 #数据库配置
 spring:
-  boot:
-    admin:
-      client:
-        url: http://localhost:8080
+#  admin client配置
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8080
 
   datasource:
     druid:
@@ -46,13 +47,14 @@ logging:
       file-name-pattern: dev_server%d{yyyymmdd}_%i.log
   #    pattern:
   #     console: "%d %clr(%5p) --- [%16t] %clr(%-40.40c){cyan} : %m %n"
-management:
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-#        开启所有端点
-    enabled-by-default: true
+#  admin client配置
+#management:
+#  endpoint:
+#    health:
+#      show-details: always
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+##        开启所有端点
+#    enabled-by-default: true
