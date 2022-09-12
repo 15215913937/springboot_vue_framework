@@ -34,10 +34,11 @@ public class EchartsController {
         map.put("y", CollUtil.newArrayList(150, 230, 224, 218, 135, 147, 260));
         return Result.success(map);
     }
-//新冠数据
+
+    //新冠数据
     @GetMapping("/epidemic")
     public String getC19() {
-        return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t="+System.currentTimeMillis());
+        return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t=" + System.currentTimeMillis());
     }
 
     @GetMapping("/booksNumber")

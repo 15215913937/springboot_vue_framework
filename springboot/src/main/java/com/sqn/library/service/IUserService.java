@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
+
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
 
 

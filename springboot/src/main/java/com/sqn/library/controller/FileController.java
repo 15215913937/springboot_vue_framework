@@ -166,7 +166,7 @@ public class FileController {
         queryWrapper.eq("is_delete", false);
         queryWrapper.orderByDesc("id");
         if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(type)) {
-            queryWrapper.like("name", name).like("type",type);
+            queryWrapper.like("name", name).like("type", type);
         }
         return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
     }

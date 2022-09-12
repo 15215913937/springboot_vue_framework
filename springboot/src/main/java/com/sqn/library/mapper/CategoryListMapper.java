@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author shenqn
@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface CategoryListMapper extends BaseMapper<CategoryList> {
 
-    List<CategoryList> findBooks(@Param("name")String name,@Param("flag") String flag);
+    List<CategoryList> findBooks(@Param("name") String name, @Param("flag") String flag);
 }

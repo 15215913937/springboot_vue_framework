@@ -1,6 +1,11 @@
 #通用环境
 #数据库配置
 spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -39,5 +44,15 @@ logging:
     rollingpolicy:
       max-file-size: 10MB
       file-name-pattern: dev_server%d{yyyymmdd}_%i.log
-#    pattern:
-#     console: "%d %clr(%5p) --- [%16t] %clr(%-40.40c){cyan} : %m %n"
+  #    pattern:
+  #     console: "%d %clr(%5p) --- [%16t] %clr(%-40.40c){cyan} : %m %n"
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#        开启所有端点
+    enabled-by-default: true

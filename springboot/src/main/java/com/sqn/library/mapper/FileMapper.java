@@ -5,7 +5,7 @@ import com.sqn.library.entity.Files;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author shenqn

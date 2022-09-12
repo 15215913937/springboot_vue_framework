@@ -69,10 +69,9 @@ public class CategoryListController {
     @GetMapping("/search")
     public Result<?> searchTo(@RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String flag) {
-        List<CategoryList> lists =  categoryListMapper.findBooks(name,flag);
+        List<CategoryList> lists = categoryListMapper.findBooks(name, flag);
         return Result.success(lists);
     }
-
 
 
 }

@@ -41,9 +41,13 @@ public class ConsumerDetailsController {
     // 新增消费记录
     @PostMapping
     public Result<?> save(@RequestBody ConsumerDetails consumerDetails) {
-        List<ConsumerDetails> old_list = consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid, consumerDetails.getUid()));
+        List<ConsumerDetails> old_list =
+                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
+                        consumerDetails.getUid()));
         consumerDetailsService.save(consumerDetails);
-        List<ConsumerDetails> new_list = consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid, consumerDetails.getUid()).orderByDesc(ConsumerDetails::getCreatetime));
+        List<ConsumerDetails> new_list =
+                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
+                        consumerDetails.getUid()).orderByDesc(ConsumerDetails::getCreatetime));
         if (old_list.size() < new_list.size()) {
             ConsumerDetails new_detail = new_list.get(0);
             return Result.success(new_detail.getCost());
@@ -90,7 +94,7 @@ public class ConsumerDetailsController {
     public Result<?> findCurrentBillById(@PathVariable Integer id, @RequestBody Timestamp currentMonth) {
         LambdaQueryWrapper<ConsumerDetails> wrapper = Wrappers.<ConsumerDetails>lambdaQuery();
         wrapper.eq(ConsumerDetails::getUid, id)
-                .ge(ConsumerDetails::getCreatetime,currentMonth)
+                .ge(ConsumerDetails::getCreatetime, currentMonth)
                 .orderByDesc(ConsumerDetails::getId);
         List<ConsumerDetails> list = consumerDetailsService.list(wrapper);
         return Result.success(list);

@@ -3,14 +3,16 @@ package com.sqn.library.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author shenqn
@@ -28,7 +30,7 @@ public class ConsumptionCategory implements Serializable {
     private Integer id;
 
     @ApiModelProperty("类别名称")
-    private String  category;
+    private String category;
 
 
 }
