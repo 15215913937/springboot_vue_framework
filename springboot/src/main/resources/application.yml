@@ -58,3 +58,10 @@ logging:
 #        include: "*"
 ##        开启所有端点
 #    enabled-by-default: true
+
+#自定义ip监测配置属性
+#tools:
+#  ip:
+#    cycle-reset: true
+#    model: "simple"
+#    log-cycle: 10L
