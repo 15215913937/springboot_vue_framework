@@ -62,6 +62,6 @@ logging:
 #自定义ip监测配置属性
 tools:
   ip:
-    cycle-reset: false
+#    cycle-reset: true
 #    model: "simple"
-#    log-cycle: 10L
+    log-cycle: 3

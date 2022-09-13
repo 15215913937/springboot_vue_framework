@@ -1,14 +1,11 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.lang.intern.InternUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import com.sqn.ipspringbootstarter.service.IpCountService;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
@@ -42,8 +39,6 @@ public class BookController {
 
     @Resource
     UserMapper userMapper;
-    @Autowired
-    IpCountService ipCountService;
 
 
     //图书新增或修改接口
@@ -94,8 +89,6 @@ public class BookController {
 //                record.setUsername(user.getName());
 //            }
 //        }
-//        自定义starter ip监测
-        ipCountService.ipCount();
         Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
     }
