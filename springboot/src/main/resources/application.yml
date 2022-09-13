@@ -60,8 +60,8 @@ logging:
 #    enabled-by-default: true
 
 #自定义ip监测配置属性
-#tools:
-#  ip:
-#    cycle-reset: true
+tools:
+  ip:
+    cycle-reset: false
 #    model: "simple"
 #    log-cycle: 10L

@@ -7,6 +7,8 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import com.sqn.ipspringbootstarter.service.IpCountService;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
@@ -15,14 +17,8 @@ import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
-import com.sqn.library.service.IUserService;
-import com.sqn.service.IpCountService;
 import io.swagger.annotations.Api;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static cn.hutool.core.date.LocalDateTimeUtil.parseDate;
 
 @Api(tags = "书籍管理")
 @RestController
@@ -49,6 +44,7 @@ public class BookController {
     UserMapper userMapper;
     @Autowired
     IpCountService ipCountService;
+
 
     //图书新增或修改接口
     @PostMapping
@@ -98,8 +94,8 @@ public class BookController {
 //                record.setUsername(user.getName());
 //            }
 //        }
-//        自定义starter
-        ipCountService.count();
+//        自定义starter ip监测
+        ipCountService.ipCount();
         Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
     }
