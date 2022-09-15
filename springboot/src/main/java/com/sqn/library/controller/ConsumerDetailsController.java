@@ -100,10 +100,28 @@ public class ConsumerDetailsController {
     @GetMapping("/getCurrentBill/{id}")
     public Result<?> findCurrentBillById(@PathVariable Integer id) {
         HashMap<String, Float> map = new HashMap<>();
-        List<Float> list = consumerDetailsMapper.getCurrentMonthExpense(id);
-        map.put("expense", list.get(0));
-        map.put("income", list.get(1));
-        consumerDetailsMapper.getLastMonthExpense(id);
+        List<Float> list1 = consumerDetailsMapper.getCurrentMonthExpense(id);
+        if (list1.size() == 0) {
+            map.put("currentExpense", 0f);
+            map.put("currentIncome", 0f);
+        } else if (list1.size() == 1) {
+            map.put("currentExpense", list1.get(0));
+            map.put("currentIncome", 0f);
+        } else {
+            map.put("currentExpense", list1.get(0));
+            map.put("currentIncome", list1.get(1));
+        }
+        List<Float> list2 = consumerDetailsMapper.getLastMonthExpense(id);
+        if (list2.size() == 0) {
+            map.put("lastExpense", 0f);
+            map.put("lastIncome", 0f);
+        } else if (list2.size() == 1) {
+            map.put("lastExpense", list2.get(0));
+            map.put("lastIncome", 0f);
+        } else {
+            map.put("lastExpense", list2.get(0));
+            map.put("lastIncome", list2.get(1));
+        }
         return Result.success(map);
     }
 
