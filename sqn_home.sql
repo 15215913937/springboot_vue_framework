@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : mydata
+ Source Server         : test
  Source Server Type    : MySQL
  Source Server Version : 80012
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 03/09/2022 13:55:36
+ Date: 15/09/2022 18:59:47
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `article`  (
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布人',
   `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -53,7 +53,7 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of book
@@ -76,7 +76,7 @@ CREATE TABLE `category_list`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '书籍类别',
   `flag` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category_list
@@ -128,30 +128,33 @@ DROP TABLE IF EXISTS `consumer_details`;
 CREATE TABLE `consumer_details`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `uid` int(11) NULL DEFAULT NULL COMMENT '用户ID',
-  `cost` float NULL DEFAULT NULL COMMENT '金额',
+  `cost` decimal(20, 2) NULL DEFAULT NULL COMMENT '金额',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类型',
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类别',
-  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createtime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumer_details
 -- ----------------------------
-INSERT INTO `consumer_details` VALUES (2, 18, 300, '支出', 'aa', '理财', '2022-08-29 23:30:08');
-INSERT INTO `consumer_details` VALUES (3, 18, 15, '收入', 'aa', '购物', '2022-08-29 23:30:11');
-INSERT INTO `consumer_details` VALUES (13, 18, 2000, '收入', '132', '工资', '2022-08-31 14:53:50');
-INSERT INTO `consumer_details` VALUES (14, 62, 123, '支出', '132', '转账', '2022-08-31 17:29:35');
-INSERT INTO `consumer_details` VALUES (15, 62, 11, '支出', '1324', '餐饮', '2022-08-31 17:30:11');
-INSERT INTO `consumer_details` VALUES (16, 62, 33, '收入', '124', '服务', '2022-08-31 17:30:19');
-INSERT INTO `consumer_details` VALUES (17, 62, 124, '支出', '1243', '购物', '2022-08-31 17:30:26');
-INSERT INTO `consumer_details` VALUES (18, 62, 1234, '支出', '1243', '购物', '2022-08-31 17:30:41');
-INSERT INTO `consumer_details` VALUES (29, 62, 123, '支出', '312', '服务', '2022-09-03 09:37:02');
-INSERT INTO `consumer_details` VALUES (30, 62, 321, '支出', '132', '服饰', '2022-09-03 09:37:06');
-INSERT INTO `consumer_details` VALUES (26, 62, 2131, '支出', '213', '餐饮', '2022-09-03 09:31:29');
-INSERT INTO `consumer_details` VALUES (28, 62, 213, '支出', '132', '购物', '2022-09-03 09:36:57');
-INSERT INTO `consumer_details` VALUES (31, 62, 123, '支出', '132', '购物', '2022-09-03 09:37:11');
+INSERT INTO `consumer_details` VALUES (2, 18, 300.00, '支出', '午饭', '理财', '2022-08-29 23:30:08');
+INSERT INTO `consumer_details` VALUES (3, 18, 15.00, '收入', '午饭', '购物', '2022-08-29 23:30:11');
+INSERT INTO `consumer_details` VALUES (13, 18, 2000.00, '收入', '午饭', '工资', '2022-08-31 14:53:50');
+INSERT INTO `consumer_details` VALUES (14, 62, 123.00, '支出', '午饭', '转账', '2022-08-31 17:29:35');
+INSERT INTO `consumer_details` VALUES (15, 62, 11.00, '支出', '午饭', '餐饮', '2022-08-31 17:30:11');
+INSERT INTO `consumer_details` VALUES (16, 62, 33.00, '收入', '午饭', '服务', '2022-08-31 17:30:19');
+INSERT INTO `consumer_details` VALUES (17, 62, 124.00, '支出', '午饭', '购物', '2022-08-31 17:30:26');
+INSERT INTO `consumer_details` VALUES (18, 62, 1234.00, '支出', '午饭', '购物', '2022-08-31 17:30:41');
+INSERT INTO `consumer_details` VALUES (29, 62, 123.00, '支出', '午饭', '服务', '2022-09-03 09:37:02');
+INSERT INTO `consumer_details` VALUES (30, 62, 321.00, '支出', '午饭', '服饰', '2022-09-03 09:37:06');
+INSERT INTO `consumer_details` VALUES (26, 62, 2131.00, '支出', '午饭', '餐饮', '2022-09-03 09:31:29');
+INSERT INTO `consumer_details` VALUES (28, 62, 213.00, '收入', '午饭', '购物', '2022-09-03 09:36:57');
+INSERT INTO `consumer_details` VALUES (31, 62, 123.00, '支出', '午饭', '购物', '2022-09-03 09:37:11');
+INSERT INTO `consumer_details` VALUES (32, 62, 100.00, '收入', '话费充值', '生活缴费', '2022-09-15 13:25:47');
+INSERT INTO `consumer_details` VALUES (33, 62, 19.00, '支出', '午饭', '餐饮', '2022-09-15 13:26:23');
+INSERT INTO `consumer_details` VALUES (34, 62, 123.20, '支出', '1', '交通', '2022-09-15 15:58:22');
 
 -- ----------------------------
 -- Table structure for consumption_category
@@ -161,7 +164,7 @@ CREATE TABLE `consumption_category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类别名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumption_category
@@ -187,7 +190,7 @@ CREATE TABLE `consumption_type`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumption_type
@@ -203,7 +206,7 @@ CREATE TABLE `dict`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型'
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dict
@@ -231,18 +234,19 @@ CREATE TABLE `events`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '正文',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of events
 -- ----------------------------
-INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', '沈奇亚', '2022-07-29 00:19:26');
-INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', '沈奇男', '2022-07-16 01:40:10');
-INSERT INTO `events` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', '沈奇男', '2022-07-20 23:46:03');
-INSERT INTO `events` VALUES (35, '小程序端正在开发', '<p>uniapp练习</p>', '沈奇男', '2022-08-11 00:05:50');
-INSERT INTO `events` VALUES (37, 'uniapp组件学习', '<p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。<br/><br/>uni-ui不包括基础组件，它是基础组件的补充。<br/><br/>#uni-ui产品特点<br/>1、高性能<br/><br/>目前为止，在小程序和混合app领域，uni-ui是性能的标杆。<br/><br/>自动差量更新数据<br/>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。<br/><br/>而uni-ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。<br/><br/>优化逻辑层和视图层通讯折损<br/>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。 比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。<br/><br/>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni-ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验<br/><br/>背景停止<br/>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。<br/><br/>而uni-ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。<br/><br/>2、全端<br/><br/>uni-ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。<br/><br/>比如导航栏navbar组件，会自动处理不同端的状态栏； 比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。<br/><br/>uni-ui还支持nvue原生渲染。<br/><br/>uni-ui还支持pc等宽屏设备，可以通过PC浏览器访问<a href=\"https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge\" target=\"_blank\">https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge</a> (opens new window)体验<br/><br/>3、风格扩展<br/><br/>uni-ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持uni.scss (opens new window)，可以方便的扩展和切换应用的风格。<br/><br/>ui是一种需求非常发散的产品，DCloud官方也无意用uni-ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。<br/><br/>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni-ui的主题风格，满足更多用户的需求。<br/><br/>4、与uniCloud协作<br/><br/>uni-ui里很多组件与uniCloud打通，可大幅提升开发效率<br/><br/>5、与uni统计自动集成实现免打点<br/><br/>uni统计是优秀的多端统计平台，见tongji.dcloud.net.cn (opens new window)。<br/><br/>除了一张报表看全端，它的另一个重要特点是免打点。 比如使用uni-ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。 当然你也可以关闭uni统计，这不是强制的。<br/><br/>6、uni-ui符合全套DCloud组件规范<br/><br/>包括easycom、uni_module、datacom，全部遵循。<br/></p>', '沈奇男', '2022-08-17 00:09:23');
+INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', '沈奇亚', '2022-07-29 00:19:26', 0);
+INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', '沈奇男', '2022-07-16 01:40:10', 0);
+INSERT INTO `events` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', '沈奇男', '2022-07-20 23:46:03', 0);
+INSERT INTO `events` VALUES (35, '小程序端正在开发', '<p>uniapp练习</p>', '沈奇男', '2022-08-11 00:05:50', 0);
+INSERT INTO `events` VALUES (37, 'uniapp组件学习', '<p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。<br/><br/>uni-ui不包括基础组件，它是基础组件的补充。<br/><br/>#uni-ui产品特点<br/>1、高性能<br/><br/>目前为止，在小程序和混合app领域，uni-ui是性能的标杆。<br/><br/>自动差量更新数据<br/>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。<br/><br/>而uni-ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。<br/><br/>优化逻辑层和视图层通讯折损<br/>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。 比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。<br/><br/>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni-ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验<br/><br/>背景停止<br/>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。<br/><br/>而uni-ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。<br/><br/>2、全端<br/><br/>uni-ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。<br/><br/>比如导航栏navbar组件，会自动处理不同端的状态栏； 比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。<br/><br/>uni-ui还支持nvue原生渲染。<br/><br/>uni-ui还支持pc等宽屏设备，可以通过PC浏览器访问<a href=\"https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge\" target=\"_blank\">https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge</a> (opens new window)体验<br/><br/>3、风格扩展<br/><br/>uni-ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持uni.scss (opens new window)，可以方便的扩展和切换应用的风格。<br/><br/>ui是一种需求非常发散的产品，DCloud官方也无意用uni-ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。<br/><br/>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni-ui的主题风格，满足更多用户的需求。<br/><br/>4、与uniCloud协作<br/><br/>uni-ui里很多组件与uniCloud打通，可大幅提升开发效率<br/><br/>5、与uni统计自动集成实现免打点<br/><br/>uni统计是优秀的多端统计平台，见tongji.dcloud.net.cn (opens new window)。<br/><br/>除了一张报表看全端，它的另一个重要特点是免打点。 比如使用uni-ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。 当然你也可以关闭uni统计，这不是强制的。<br/><br/>6、uni-ui符合全套DCloud组件规范<br/><br/>包括easycom、uni_module、datacom，全部遵循。<br/></p>', '沈奇男', '2022-08-17 00:09:23', 0);
 
 -- ----------------------------
 -- Table structure for files
@@ -258,7 +262,7 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
@@ -290,7 +294,7 @@ CREATE TABLE `menu`  (
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -320,7 +324,7 @@ CREATE TABLE `role`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
@@ -338,7 +342,7 @@ CREATE TABLE `role_menu`  (
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `menu_id` int(11) NOT NULL COMMENT '菜单id',
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of role_menu
@@ -396,12 +400,12 @@ CREATE TABLE `user`  (
   `birthday` date NULL DEFAULT NULL COMMENT '生日',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '性别',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员',
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
   `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user

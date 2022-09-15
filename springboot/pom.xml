@@ -120,11 +120,12 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>2.5.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.sqn</groupId>
-            <artifactId>ip-spring-boot-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+<!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
+<!--        <dependency>-->
+<!--            <groupId>com.sqn</groupId>-->
+<!--            <artifactId>ip-spring-boot-starter</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

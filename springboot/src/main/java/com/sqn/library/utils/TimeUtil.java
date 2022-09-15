@@ -109,4 +109,8 @@ public class TimeUtil {
         return Integer.parseInt(point[0]) * 10000 + Integer.parseInt(point[1]) * 100 + Integer.parseInt(point[2]);
     }
 
+    public static void main(String[] args) {
+        System.out.println(toTimestamp("2022-08-01 23:30:08"));
+    }
+
 }

@@ -27,13 +27,13 @@ public class EchartsController {
     @Resource
     IBookService bookService;
 
-    @GetMapping("/example")
-    public Result<?> get() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("x", CollUtil.newArrayList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"));
-        map.put("y", CollUtil.newArrayList(150, 230, 224, 218, 135, 147, 260));
-        return Result.success(map);
-    }
+//    @GetMapping("/example")
+//    public Result<?> get() {
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("x", CollUtil.newArrayList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"));
+//        map.put("y", CollUtil.newArrayList(150, 230, 224, 218, 135, 147, 260));
+//        return Result.success(map);
+//    }
 
     //新冠数据
     @GetMapping("/epidemic")

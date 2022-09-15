@@ -79,4 +79,11 @@ public class EventsController {
         eventsMapper.deleteBatchIds(ids);
         return Result.success();
     }
+
+//    点击查看计数
+    @PostMapping("/{id}")
+    public Result<?> addCount(@PathVariable Integer id){
+        eventsMapper.updateViewCount(id);
+        return Result.success();
+    }
 }

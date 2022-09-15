@@ -5,12 +5,18 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.ConsumerDetailsMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sqn.library.common.Result;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author shenqn
  * @since 2022-08-30
  */
+@Slf4j
 @RestController
 @RequestMapping("/consumer-details")
 public class ConsumerDetailsController {
@@ -90,14 +97,14 @@ public class ConsumerDetailsController {
     }
 
     //    查询当月账单
-    @PostMapping("/findCurrentBill/{id}")
-    public Result<?> findCurrentBillById(@PathVariable Integer id, @RequestBody Timestamp currentMonth) {
-        LambdaQueryWrapper<ConsumerDetails> wrapper = Wrappers.<ConsumerDetails>lambdaQuery();
-        wrapper.eq(ConsumerDetails::getUid, id)
-                .ge(ConsumerDetails::getCreatetime, currentMonth)
-                .orderByDesc(ConsumerDetails::getId);
-        List<ConsumerDetails> list = consumerDetailsService.list(wrapper);
-        return Result.success(list);
+    @GetMapping("/getCurrentBill/{id}")
+    public Result<?> findCurrentBillById(@PathVariable Integer id) {
+        HashMap<String, Float> map = new HashMap<>();
+        List<Float> list = consumerDetailsMapper.getCurrentMonthExpense(id);
+        map.put("expense", list.get(0));
+        map.put("income", list.get(1));
+        consumerDetailsMapper.getLastMonthExpense(id);
+        return Result.success(map);
     }
 
 }

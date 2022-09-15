@@ -60,6 +60,6 @@ logging:
 #    enabled-by-default: true
 
 #自定义ip监测配置属性
-tools:
-  ip:
-    log-cycle: 3
+#tools:
+#  ip:
+#    log-cycle: 3
