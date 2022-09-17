@@ -1,6 +1,5 @@
 package com.sqn.library.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -24,8 +23,10 @@ public interface IBookService extends IService<Book> {
     Page<Book> findPage(Page<Book> tPage, @Param("name") String name, @Param("author") String author, @Param(
             "category") String category);
 
-    Page<Book> findPageByUid(Page<Book> page, @Param("uid") Integer uid, @Param("name") String name,
-                             @Param("author") String author,
-                             @Param("category") String category);
+    List<Book> getByUid(Integer id);
+
+//    Page<Book> findPageByUid(Page<Book> page, @Param("uid") Integer uid, @Param("name") String name,
+//                             @Param("author") String author,
+//                             @Param("category") String category);
 
 }

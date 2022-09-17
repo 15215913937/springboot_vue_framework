@@ -109,8 +109,8 @@ public class UserController {
      */
     @PostMapping("/updatePwd")
     public Result<?> updatePwd(@RequestBody UserPasswordDTO userPasswordDTO) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", userPasswordDTO.getUsername());
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>();
+        queryWrapper.eq(User::getUsername, userPasswordDTO.getUsername());
         User res = userMapper.selectOne(queryWrapper);
         if (!SecurityUtils.matchesPassword(userPasswordDTO.getPassword(), res.getPassword())) {
             return Result.error(Constants.CODE_COMMON_ERR, "原密码错误");
@@ -193,10 +193,6 @@ public class UserController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String role) {
-//        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().orderByAsc(User::getId);
-//        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(role)) {
-//            wrapper.like(User::getName, name).like(User::getRole, role);
-//        }
         Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name, role);
         return Result.success(userPage);
     }
@@ -217,12 +213,6 @@ public class UserController {
         return Result.success(userMapper.selectById(id));
 
     }
-
-    //    更新余额
-//    @PostMapping("/updateBalance")
-//    public Result<?> updateBalance(@RequestBody Integer id, @RequestBody Double new_bill) {
-//        return Result.success(iUserService.updateBalance(id,new_bill));
-//    }
 
 
     @GetMapping("/all")

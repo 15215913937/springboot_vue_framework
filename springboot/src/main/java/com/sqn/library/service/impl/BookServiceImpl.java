@@ -1,11 +1,13 @@
 package com.sqn.library.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.entity.Book;
 import com.sqn.library.mapper.BookMapper;
 import com.sqn.library.service.IBookService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,8 +28,8 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
 
     @Override
     public List<Book> OneList(Integer id) {
-        QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uId", id);
+        LambdaQueryWrapper<Book> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Book::getUid, id);
         return list(queryWrapper);
     }
 
@@ -37,7 +39,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
     }
 
     @Override
-    public Page<Book> findPageByUid(Page<Book> page, Integer uid, String name, String author, String category) {
-        return bookMapper.findPageByUid(page, uid, name, author, category);
+    public List<Book> getByUid(Integer id) {
+        final LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
+        wrapper.eq(Book::getUid, id);
+        return bookMapper.selectList(wrapper);
     }
 }

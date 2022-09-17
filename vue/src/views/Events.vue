@@ -8,14 +8,19 @@
         </el-icon>
         &nbsp发表新事件
       </el-button>
-
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
       <el-input v-model="title" placeholder="请输入标题" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
-      <el-input v-model="author" placeholder="请输入作者" style="width: 20%" :prefix-icon="Search" class="mr-10"
-                clearable/>
+      <el-select v-model="author" style="width: 15%;bottom: 2px" class="mr-10" placeholder="选择作者" clearable>
+        <el-option
+            v-for="item in authorList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+        />
+      </el-select>
       <el-date-picker
           class="mr-10"
           v-model="timeHorizon"
@@ -49,7 +54,7 @@
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="title" label="标题" align="center"/>
-      <el-table-column prop="author" label="作者" align="center"/>
+      <el-table-column prop="username" label="作者" align="center"/>
       <el-table-column prop="createTime" label="创建时间" align="center"/>
       <el-table-column prop="viewCount" label="查看次数" align="center"/>
       <el-table-column fixed="right" label="操作" width="300px" align="center">
@@ -134,6 +139,7 @@ export default {
       dialogVisible: false,
       title: '',
       author: '',
+      authorList: [],
       timeHorizon: [],
       currentPage: 1,
       pageSize: 10,
@@ -154,6 +160,10 @@ export default {
   },
   created() {
     this.load();
+    request.get('/events/authorList').then(res => {
+      // console.log(res.data)
+      this.authorList = res.data;
+    })
   },
   setup() {
     return {
@@ -176,8 +186,10 @@ export default {
       this.load();
     },
     load() {
+
       let time = this.timeHorizon;
-      // console.log(time);
+      console.log("timeType:" + typeof this.timeHorizon);
+      // console.log("-------" + typeof this.author)
       request.get("/events", {
         params: {
           pageNum: this.currentPage,
@@ -224,7 +236,7 @@ export default {
             this.$message.error("正文不能为空")
             return false;
           }
-          this.form.author = this.user.name;
+          this.form.author = this.user.id;
           request.post("/events", this.form).then(res => {
             // console.log(res);
             if (res.code === '0') {
@@ -237,12 +249,6 @@ export default {
           });
         }
       })
-
-
-      // else {
-      //     this.$message.error("不是作者本人，编辑无效！")
-      // }
-
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
@@ -261,7 +267,7 @@ export default {
     ,
     handleDelete(row) {
       // console.log(this.user)
-      if (row.author === this.user.name || this.user.role === "ROLE_ADMIN") {
+      if (row.author === this.user.id || this.user.role === "ROLE_ADMIN") {
         this.id = row.id;
         request.delete("/events/" + this.id).then(res => {
           if (res.code === '0') {

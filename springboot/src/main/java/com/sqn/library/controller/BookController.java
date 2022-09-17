@@ -77,33 +77,10 @@ public class BookController {
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String author,
                               @RequestParam(defaultValue = "") String category) {
-//        LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
-//        if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(author) || StrUtil.isNotBlank(category)) {
-//            wrapper.like(Book::getBookname, name).like(Book::getAuthor, author).like(Book::getCategory, category);
-//        }
-//        Page<Book> bookPage = bookMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
-//        List<Book> records = bookPage.getRecords();
-//        for (Book record : records) {
-//            User user = iUserService.getById(record.getUid());
-//            if(user!=null){
-//                record.setUsername(user.getName());
-//            }
-//        }
         Page<Book> bookPage = iBookService.findPage(new Page<>(pageNum, pageSize), name, author, category);
         return Result.success(bookPage);
     }
 
-    @GetMapping("/byUid")
-    public Result<?> findPageById(@RequestParam Integer uid,
-                                  @RequestParam(defaultValue = "1") Integer pageNum,
-                                  @RequestParam(defaultValue = "10") Integer pageSize,
-                                  @RequestParam(defaultValue = "") String name,
-                                  @RequestParam(defaultValue = "") String author,
-                                  @RequestParam(defaultValue = "") String category) {
-
-        Page<Book> bookPage = iBookService.findPageByUid(new Page<>(pageNum, pageSize), uid, name, author, category);
-        return Result.success(bookPage);
-    }
 
     //批量删除
     @PostMapping("/deleteBatch")
@@ -111,6 +88,13 @@ public class BookController {
         bookMapper.deleteBatchIds(ids);
         return Result.success();
     }
+
+    //    根据id查询
+//    @GetMapping("/{id}")
+//    public Result<?> getOneBookCount(@PathVariable Integer id) {
+//        final List<Book> byUid = iBookService.getByUid(id);
+//        return Result.success(byUid.size());
+//    }
 
     /**
      * 导出接口

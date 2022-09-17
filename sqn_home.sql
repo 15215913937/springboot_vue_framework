@@ -11,30 +11,11 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 16/09/2022 12:04:37
+ Date: 17/09/2022 17:55:01
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for article
--- ----------------------------
-DROP TABLE IF EXISTS `article`;
-CREATE TABLE `article`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '正文',
-  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布人',
-  `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of article
--- ----------------------------
-INSERT INTO `article` VALUES (1, '我是标题', '我是郑文', '作者', '我是时间');
-INSERT INTO `article` VALUES (4, '13241234', NULL, '沈奇男', NULL);
 
 -- ----------------------------
 -- Table structure for book
@@ -53,19 +34,22 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '自动化技术、计算机技术', NULL, '机械工业出版社', 18, 63.96, '2022-02-07', '从架构设计、工作原理、设计原则、代码实现、工程实践等维度，深入分析如何从0到1搭建自动化测试框架。\n', 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
+INSERT INTO `book` VALUES (1, '从0到1搭建自动化测试框架', '蔡超', '自动化技术、计算机技术', NULL, '机械工业出版社', 1, 63.96, '2022-02-07', '从架构设计、工作原理、设计原则、代码实现、工程实践等维度，深入分析如何从0到1搭建自动化测试框架。\n', 'http://localhost:9090/files/5193c07851f74969a23b414bd642601d');
 INSERT INTO `book` VALUES (31, '不战之困', '戴旭', '军事', NULL, '武汉出版社', 23, 45.00, '2012-04-23', '一部影响中国军队30年变革的思想库，\n50部改变中外军事格局的军事文件首度曝光。', 'http://localhost:9090/files/4e8cc550907640fd9aecd5111ca0a30f');
-INSERT INTO `book` VALUES (32, '全栈自动化测试实战', '卢家涛', '自动化技术、计算机技术', '2020年3月第1版', '电子工业出版社', 18, 79.00, '2021-10-31', '基于TestNG、HttpClient、Selenium和Appium', 'http://localhost:9090/files/851c041f164b4a269afb2ae535384344');
+INSERT INTO `book` VALUES (32, '全栈自动化测试实战', '卢家涛', '自动化技术、计算机技术', '2020年3月第1版', '电子工业出版社', 1, 79.00, '2021-10-31', '基于TestNG、HttpClient、Selenium和Appium', 'http://localhost:9090/files/851c041f164b4a269afb2ae535384344');
 INSERT INTO `book` VALUES (33, '金融的价值', '黄益平', '经济', '2021年12月第1版', '中信出版集团', 23, 69.00, '2022-07-22', '与宏观分析趋势，于底层掌握逻辑', 'http://localhost:9090/files/36bac59e0cad4ba486b607f2c2e10606');
 INSERT INTO `book` VALUES (34, '李东生 向生而生', '李海东', '综合性图书', NULL, '中国友谊出版公司', 23, 48.00, '2022-07-22', '经历痛苦的蜕变，才能如“鹰”般重生。', 'http://localhost:9090/files/1527646ef01140cdb33879e10321c591');
 INSERT INTO `book` VALUES (59, '假如时间不存在？', '[意]卡尔罗·罗威利（Carlo Rovelli）', '科普/物理', '2013年5月北京第1版第1次印刷', '化学工业出版社', 23, 24.00, '2013-10-04', '--购书于秦皇岛。\n讲点颠覆常理的科学', 'http://localhost:9090/files/784e481472164d6183e47f3b30dc6703');
 INSERT INTO `book` VALUES (60, '未来简史', '[以色列]尤瓦尔·赫拉利（Yuval Noah Harari））', '社会科学总论', '2017年2月第1版', '中信出版社', 23, 68.00, '2017-11-14', '--购书于阿拉善左旗。\nHome Deus A Brief History of Tomorrow\n从智人到智神', 'http://localhost:9090/files/0774edccebfd498e86debc789a06e3b0');
 INSERT INTO `book` VALUES (61, '一本书读懂不良资产', '石佳华', '经济', NULL, '中国法制出版社', 23, 68.00, '2022-09-02', ' 多年从事银行信贷、不良资产收购与处置的页内专业人士带你揭开中国不良资产管理行业的神秘面纱', 'http://localhost:9090/files/a0da2e590694473ebd0182f3285e7287');
+INSERT INTO `book` VALUES (65, '汉武帝和他的时代', '姜鹏', '历史、地理', '2022年3月第1版', '上海人民出版社、学林出版社', 23, 68.00, '2022-09-17', '回望中国历史上第一个狂飙突进的时代。\n感受风云际会中人物命运的跌宕起伏', 'http://localhost:9090/files/75f4673fab664f1da6ed0e980d2d6ce3');
+INSERT INTO `book` VALUES (66, '商业模式全史', '[日]三谷宏治', '经济', '2016年1月第1版', '江苏凤凰文艺出版社', 23, 42.00, '2022-09-17', '以全球性眼光综合分析“大企业”盛衰兴废的力作。\n创业者、企业管理者、MBA课程学习者的好帮手。', 'http://localhost:9090/files/f39e96a9602b41a1b8f91629c56c5673');
+INSERT INTO `book` VALUES (67, '决策与判断', '[美]斯科特·普劳斯（Scott Plous）', '综合性图书', '2020年3月第1版', '人民邮电出版社', 23, 88.00, '2022-09-17', NULL, 'http://localhost:9090/files/3ae625a900684293acef1477a9cd4057');
 
 -- ----------------------------
 -- Table structure for category_list
@@ -134,7 +118,7 @@ CREATE TABLE `consumer_details`  (
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类别',
   `createtime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 51 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumer_details
@@ -249,6 +233,32 @@ CREATE TABLE `events`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '正文',
+  `author` int(11) NULL DEFAULT NULL COMMENT '编者 uid',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 44 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of events
+-- ----------------------------
+INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', 42, '2022-07-29 00:19:26', 6);
+INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', 1, '2022-07-16 01:40:10', 2);
+INSERT INTO `events` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', 1, '2022-07-20 23:46:03', 3);
+INSERT INTO `events` VALUES (35, '小程序端正在开发', '<p>uniapp练习</p>', 1, '2022-08-11 00:05:50', 1);
+INSERT INTO `events` VALUES (37, 'uniapp组件学习', '<p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。<br/><br/>uni-ui不包括基础组件，它是基础组件的补充。<br/><br/>#uni-ui产品特点<br/>1、高性能<br/><br/>目前为止，在小程序和混合app领域，uni-ui是性能的标杆。<br/><br/>自动差量更新数据<br/>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。<br/><br/>而uni-ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。<br/><br/>优化逻辑层和视图层通讯折损<br/>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。 比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。<br/><br/>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni-ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验<br/><br/>背景停止<br/>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。<br/><br/>而uni-ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。<br/><br/>2、全端<br/><br/>uni-ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。<br/><br/>比如导航栏navbar组件，会自动处理不同端的状态栏； 比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。<br/><br/>uni-ui还支持nvue原生渲染。<br/><br/>uni-ui还支持pc等宽屏设备，可以通过PC浏览器访问<a href=\"https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge\" target=\"_blank\">https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge</a> (opens new window)体验<br/><br/>3、风格扩展<br/><br/>uni-ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持uni.scss (opens new window)，可以方便的扩展和切换应用的风格。<br/><br/>ui是一种需求非常发散的产品，DCloud官方也无意用uni-ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。<br/><br/>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni-ui的主题风格，满足更多用户的需求。<br/><br/>4、与uniCloud协作<br/><br/>uni-ui里很多组件与uniCloud打通，可大幅提升开发效率<br/><br/>5、与uni统计自动集成实现免打点<br/><br/>uni统计是优秀的多端统计平台，见tongji.dcloud.net.cn (opens new window)。<br/><br/>除了一张报表看全端，它的另一个重要特点是免打点。 比如使用uni-ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。 当然你也可以关闭uni统计，这不是强制的。<br/><br/>6、uni-ui符合全套DCloud组件规范<br/><br/>包括easycom、uni_module、datacom，全部遵循。<br/></p>', 1, '2022-08-17 00:09:23', 5);
+INSERT INTO `events` VALUES (42, '123', '<p>123</p>', 1, '2022-09-17 10:56:59', 2);
+INSERT INTO `events` VALUES (40, '测试文章1', '<p>啊啊啊啊</p>', 1, '2022-09-17 00:52:04', 3);
+INSERT INTO `events` VALUES (43, '新晋管理员--me', '<p>新晋管理员--me<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', 62, '2022-09-17 15:07:15', 1);
+
+-- ----------------------------
+-- Table structure for events_copy1
+-- ----------------------------
+DROP TABLE IF EXISTS `events_copy1`;
+CREATE TABLE `events_copy1`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '正文',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
   `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
@@ -256,13 +266,13 @@ CREATE TABLE `events`  (
 ) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of events
+-- Records of events_copy1
 -- ----------------------------
-INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', '沈奇亚', '2022-07-29 00:19:26', 5);
-INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', '沈奇男', '2022-07-16 01:40:10', 2);
-INSERT INTO `events` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', '沈奇男', '2022-07-20 23:46:03', 1);
-INSERT INTO `events` VALUES (35, '小程序端正在开发', '<p>uniapp练习</p>', '沈奇男', '2022-08-11 00:05:50', 1);
-INSERT INTO `events` VALUES (37, 'uniapp组件学习', '<p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。<br/><br/>uni-ui不包括基础组件，它是基础组件的补充。<br/><br/>#uni-ui产品特点<br/>1、高性能<br/><br/>目前为止，在小程序和混合app领域，uni-ui是性能的标杆。<br/><br/>自动差量更新数据<br/>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。<br/><br/>而uni-ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。<br/><br/>优化逻辑层和视图层通讯折损<br/>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。 比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。<br/><br/>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni-ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验<br/><br/>背景停止<br/>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。<br/><br/>而uni-ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。<br/><br/>2、全端<br/><br/>uni-ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。<br/><br/>比如导航栏navbar组件，会自动处理不同端的状态栏； 比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。<br/><br/>uni-ui还支持nvue原生渲染。<br/><br/>uni-ui还支持pc等宽屏设备，可以通过PC浏览器访问<a href=\"https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge\" target=\"_blank\">https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge</a> (opens new window)体验<br/><br/>3、风格扩展<br/><br/>uni-ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持uni.scss (opens new window)，可以方便的扩展和切换应用的风格。<br/><br/>ui是一种需求非常发散的产品，DCloud官方也无意用uni-ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。<br/><br/>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni-ui的主题风格，满足更多用户的需求。<br/><br/>4、与uniCloud协作<br/><br/>uni-ui里很多组件与uniCloud打通，可大幅提升开发效率<br/><br/>5、与uni统计自动集成实现免打点<br/><br/>uni统计是优秀的多端统计平台，见tongji.dcloud.net.cn (opens new window)。<br/><br/>除了一张报表看全端，它的另一个重要特点是免打点。 比如使用uni-ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。 当然你也可以关闭uni统计，这不是强制的。<br/><br/>6、uni-ui符合全套DCloud组件规范<br/><br/>包括easycom、uni_module、datacom，全部遵循。<br/></p>', '沈奇男', '2022-08-17 00:09:23', 5);
+INSERT INTO `events_copy1` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', '沈奇亚', '2022-07-29 00:19:26', 5);
+INSERT INTO `events_copy1` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', '沈奇男', '2022-07-16 01:40:10', 2);
+INSERT INTO `events_copy1` VALUES (25, '老沈新语1', '<p>老沈说：“有女人的地方就有江湖”<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👏</span></p>', '沈奇男', '2022-07-20 23:46:03', 1);
+INSERT INTO `events_copy1` VALUES (35, '小程序端正在开发', '<p>uniapp练习</p>', '沈奇男', '2022-08-11 00:05:50', 1);
+INSERT INTO `events_copy1` VALUES (37, 'uniapp组件学习', '<p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。<br/><br/>uni-ui不包括基础组件，它是基础组件的补充。<br/><br/>#uni-ui产品特点<br/>1、高性能<br/><br/>目前为止，在小程序和混合app领域，uni-ui是性能的标杆。<br/><br/>自动差量更新数据<br/>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。<br/><br/>而uni-ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。<br/><br/>优化逻辑层和视图层通讯折损<br/>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。 比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。<br/><br/>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni-ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验<br/><br/>背景停止<br/>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。<br/><br/>而uni-ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。<br/><br/>2、全端<br/><br/>uni-ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。<br/><br/>比如导航栏navbar组件，会自动处理不同端的状态栏； 比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。<br/><br/>uni-ui还支持nvue原生渲染。<br/><br/>uni-ui还支持pc等宽屏设备，可以通过PC浏览器访问<a href=\"https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge\" target=\"_blank\">https://hellouniapp.dcloud.net.cn/pages/extUI/badge/badge</a> (opens new window)体验<br/><br/>3、风格扩展<br/><br/>uni-ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持uni.scss (opens new window)，可以方便的扩展和切换应用的风格。<br/><br/>ui是一种需求非常发散的产品，DCloud官方也无意用uni-ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。<br/><br/>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni-ui的主题风格，满足更多用户的需求。<br/><br/>4、与uniCloud协作<br/><br/>uni-ui里很多组件与uniCloud打通，可大幅提升开发效率<br/><br/>5、与uni统计自动集成实现免打点<br/><br/>uni统计是优秀的多端统计平台，见tongji.dcloud.net.cn (opens new window)。<br/><br/>除了一张报表看全端，它的另一个重要特点是免打点。 比如使用uni-ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。 当然你也可以关闭uni统计，这不是强制的。<br/><br/>6、uni-ui符合全套DCloud组件规范<br/><br/>包括easycom、uni_module、datacom，全部遵循。<br/></p>', '沈奇男', '2022-08-17 00:09:23', 5);
 
 -- ----------------------------
 -- Table structure for files

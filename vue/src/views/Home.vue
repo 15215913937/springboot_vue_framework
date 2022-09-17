@@ -164,26 +164,19 @@ export default {
   },
   mounted() {  //页面元素渲染完成后再触发mounted
     let that = this;
-    //获取月消费数据
-    request.get("/consumer-details/getCurrentBill/" + this.user.id).then(res => {
-      this.currentMonthExpense = res.data.currentExpense;
-      this.currentMonthIncome = res.data.currentIncome;
-      this.lastMonthExpense = res.data.lastExpense;
-      this.lastMonthIncome = res.data.lastIncome;
-      this.expenseRatioYearOnYear = res.data.expenseRatioYearOnYear;
-      this.incomeRatioYearOnYear = res.data.incomeRatioYearOnYear;
+    //获取个人数据
+    request.get("/home/getHomeOneInfo/" + this.user.id).then(res => {
+      this.currentMonthExpense = res.data.billInfo.currentExpense;
+      this.currentMonthIncome = res.data.billInfo.currentIncome;
+      this.lastMonthExpense = res.data.billInfo.lastExpense;
+      this.lastMonthIncome = res.data.billInfo.lastIncome;
+      this.expenseRatioYearOnYear = res.data.billInfo.expenseRatioYearOnYear;
+      this.incomeRatioYearOnYear = res.data.billInfo.incomeRatioYearOnYear;
+      this.myBookCount = parseInt(res.data.MyBookInfo.myBookCount)
     })
     //获取家族注册人数和个人书籍数量
     request.get("/user").then(res => {
       this.userCount = res.data.total;
-    });
-    //获取个人书籍
-    request.get("/book/byUid", {
-      params: {
-        uid: that.user.id,
-      }
-    }).then(res => {
-      this.myBookCount = res.data.total;
     });
     //获取书籍总数
     request.get("/book").then(res => {
@@ -196,7 +189,7 @@ export default {
       let myEvents = res.data.records;
       let count = 0;
       for (const myEvent of myEvents) {
-        if (myEvent.author === this.user.name) {
+        if (myEvent.author === this.user.id) {
           count += 1
         }
       }
@@ -330,10 +323,5 @@ export default {
   font-size: 25px
 
 }
-
-
-/*.chart {*/
-/*    height: 300px*/
-/*}*/
 
 </style>

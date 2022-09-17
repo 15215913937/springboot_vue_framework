@@ -29,8 +29,6 @@
                         :value="item.name"
                 />
             </el-select>
-            <!--      <el-input v-model="category" placeholder="请输入类别" style="width: 15%" class="mr-10"-->
-            <!--                clearable/>-->
             <!--            <el-input v-model="buyDate" placeholder="请输入时间" style="width: 15%" :prefix-icon="Search" class="mr-10"-->
             <!--                      clearable/>-->
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>

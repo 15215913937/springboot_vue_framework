@@ -100,22 +100,7 @@ public class ConsumerDetailsController {
         return Result.success(consumerDetailsService.page(new Page<>(pageNum, pageSize), wrapper));
     }
 
-    //    查询当月账单
-    @GetMapping("/getCurrentBill/{id}")
-    public Result<?> findCurrentBillById(@PathVariable Integer id) {
-        HashMap<String, String> map = new HashMap<>();
-        List<String> list1 = consumerDetailsMapper.getCurrentMonthExpense(id);
-        List<String> list2 = consumerDetailsMapper.getLastMonthExpense(id);
-        map.put("currentExpense", (list1.size() != 0 ? list1.get(0) : "0.00") + "元");
-        map.put("currentIncome", (list1.size() == 2 ? list1.get(1) : "0.00") + "元");
-        map.put("lastExpense", (list2.size() != 0 ? list2.get(0) : "0.00") + "元");
-        map.put("lastIncome", (list2.size() == 2 ? list2.get(1) : "0.00") + "元");
-        final String s1 = consumeCalculate.ratioYearOnYear(list1.size() != 0 ? Double.parseDouble(list1.get(0)) : 0d, list2.size() != 0 ? Double.parseDouble(list2.get(0)) : 0d);
-        final String s2 = consumeCalculate.ratioYearOnYear(list1.size() == 2 ? Double.parseDouble(list1.get(1)) : 0d, list2.size() == 2 ? Double.parseDouble(list2.get(1)) : 0d);
-        map.put("expenseRatioYearOnYear", s1);
-        map.put("incomeRatioYearOnYear", s2);
-        return Result.success(map);
-    }
+
 
 }
 

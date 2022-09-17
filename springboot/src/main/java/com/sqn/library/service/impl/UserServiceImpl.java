@@ -37,8 +37,6 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
     @Resource
     UserMapper userMapper;
-    @Resource
-    IUserService iUserService;
 
     @Override
     public void updatePassword(UserPasswordDTO userPasswordDTO) {
@@ -55,29 +53,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new CustomException("-1", "系统异常");
         }
     }
-//    @Override
-//    public Double updateBalance(Integer id, Double new_bill) {
-//        User one = userMapper.selectById(id);
-//        Double balance = one.getBalance();
-//        balance += new_bill;
-////        LambdaQueryWrapper<ConsumerDetails> wrapper = Wrappers.lambdaQuery();
-////        wrapper.eq(ConsumerDetails::getUid, id);
-////        List<ConsumerDetails> list = iConsumerDetailsService.list(wrapper);
-//////        System.out.println(balance);
-////        for (ConsumerDetails consumerDetails : list) {
-//////            System.out.println("类型：" + consumerDetails.getType() + ",金额：" + consumerDetails.getCost());
-////            if (consumerDetails.getType().equals("支出")) {
-////                balance -= consumerDetails.getCost();
-////            } else if (consumerDetails.getType().equals("收入")) {
-////                balance += consumerDetails.getCost();
-////            }
-////        }
-//        one.setBalance(balance);
-//        System.out.println("------------------------------------这里------------------" + one);
-//        User user = new User();
-//        user.setId(id);
-//        user.setBalance(balance);
-//        userMapper.updateById(user);
-//        return balance;
-//    }
 }

@@ -9,7 +9,9 @@ import com.sqn.library.common.Constants;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.DictMapper;
 import com.sqn.library.mapper.MenuMapper;
+import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,9 +48,9 @@ public class MenuController {
     DictMapper dictMapper;
 
     @Resource
-    StringRedisTemplate stringRedisTemplate;
-    @Resource
     MenuMapper menuMapper;
+    @Resource
+    RedisUtils redisUtils;
 
     // 新增或者更新
     @PostMapping
@@ -61,27 +63,27 @@ public class MenuController {
             throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
         }
         menuService.saveOrUpdate(menu);
-        flushRedis(Constants.MENUS_KEY);
+        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         menuService.removeById(id);
-        flushRedis(Constants.MENUS_KEY);
+        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         menuService.removeByIds(ids);
-        flushRedis(Constants.MENUS_KEY);
+        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @GetMapping
     public Result<?> findAll(@RequestParam(defaultValue = "") String name) {
-////        1、从缓存中获取数据,返回的是一个json
+//        1、从缓存中获取数据,返回的是一个json
 //        String jsonStr = stringRedisTemplate.opsForValue().get(Constants.MENUS_KEY);
 //        List<Menu> menus;
 //        if (StrUtil.isBlank(jsonStr)) { //如果jsonStr是空的
@@ -117,9 +119,5 @@ public class MenuController {
         return Result.success(menuService.list().stream().map(Menu::getId));
     }
 
-    //清空缓存
-    public void flushRedis(String key) {
-        stringRedisTemplate.delete(key);
-    }
 }
 
