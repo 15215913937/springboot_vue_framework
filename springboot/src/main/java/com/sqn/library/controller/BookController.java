@@ -81,6 +81,18 @@ public class BookController {
         return Result.success(bookPage);
     }
 
+    @GetMapping("/getOneBooks")
+    public Result<?> findPageByUid(
+            @RequestParam(defaultValue = "") String uid,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String author,
+            @RequestParam(defaultValue = "") String category) {
+        Page<Book> bookPage = iBookService.findPageByUid(new Page<>(pageNum, pageSize), uid, name, author, category);
+        return Result.success(bookPage);
+    }
+
 
     //批量删除
     @PostMapping("/deleteBatch")

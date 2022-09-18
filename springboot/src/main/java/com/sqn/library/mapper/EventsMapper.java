@@ -24,4 +24,6 @@ public interface EventsMapper extends BaseMapper<Events> {
 
 
     Page<Events> findPage(Page<Events> tPage, String title, Integer author, String startTime, String endTime);
+    @Select("SELECT * FROM ( SELECT `events`.*, `user`.NAME username FROM `events` LEFT JOIN `user` ON `events`.author = `user`.id ) a WHERE a.id = #{id}")
+    Events getById(Integer id);
 }

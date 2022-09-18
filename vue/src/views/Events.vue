@@ -186,7 +186,6 @@ export default {
       this.load();
     },
     load() {
-
       let time = this.timeHorizon;
       console.log("timeType:" + typeof this.timeHorizon);
       // console.log("-------" + typeof this.author)

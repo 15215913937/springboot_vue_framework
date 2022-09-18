@@ -61,8 +61,8 @@ public class EventsController {
 
     @GetMapping("/{id}")
     public Result<?> findOneEvent(@PathVariable Integer id) {
-        Events events = eventsMapper.selectById(id);
-        return Result.success(events);
+        Events event = eventsMapper.getById(id);
+        return Result.success(event);
     }
 
     //事件批量删除

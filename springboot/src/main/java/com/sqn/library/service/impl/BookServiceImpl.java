@@ -44,4 +44,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
         wrapper.eq(Book::getUid, id);
         return bookMapper.selectList(wrapper);
     }
+
+    @Override
+    public Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category) {
+        return bookMapper.findPageByUid(objectPage, uid, name, author, category);
+    }
 }
