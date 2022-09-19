@@ -1,6 +1,9 @@
 package com.sqn.library.utils;
 
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import io.micrometer.core.instrument.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,7 +46,7 @@ public class RedisUtils {
      * @param value
      * @param timeout 有效期 单位：秒
      */
-    public Boolean setRedis(String key, String value, long timeout) {
+    public Boolean setObjectToRedis(String key, String value, long timeout) {
         stringRedisTemplate.opsForValue().set(key, value, timeout,TimeUnit.SECONDS);
         return true;
     }

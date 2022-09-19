@@ -1,6 +1,7 @@
 package com.sqn.library.controller;
 
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
@@ -10,6 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
+import com.sqn.library.controller.dto.LoginByPhoneDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.controller.dto.UserSearchDTO;
@@ -17,12 +19,10 @@ import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.exception.GlobalExceptionHandler;
-import com.sqn.library.mapper.BookMapper;
-import com.sqn.library.mapper.RoleMapper;
-import com.sqn.library.mapper.RoleMenuMapper;
-import com.sqn.library.mapper.UserMapper;
+import com.sqn.library.mapper.*;
 import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
+import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
@@ -34,6 +34,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.cert.CertStoreException;
 import java.util.ArrayList;
@@ -65,7 +67,11 @@ public class UserController {
     IMenuService iMenuService;
 
     @Resource
-    StringRedisTemplate stringRedisTemplate;
+    MenuMapper menuMapper;
+
+
+    @Resource
+    RedisUtils redisUtils;
 
     //登录接口
     //@RequestBody ：把前端传过来的json对象转换为java对象
@@ -75,16 +81,16 @@ public class UserController {
         if (res == null || !SecurityUtils.matchesPassword(user.getPassword(), res.getPassword())) {
             return Result.error(Constants.CODE_COMMON_ERR, "用户名或密码错误！");
         }
-        String role = res.getRole();
-        Integer roleId = roleMapper.selectByFlag(role);
+        Integer roleId = roleMapper.selectByFlag(res.getRole());
         //当前角色的所有菜单id集合
         List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
         //查出系统所有菜单
         List<Menu> menus = iMenuService.findMenus("");
-        //new一个最后筛选完成之后的list
+        //new一个最后筛选后的list
         List<Menu> roleMenus = new ArrayList<>();
         //筛选当前用户角色的菜单
         for (Menu menu : menus) {
+//            获取每个父菜单的子菜单
             List<Menu> children = menu.getChildren();
             if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
                 roleMenus.add(menu);
@@ -99,6 +105,12 @@ public class UserController {
         res.setToken(token);
 //        flushRedis(USER_KEY);
         return Result.success(res);
+    }
+
+    //    发送手机验证码
+    @PostMapping("/code")
+    public Result<?> sendCode(@RequestBody String phone, HttpSession session) {
+        return iUserService.sendCode(phone, session);
     }
 
     /**
@@ -153,6 +165,43 @@ public class UserController {
         return Result.success();
     }
 
+    //手机号登录或注册
+    @PostMapping("/loginByPhone")
+    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
+        if (user == null) {
+//            User nUser = new User();
+            user.setRole("ROLE_VISITOR");
+            user.setUsername("qnShen_" + RandomUtil.randomString(8));
+            user.setPassword(SecurityUtils.encodePassword("123456"));
+            user.setName("游客_" + RandomUtil.randomString(8));
+            user.setPhone(loginByPhoneDTO.getPhone());
+        }
+        System.out.println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+        System.out.println(user);
+        Integer roleId = roleMapper.selectByFlag(user.getRole());
+        //当前角色的所有菜单id集合
+        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
+        //查出系统所有菜单
+        List<Menu> menus = iMenuService.list();
+        //new一个最后筛选后的list
+        List<Menu> roleMenus = new ArrayList<>();
+        //筛选当前用户角色的菜单
+        for (Menu menu : menus) {
+//            获取每个父菜单的子菜单
+            List<Menu> children = menu.getChildren();
+            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
+                roleMenus.add(menu);
+            }
+            //移除children里面不在menuIds集中的元素
+            children.removeIf(child -> !menuIds.contains(child.getId()));
+        }
+        user.setMenus(roleMenus);
+        // 生成token
+        String token = TokenUtils.genToken(user);
+        user.setToken(token);
+        return Result.success(user);
+    }
 
     //新增或更新接口
     @PostMapping
@@ -174,7 +223,7 @@ public class UserController {
             user.setName(user.getUsername());
         }
         iUserService.saveOrUpdate(user);
-//        flushRedis(USER_KEY);
+//        redisUtils.flushRedis(USER_KEY);
         return Result.success();
 
     }
@@ -183,7 +232,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         iUserService.removeById(id);
-//        flushRedis(USER_KEY);
+//        redisUtils.flushRedis(USER_KEY);
         return Result.success();
     }
 
@@ -201,7 +250,7 @@ public class UserController {
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
 //        设置缓存
-//        String s = stringRedisTemplate.opsForValue().get(USER_KEY);
+//        String s =
 //        User user;
 //        if (StrUtil.isBlank(s)) {
 //            user = userMapper.selectById(id);
@@ -220,9 +269,4 @@ public class UserController {
         return Result.success(iUserService.list());
     }
 
-
-    //清空缓存
-    public void flushRedis(String key) {
-        stringRedisTemplate.delete(key);
-    }
 }
