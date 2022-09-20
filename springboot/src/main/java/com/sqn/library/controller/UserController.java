@@ -107,6 +107,44 @@ public class UserController {
         return Result.success(res);
     }
 
+    //手机号登录或注册
+    @PostMapping("/loginByPhone")
+    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
+        User user = new User();
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
+        if (res == null) {
+            user.setRole("ROLE_VISITOR");
+            user.setUsername("qnShen_" + RandomUtil.randomString(8));
+            user.setPassword(SecurityUtils.encodePassword("123456"));
+            user.setName("游客_" + RandomUtil.randomString(8));
+            user.setPhone(loginByPhoneDTO.getPhone());
+        } else {
+            user = res;
+        }
+        Integer roleId = roleMapper.selectByFlag(user.getRole());
+        //当前角色的所有菜单id集合
+        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
+        //查出系统所有菜单
+        List<Menu> menus = iMenuService.list();
+        //new一个最后筛选后的list
+        List<Menu> roleMenus = new ArrayList<>();
+        //筛选当前用户角色的菜单
+        for (Menu menu : menus) {
+//            获取每个父菜单的子菜单
+            List<Menu> children = menu.getChildren();
+            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
+                roleMenus.add(menu);
+            }
+            //移除children里面不在menuIds集中的元素
+            children.removeIf(child -> !menuIds.contains(child.getId()));
+        }
+        user.setMenus(roleMenus);
+        // 生成token
+        String token = TokenUtils.genToken(user);
+        user.setToken(token);
+        return Result.success(user);
+    }
+
     //    发送手机验证码
     @PostMapping("/code")
     public Result<?> sendCode(@RequestBody String phone, HttpSession session) {
@@ -165,43 +203,7 @@ public class UserController {
         return Result.success();
     }
 
-    //手机号登录或注册
-    @PostMapping("/loginByPhone")
-    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
-        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
-        if (user == null) {
-//            User nUser = new User();
-            user.setRole("ROLE_VISITOR");
-            user.setUsername("qnShen_" + RandomUtil.randomString(8));
-            user.setPassword(SecurityUtils.encodePassword("123456"));
-            user.setName("游客_" + RandomUtil.randomString(8));
-            user.setPhone(loginByPhoneDTO.getPhone());
-        }
-        System.out.println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-        System.out.println(user);
-        Integer roleId = roleMapper.selectByFlag(user.getRole());
-        //当前角色的所有菜单id集合
-        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
-        //查出系统所有菜单
-        List<Menu> menus = iMenuService.list();
-        //new一个最后筛选后的list
-        List<Menu> roleMenus = new ArrayList<>();
-        //筛选当前用户角色的菜单
-        for (Menu menu : menus) {
-//            获取每个父菜单的子菜单
-            List<Menu> children = menu.getChildren();
-            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
-                roleMenus.add(menu);
-            }
-            //移除children里面不在menuIds集中的元素
-            children.removeIf(child -> !menuIds.contains(child.getId()));
-        }
-        user.setMenus(roleMenus);
-        // 生成token
-        String token = TokenUtils.genToken(user);
-        user.setToken(token);
-        return Result.success(user);
-    }
+
 
     //新增或更新接口
     @PostMapping
