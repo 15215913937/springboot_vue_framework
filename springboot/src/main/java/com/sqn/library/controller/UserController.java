@@ -118,14 +118,18 @@ public class UserController {
             user.setPassword(SecurityUtils.encodePassword("123456"));
             user.setName("游客_" + RandomUtil.randomString(8));
             user.setPhone(loginByPhoneDTO.getPhone());
+            userMapper.insert(user);
+            user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone,
+                    loginByPhoneDTO.getPhone()));
         } else {
             user = res;
         }
+
         Integer roleId = roleMapper.selectByFlag(user.getRole());
         //当前角色的所有菜单id集合
         List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
         //查出系统所有菜单
-        List<Menu> menus = iMenuService.list();
+        List<Menu> menus = iMenuService.findMenus("");
         //new一个最后筛选后的list
         List<Menu> roleMenus = new ArrayList<>();
         //筛选当前用户角色的菜单
@@ -202,7 +206,6 @@ public class UserController {
         }
         return Result.success();
     }
-
 
 
     //新增或更新接口

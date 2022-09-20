@@ -84,7 +84,6 @@
         },
         created() {
             this.form = JSON.parse(sessionStorage.getItem("user") || {});
-            this.form.balance = this.form.balance.toFixed(2)
         },
         methods: {
             update() {

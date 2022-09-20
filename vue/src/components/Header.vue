@@ -69,7 +69,7 @@
                     "top": "3",
                     "key": "af9a153d00174b4682bd2acd5761b695"
                 }
-            }
+            };
             var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = "https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0";

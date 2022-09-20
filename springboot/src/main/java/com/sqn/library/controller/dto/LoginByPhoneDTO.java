@@ -1,6 +1,8 @@
 package com.sqn.library.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author shenqn

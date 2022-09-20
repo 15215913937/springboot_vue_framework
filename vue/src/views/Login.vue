@@ -12,10 +12,10 @@
                                 style="display: flex;width: 100%;height: 30px;text-align: center;padding: 0 80px;margin-bottom: 10px">
 
                             <div style="flex: 1">
-                                <el-button type="wraning" @click="setLoginWayZero">账号登录</el-button>
+                                <el-button type="warning" @click="setLoginWayZero">账号登录</el-button>
                             </div>
                             <div style="flex: 1">
-                                <el-button type="wraning" @click="setLoginWayOne">手机号登录</el-button>
+                                <el-button type="warning" @click="setLoginWayOne">手机号登录</el-button>
                             </div>
                         </div>
                         <div v-if="loginWay===0">
@@ -39,18 +39,17 @@
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button style="flex:1;margin-bottom:20px" type="primary" @click="loginOne"
-                                               @keyup.enter="keyDown(e)"
-                                               :loading="loading">登录
+                                               :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
                                     </el-button>
                                 </el-form-item>
                             </el-form>
                         </div>
                         <div v-if="loginWay===1">
                             <el-form ref="formByPhone" :model="formByPhone" style="margin: 0 100px"
-                                     :rules="rulesByphone">
+                                     :rules="rulesByPhone">
                                 <el-form-item prop="phone">
                                     <el-input :prefix-icon="Iphone" placeholder="请输入手机号" v-model="formByPhone.phone"/>
-                                    <el-button type="wraning" disabled @click="sendCode">发送验证码</el-button>
+                                    <el-button type="warning" @click="sendCode">发送验证码</el-button>
                                 </el-form-item>
                                 <el-form-item prop="code">
                                     <el-input :prefix-icon="Key" show-password placeholder="请输入验证码"
@@ -58,8 +57,7 @@
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button style="flex:1;margin-bottom:20px" type="primary" @click="loginTwo"
-                                               @keyup.enter="keyDown(e)"
-                                               :loading="loading">登录
+                                               :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
                                     </el-button>
                                 </el-form-item>
                             </el-form>
@@ -192,13 +190,14 @@
                             return
                         }
                         this.loading = true;
-                        request.post("/user/code", this.formByPhone.phone).then(res => {
+                        request.post("/user/loginByPhone", this.formByPhone).then(res => {
                             console.log(res);
                             if (res.code === '0') {
                                 this.$message.success("登录成功");
                                 // console.log(res)
                                 sessionStorage.setItem("user", JSON.stringify(res.data));  // 缓存用户信息
                                 sessionStorage.setItem("menus", JSON.stringify(res.data.menus));//缓存用户菜单
+                                setRoutes();
                                 this.$router.push("/"); //登录成功后自动跳转到首页
                             } else {
                                 this.$message.error(res.msg)
@@ -210,14 +209,6 @@
                     }
                 })
             },
-            // 点击回车键登录
-            keyDown(e) {
-                // 回车则执行登录方法 enter键的ASCII是13
-                if (e.keyCode === 13 || e.keyCode === 100) {
-                    this.login(); // 定义的登录方法
-                }
-            }
-            ,
             canplay() {
                 this.vedioCanPlay = true
             },
@@ -230,7 +221,11 @@
                 this.form = {};
             },
             sendCode() {
-                console.log("phone:" + this.formByPhone.phone);
+                console.log("phone:↓↓↓↓↓↓↓↓↓↓");
+                console.log(this.formByPhone.phone);
+                request.post("/user/code",this.formByPhone.phone).then(res => {
+                    console.log(res);
+                })
             }
         }
     }

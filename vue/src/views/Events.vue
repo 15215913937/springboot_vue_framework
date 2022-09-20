@@ -187,8 +187,6 @@ export default {
     },
     load() {
       let time = this.timeHorizon;
-      console.log("timeType:" + typeof this.timeHorizon);
-      // console.log("-------" + typeof this.author)
       request.get("/events", {
         params: {
           pageNum: this.currentPage,

@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 20/09/2022 01:02:37
+ Date: 21/09/2022 00:36:38
 */
 
 SET NAMES utf8mb4;
@@ -168,12 +168,9 @@ INSERT INTO `consumer_details` VALUES (41, 62, 123.20, '支出', '1', '交通', 
 INSERT INTO `consumer_details` VALUES (42, 62, 123.20, '支出', '1', '交通', '2022-06-21 15:58:22');
 INSERT INTO `consumer_details` VALUES (43, 62, 100.00, '收入', 'PDD', '工资', '2022-09-15 23:47:29');
 INSERT INTO `consumer_details` VALUES (44, 62, 1000.00, '支出', '买项链', '购物', '2022-09-15 23:47:46');
-INSERT INTO `consumer_details` VALUES (45, 1, 400000.00, '支出', '早餐，老台门，2个肉包子', '餐饮', '2022-09-15 23:55:23');
-INSERT INTO `consumer_details` VALUES (46, 1, 100000.33, '收入', '理财', '理财', '2022-09-15 23:57:39');
 INSERT INTO `consumer_details` VALUES (47, 62, 100.00, '支出', '21', '餐饮', '2022-09-16 11:05:37');
 INSERT INTO `consumer_details` VALUES (48, 62, 500.00, '收入', '13', '生活缴费', '2022-09-16 11:05:46');
-INSERT INTO `consumer_details` VALUES (49, 1, 40000.00, '支出', '早餐，老台门，2个肉包子', '餐饮', '2022-08-15 23:55:23');
-INSERT INTO `consumer_details` VALUES (50, 1, 800000.33, '收入', '理财', '理财', '2022-08-15 23:57:39');
+INSERT INTO `consumer_details` VALUES (51, 1, 1029.00, '支出', '给母亲买洗衣机，淘宝消费，美的品牌', '购物', '2022-09-20 23:44:32');
 
 -- ----------------------------
 -- Table structure for consumption_category
@@ -429,7 +426,7 @@ CREATE TABLE `user`  (
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
   `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -444,5 +441,7 @@ INSERT INTO `user` VALUES (31, 'yk1', '$2a$10$s9EXA7z4XgkdUGKg7hZAL.tk5o4BSJHC8V
 INSERT INTO `user` VALUES (45, 'ts1', '$2a$10$CU2YPItFd5ZH4WAq2PMHPuC9O/DCSOTOH2OrL5gRhFiHdTbuRip66', '沈小测1', NULL, NULL, NULL, '2022-07-26 14:41:19', 'ROLE_TESTER', '15215913934', NULL);
 INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, NULL, 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 'ROLE_ADMIN', '15215913935', NULL);
 INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 'ROLE_USER', NULL, NULL);
+INSERT INTO `user` VALUES (67, 'qnShen_r6skapit', '$2a$10$Jsbvf.jyg.KB/D/aLQdFgeilDQnZ/wFBIP86wBMNaL7OVwU9NVkiu', '游客_s668ybxp', NULL, NULL, NULL, '2022-09-20 23:45:08', 'ROLE_VISITOR', '13454566610', NULL);
+INSERT INTO `user` VALUES (66, 'qnShen_ghr9eqf2', '$2a$10$o58b6EUSrk.1Yb0bjkYiy.OAvIFsZX5up/eiw5F/hP8vxiEQscZ/y', '游客_jf222blo', NULL, NULL, NULL, '2022-09-20 23:27:46', 'ROLE_VISITOR', '15215913334', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
