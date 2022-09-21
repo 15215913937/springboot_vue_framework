@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : test
+ Source Server         : mydata
  Source Server Type    : MySQL
  Source Server Version : 80012
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 21/09/2022 18:50:50
+ Date: 22/09/2022 00:30:49
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `article`  (
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布人',
   `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发布时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of article
@@ -53,7 +53,7 @@ CREATE TABLE `book`  (
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图书信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
@@ -79,7 +79,7 @@ CREATE TABLE `category_list`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '书籍类别',
   `flag` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of category_list
@@ -135,9 +135,9 @@ CREATE TABLE `consumer_details`  (
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类型',
   `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类别',
-  `createtime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 53 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of consumer_details
@@ -172,6 +172,8 @@ INSERT INTO `consumer_details` VALUES (47, 62, 100.00, '支出', '21', '餐饮',
 INSERT INTO `consumer_details` VALUES (48, 62, 500.00, '收入', '13', '生活缴费', '2022-09-16 11:05:46');
 INSERT INTO `consumer_details` VALUES (51, 1, 1029.00, '支出', '给母亲买洗衣机，淘宝消费，美的品牌', '购物', '2022-09-20 23:44:32');
 INSERT INTO `consumer_details` VALUES (52, 1, 19.98, '支出', '午饭 梅菜扣肉饭是招牌（绍兴店）', '餐饮', '2022-09-21 13:22:06');
+INSERT INTO `consumer_details` VALUES (53, 1, 5.50, '支出', '下班回家，骑小电驴', '交通', '2022-09-21 20:10:58');
+INSERT INTO `consumer_details` VALUES (54, 1, 20.88, '支出', '晚饭 金鲜生外带寿司&日料食堂（越城店）', '餐饮', '2022-09-21 20:12:15');
 
 -- ----------------------------
 -- Table structure for consumption_category
@@ -181,7 +183,7 @@ CREATE TABLE `consumption_category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类别名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of consumption_category
@@ -207,7 +209,7 @@ CREATE TABLE `consumption_type`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of consumption_type
@@ -223,7 +225,7 @@ CREATE TABLE `dict`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型'
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of dict
@@ -251,10 +253,10 @@ CREATE TABLE `events`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '正文',
   `author` int(11) NULL DEFAULT NULL COMMENT '编者 uid',
-  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 44 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 44 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of events
@@ -277,10 +279,10 @@ CREATE TABLE `events_copy1`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '正文',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '编者',
-  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of events_copy1
@@ -305,13 +307,13 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
 INSERT INTO `files` VALUES (32, '老沈.jpg', 'jpg', 34, 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', 'e3f851531cb8c035015dd190b2895f71', 0, 1);
-INSERT INTO `files` VALUES (33, '小沈.jpg', 'jpg', 434, 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', '6011acb83994d9c62f4a4a2ef29180be', 0, 1);
+INSERT INTO `files` VALUES (33, '小沈.jpg', 'jpg', 434, 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', '6011acb83994d9c62f4a4a2ef29180be', 1, 1);
 INSERT INTO `files` VALUES (34, 'tx1.jpeg', 'jpeg', 83, 'http://localhost:9090/files/test/d7943336f1ef40dea6c29a06f2dad5e0.jpeg', '3e647ca495ddad8d3c52f63eef8bec50', 1, 1);
 INSERT INTO `files` VALUES (35, 'tx1.jpeg', 'jpeg', 83, 'http://localhost:9090/files/test/d7943336f1ef40dea6c29a06f2dad5e0.jpeg', '3e647ca495ddad8d3c52f63eef8bec50', 1, 1);
 INSERT INTO `files` VALUES (36, '小沈.jpg', 'jpg', 434, 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', '6011acb83994d9c62f4a4a2ef29180be', 0, 1);
@@ -323,6 +325,7 @@ INSERT INTO `files` VALUES (41, '身份证.jpg', 'jpg', 189, 'http://localhost:9
 INSERT INTO `files` VALUES (42, 'default.jpg', 'jpg', 13, 'http://localhost:9090/files/test/e216d505a5694a00973eb1391b776ddc.jpg', '834c7fa1fa9c8b62610250717e7b25c8', 0, 1);
 INSERT INTO `files` VALUES (43, '默认头像.png', 'png', 9, 'http://localhost:9090/files/test/f776fde4b0e34c0e8cb43c6fa8b765dd.png', 'ac6bf2e6db9b9969eb8bde298c8bf9ec', 0, 1);
 INSERT INTO `files` VALUES (44, '哈头像.jpg', 'jpg', 7, 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', 'd0034dd1f891ee8446debade2142390c', 0, 1);
+INSERT INTO `files` VALUES (45, '未来简史.jpg', 'jpg', 45, 'http://localhost:9090/files/test/1c2c48c7d18e4ba2849286cb57c9a4af.jpg', '25428cfa200bed6ed6ba9967517fa8b4', 0, 1);
 
 -- ----------------------------
 -- Table structure for menu
@@ -337,7 +340,7 @@ CREATE TABLE `menu`  (
   `pid` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of menu
@@ -367,7 +370,7 @@ CREATE TABLE `role`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `flag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role
@@ -385,7 +388,7 @@ CREATE TABLE `role_menu`  (
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `menu_id` int(11) NOT NULL COMMENT '菜单id',
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
 
 -- ----------------------------
 -- Records of role_menu
@@ -445,12 +448,12 @@ CREATE TABLE `user`  (
   `birthday` date NULL DEFAULT NULL COMMENT '生日',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '性别',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
-  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色：1管理员，2普通成员，3游客，4测试',
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
   `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user

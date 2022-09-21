@@ -21,6 +21,7 @@ import com.sqn.library.service.IConsumerDetailsService;
 import com.sqn.library.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.utils.RegexUtils;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,18 +62,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result<?> sendCode(String phone, HttpSession session) {
+    public Boolean sendCode(String phone, HttpSession session) {
 //        验证手机号格式是否正确
         if (!RegexUtils.isMobileExact(phone)) {
-            return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
+            return false;
         } else {
 //            格式正确，则生成6位随机数（即验证码）
             String code = RandomUtil.randomNumbers(6);
 //            保存验证码到session
-            session.setAttribute("code", code);
+            session.setAttribute("phoneCode", code);
 //            发送验证码
-            log.debug("发送验证码成功，验证码是：{}", code);
+            log.info("发送验证码成功，验证码是：{}", code);
         }
-        return Result.success();
+        return true;
     }
 }

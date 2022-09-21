@@ -26,8 +26,6 @@ public interface IUserService extends IService<User> {
 
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
 
-    Result<?> sendCode(String phone, HttpSession session);
+    Boolean sendCode(String phone, HttpSession session);
 
-
-//    Double updateBalance(Integer id,Double new_bill);
 }

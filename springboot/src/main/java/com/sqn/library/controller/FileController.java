@@ -14,6 +14,8 @@ import com.sqn.library.common.Result;
 import com.sqn.library.entity.Files;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.FileMapper;
+import com.sqn.library.service.IFileService;
+import com.sqn.library.service.impl.FileServiceImpl;
 import io.swagger.annotations.Api;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.jnlp.FileSaveService;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -55,6 +58,9 @@ public class FileController {
     @Resource
     FileMapper fileMapper;
 
+    @Resource
+    IFileService iFileService;
+
     @PostMapping("/testUpload")
     public String testUpload(@RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
@@ -76,7 +82,7 @@ public class FileController {
         //获取文件的MD5
         String md5 = SecureUtil.md5(uploadFile);
         //从数据库查询是否存在相同的记录
-        Files dbFiles = getFileByMd5(md5);
+        Files dbFiles = iFileService.getFileByMd5(md5);
         //获取文件的url
         if (dbFiles != null) {
             url = dbFiles.getUrl();
@@ -113,18 +119,6 @@ public class FileController {
         outputStream.close();
     }
 
-    /**
-     * 通过文件的md5查询文件
-     *
-     * @param md5
-     */
-    public Files getFileByMd5(String md5) {
-        //查询文件的md5是否存在
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("md5", md5);
-        List<Files> filesList = fileMapper.selectList(queryWrapper);
-        return filesList.size() == 0 ? null : filesList.get(0);
-    }
 
     //更新接口
     @PostMapping("/update")
@@ -144,14 +138,7 @@ public class FileController {
     //批量删除
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        //select * from files where id in (id,id,id...)
-        queryWrapper.in("id", ids);
-        List<Files> files = fileMapper.selectList(queryWrapper);
-        for (Files file : files) {
-            file.setIsDelete(true);
-            fileMapper.updateById(file);
-        }
+        iFileService.deleteBatch(ids);
         return Result.success();
     }
 
@@ -161,22 +148,15 @@ public class FileController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String type) {
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Files> wrapper = Wrappers.<Files>lambdaQuery();
+        wrapper.eq(Files::getIsDelete, false).orderByDesc(Files::getId);
         //查询未删除的数据
-        queryWrapper.eq("is_delete", false);
-        queryWrapper.orderByDesc("id");
         if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(type)) {
-            queryWrapper.like("name", name).like("type", type);
+            wrapper.like(Files::getName, name).like(Files::getType, type);
         }
-        return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), wrapper));
     }
 
-//    @GetMapping("/{id}")
-//    private Result<?> getById(@PathVariable Long id) {
-//        Files files = fileMapper.selectById(id);
-//        return Result.success(files);
-//
-//    }
 
     //--------------------------------以下是事件论坛文件上传接口-------------------------------------
 

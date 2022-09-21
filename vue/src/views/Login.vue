@@ -186,7 +186,7 @@
                             return
                         }
                         if (!this.formByPhone.code && this.formByPhone.code !== '2') {
-                            this.$message.error("验证码错误");
+                            this.$message.error("验证码不能为空");
                             return
                         }
                         this.loading = true;

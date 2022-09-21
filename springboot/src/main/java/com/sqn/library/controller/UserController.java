@@ -1,12 +1,9 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
@@ -14,11 +11,9 @@ import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.LoginByPhoneDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
-import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
-import com.sqn.library.exception.GlobalExceptionHandler;
 import com.sqn.library.mapper.*;
 import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IUserService;
@@ -26,22 +21,15 @@ import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.security.cert.CertStoreException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.sqn.library.common.Constants.USER_KEY;
 
 /**
  * Rest模式
@@ -50,6 +38,7 @@ import static com.sqn.library.common.Constants.USER_KEY;
 @RestController
 @RequestMapping("/user")
 @Api(tags = {"成员管理"})
+@Slf4j
 public class UserController {
     @Resource
     UserMapper userMapper;
@@ -69,12 +58,7 @@ public class UserController {
     @Resource
     MenuMapper menuMapper;
 
-
-    @Resource
-    RedisUtils redisUtils;
-
     //登录接口
-    //@RequestBody ：把前端传过来的json对象转换为java对象
     @PostMapping("/login")
     public Result<?> login(@RequestBody User user) {
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
@@ -109,14 +93,19 @@ public class UserController {
 
     //手机号登录或注册
     @PostMapping("/loginByPhone")
-    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
+    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO, HttpSession session) {
         User user = new User();
+        Object cacheCode = session.getAttribute("phoneCode");
+        if (cacheCode == null || !(cacheCode == loginByPhoneDTO.getCode())) {
+            return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
+        }
+        log.info("code:" + cacheCode);
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
         if (res == null) {
             user.setRole("ROLE_VISITOR");
-            user.setUsername("qnShen_" + RandomUtil.randomString(8));
-            user.setPassword(SecurityUtils.encodePassword("123456"));
-            user.setName("游客_" + RandomUtil.randomString(8));
+            user.setUsername(Constants.PREFIX_USERNAME + RandomUtil.randomString(8));
+            user.setPassword(SecurityUtils.encodePassword(Constants.DEFAULT_PASSWORD));
+            user.setName(Constants.PREFIX_NAME + RandomUtil.randomString(8));
             user.setPhone(loginByPhoneDTO.getPhone());
             userMapper.insert(user);
             user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone,
@@ -124,7 +113,6 @@ public class UserController {
         } else {
             user = res;
         }
-
         Integer roleId = roleMapper.selectByFlag(user.getRole());
         //当前角色的所有菜单id集合
         List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
@@ -146,13 +134,18 @@ public class UserController {
         // 生成token
         String token = TokenUtils.genToken(user);
         user.setToken(token);
-        return Result.success(user);
+//        BeanUtil.copyProperties(user, LoginByPhoneDTO.class);//复制属性，用于隐藏敏感信息
+        return Result.success();
     }
 
     //    发送手机验证码
     @PostMapping("/code")
     public Result<?> sendCode(@RequestBody String phone, HttpSession session) {
-        return iUserService.sendCode(phone, session);
+        Boolean isSend = iUserService.sendCode(phone, session);
+        if (!isSend) {
+            return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
+        }
+        return Result.success();
     }
 
     /**
@@ -179,7 +172,7 @@ public class UserController {
     @PostMapping("/resetPwd")
     public Result<?> resetPwd(@RequestBody UserResetPwdDTO userResetPwdDTO) {
         if (userResetPwdDTO.getNewPassword() == null) {
-            userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword("123456"));
+            userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword(Constants.DEFAULT_PASSWORD));
         } else {
             //把前端传过来的新密码加密处理
             userResetPwdDTO.setNewPassword(SecurityUtils.encodePassword(userResetPwdDTO.getNewPassword()));

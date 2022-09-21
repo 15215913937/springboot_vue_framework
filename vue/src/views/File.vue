@@ -140,7 +140,7 @@
                 }
                 request.post("/files/deleteBatch", this.ids).then(res => {
                     if (res.code === '0') {
-                        this.$message.success("批量删除成功")
+                        this.$message.success("批量删除成功");
                         this.load()
                     } else {
                         this.$message.error(res.msg)
@@ -174,8 +174,7 @@
                 })
             },
             handleDelete(row) {
-                this.id = row.id
-                // console.log(this.id);
+                this.id = row.id;
                 request.delete("/files/" + this.id).then(res => {
                     if (res.code === '0') {
                         this.$message.success("删除成功")

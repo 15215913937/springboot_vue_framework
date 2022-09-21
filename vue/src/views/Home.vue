@@ -197,7 +197,6 @@ export default {
     });
     //获取文件总数
     request.get("/files").then(res => {
-      // console.log(res.data.records.length)
       this.fileCount = res.data.total
     });
     //折线图
