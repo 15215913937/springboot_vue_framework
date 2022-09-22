@@ -11,8 +11,6 @@ import com.sqn.library.mapper.DictMapper;
 import com.sqn.library.mapper.MenuMapper;
 import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

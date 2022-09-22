@@ -56,7 +56,7 @@ public class UserController {
     IMenuService iMenuService;
 
     @Resource
-    MenuMapper menuMapper;
+    RedisUtils redisUtils;
 
     //登录接口
     @PostMapping("/login")
@@ -93,13 +93,8 @@ public class UserController {
 
     //手机号登录或注册
     @PostMapping("/loginByPhone")
-    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO, HttpSession session) {
+    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
         User user = new User();
-        Object cacheCode = session.getAttribute("phoneCode");
-        if (cacheCode == null || !(cacheCode == loginByPhoneDTO.getCode())) {
-            return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
-        }
-        log.info("code:" + cacheCode);
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
         if (res == null) {
             user.setRole("ROLE_VISITOR");
@@ -139,9 +134,9 @@ public class UserController {
     }
 
     //    发送手机验证码
-    @PostMapping("/code")
-    public Result<?> sendCode(@RequestBody String phone, HttpSession session) {
-        Boolean isSend = iUserService.sendCode(phone, session);
+    @PostMapping("/sendCode")
+    public Result<?> sendCode(@RequestBody String phone){
+        Boolean isSend = iUserService.sendCode(phone);
         if (!isSend) {
             return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
         }

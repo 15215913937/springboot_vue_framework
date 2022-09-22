@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class LoginByPhoneDTO {
     private String phone;
-    private String code;
+//    private String code;
 }

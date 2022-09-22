@@ -4,9 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
+import com.sqn.library.entity.Events;
+import com.sqn.library.entity.Files;
+import com.sqn.library.entity.User;
 import com.sqn.library.mapper.ConsumerDetailsMapper;
 import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IEventsService;
+import com.sqn.library.service.IFileService;
+import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.ConsumeCalculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +39,11 @@ public class HomeController {
     @Resource
     IEventsService eventsService;
 
+    @Resource
+    IFileService iFileService;
+    @Resource
+    IUserService userService;
+
     //    查询当月账单
     @GetMapping("/getHomeOneInfo/{id}")
     public Result<?> getHomeOneInfo(@PathVariable Integer id) {
@@ -53,13 +63,28 @@ public class HomeController {
         billInfo.put("expenseRatioYearOnYear", s1);
         billInfo.put("incomeRatioYearOnYear", s2);
         homeInfo.put("billInfo", billInfo);
-//          我的书籍
+//          数量统计
         HashMap<String, String> commonInfo = new HashMap<>();
-//        我的书籍-个数
+//        总书籍个数
+        final List<Book> booksList = iBookService.list();
+        commonInfo.put("booksCount", String.valueOf(booksList.size()));
+//        我的书籍个数
         final List<Book> bookList = iBookService.getByUid(id);
         commonInfo.put("myBookCount", String.valueOf(bookList.size()));
-        homeInfo.put("MyBookInfo", commonInfo);
+//        事件统计
+        final List<Events> eventsList = eventsService.list();
+        commonInfo.put("eventsCount", String.valueOf(eventsList.size()));
+//我的事件统计
+        final Integer byAuthor = eventsService.getByAuthor(id);
+        commonInfo.put("myEventCount", String.valueOf(byAuthor));
+//        文件总数
+        final List<Files> filesList = iFileService.list();
+        commonInfo.put("filesCount", String.valueOf(filesList.size()));
+//注册总人数
+        final List<User> usersList = userService.list();
+        commonInfo.put("usersCount", String.valueOf(usersList.size()));
 
+        homeInfo.put("commonInfo", commonInfo);
         return Result.success(homeInfo);
     }
 }

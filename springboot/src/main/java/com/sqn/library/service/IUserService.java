@@ -26,6 +26,6 @@ public interface IUserService extends IService<User> {
 
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
 
-    Boolean sendCode(String phone, HttpSession session);
+    Boolean sendCode(String phone);
 
 }

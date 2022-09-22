@@ -50,7 +50,7 @@
       <div style="flex: 1">
         <el-row :gutter="10" style="margin-bottom: 15px">
           <el-col :span="6">
-            <el-card style="color: #E6A23C">
+            <el-card style="color: #E6A23C" @dblclick="$router.push('/user')">
               <div>
                 <el-icon>
                   <HomeFilled/>
@@ -61,7 +61,7 @@
             </el-card>
           </el-col>
           <el-col :span="6">
-            <el-card style="color: #67C23A">
+            <el-card style="color: #67C23A" @dblclick="$router.push('/book')">
               <div>
                 <el-icon>
                   <Reading/>
@@ -72,7 +72,7 @@
             </el-card>
           </el-col>
           <el-col :span="6">
-            <el-card style="color: #67C23A">
+            <el-card style="color: #67C23A" @dblclick="$router.push('/events')">
               <div>
                 <el-icon>
                   <DataLine/>
@@ -83,7 +83,7 @@
             </el-card>
           </el-col>
           <el-col :span="6">
-            <el-card style="color: #67C23A">
+            <el-card style="color: #67C23A" @dblclick="$router.push('/file')">
               <div>
                 <el-icon>
                   <Files/>
@@ -172,33 +172,13 @@ export default {
       this.lastMonthIncome = res.data.billInfo.lastIncome;
       this.expenseRatioYearOnYear = res.data.billInfo.expenseRatioYearOnYear;
       this.incomeRatioYearOnYear = res.data.billInfo.incomeRatioYearOnYear;
-      this.myBookCount = parseInt(res.data.MyBookInfo.myBookCount)
+      this.myBookCount = parseInt(res.data.commonInfo.myBookCount);
+      this.bookCount = parseInt(res.data.commonInfo.booksCount);
+      this.userCount = parseInt(res.data.commonInfo.usersCount);
+      this.eventCount = parseInt(res.data.commonInfo.eventsCount);
+      this.myEventCount = parseInt(res.data.commonInfo.myEventCount);
+      this.fileCount = parseInt(res.data.commonInfo.filesCount);
     })
-    //获取家族注册人数和个人书籍数量
-    request.get("/user").then(res => {
-      this.userCount = res.data.total;
-    });
-    //获取书籍总数
-    request.get("/book").then(res => {
-      this.bookCount = res.data.total
-    });
-    //获取事件总数和个人事件
-    request.get("/events").then(res => {
-      // console.log(res.data.records)
-      this.eventCount = res.data.total
-      let myEvents = res.data.records;
-      let count = 0;
-      for (const myEvent of myEvents) {
-        if (myEvent.author === this.user.id) {
-          count += 1
-        }
-      }
-      this.myEventCount = count
-    });
-    //获取文件总数
-    request.get("/files").then(res => {
-      this.fileCount = res.data.total
-    });
     //折线图
     const chartDom1 = document.getElementById('main');
     const myChart1 = echarts.init(chartDom1);

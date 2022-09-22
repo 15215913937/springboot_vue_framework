@@ -26,7 +26,6 @@ public class RedisUtils {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    //清空缓存
 
     /**
      * 清空缓存
@@ -44,17 +43,16 @@ public class RedisUtils {
      *
      * @param key
      * @param value
-     * @param timeout 有效期 单位：秒
+     * @param timeout 有效期 ttl单位：分钟
      */
-    public Boolean setObjectToRedis(String key, String value, long timeout) {
-        stringRedisTemplate.opsForValue().set(key, value, timeout,TimeUnit.SECONDS);
+    public Boolean setStringToRedis(String key, String value, long timeout) {
+        stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MINUTES);
         return true;
     }
 
     public String getRedis(String key) {
         return stringRedisTemplate.opsForValue().get(key);
     }
-
 
 
 }

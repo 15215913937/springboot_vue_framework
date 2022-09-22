@@ -20,6 +20,7 @@ import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IConsumerDetailsService;
 import com.sqn.library.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.RegexUtils;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,8 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
     @Resource
     UserMapper userMapper;
+    @Resource
+    RedisUtils redisUtils;
 
     @Override
     public void updatePassword(UserPasswordDTO userPasswordDTO) {
@@ -62,15 +65,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Boolean sendCode(String phone, HttpSession session) {
+    public Boolean sendCode(String phone) {
 //        验证手机号格式是否正确
         if (!RegexUtils.isMobileExact(phone)) {
             return false;
         } else {
 //            格式正确，则生成6位随机数（即验证码）
             String code = RandomUtil.randomNumbers(6);
-//            保存验证码到session
-            session.setAttribute("phoneCode", code);
+//            保存验证码到redis
+            redisUtils.setStringToRedis(Constants.LOGIN_CODE_KEY, code, Constants.LOGIN_CODE_KEY_TTL);
 //            发送验证码
             log.info("发送验证码成功，验证码是：{}", code);
         }
