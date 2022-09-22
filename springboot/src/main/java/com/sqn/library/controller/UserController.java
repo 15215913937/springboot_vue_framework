@@ -95,6 +95,11 @@ public class UserController {
     @PostMapping("/loginByPhone")
     public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
         User user = new User();
+        String cacheCode = redisUtils.getRedis(Constants.LOGIN_CODE_KEY);
+        if (!loginByPhoneDTO.getCode().equals(cacheCode)) {
+            return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
+        }
+        redisUtils.removeRedis(Constants.LOGIN_CODE_KEY);
         User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
         if (res == null) {
             user.setRole("ROLE_VISITOR");
@@ -129,13 +134,14 @@ public class UserController {
         // 生成token
         String token = TokenUtils.genToken(user);
         user.setToken(token);
+        redisUtils.setObjectToRedis(Constants.USER_KEY, user, 120);
 //        BeanUtil.copyProperties(user, LoginByPhoneDTO.class);//复制属性，用于隐藏敏感信息
-        return Result.success();
+        return Result.success(user);
     }
 
     //    发送手机验证码
     @PostMapping("/sendCode")
-    public Result<?> sendCode(@RequestBody String phone){
+    public Result<?> sendCode(@RequestBody String phone) {
         Boolean isSend = iUserService.sendCode(phone);
         if (!isSend) {
             return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
@@ -147,7 +153,6 @@ public class UserController {
      * 修改密码
      *
      * @return
-     * @throws Exception
      */
     @PostMapping("/updatePwd")
     public Result<?> updatePwd(@RequestBody UserPasswordDTO userPasswordDTO) {

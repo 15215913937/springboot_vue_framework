@@ -239,7 +239,7 @@
             },
 
             save() {
-                this.$refs.pass.validate((valid) => {
+                this.$refs['pass'].validate((valid) => {
                     if (valid) {
                         this.loading = true
                         // if (this.form.id) {//若果id存在，更新

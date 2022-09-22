@@ -50,8 +50,17 @@ public class RedisUtils {
         return true;
     }
 
+    public Boolean setObjectToRedis(String key, Object object, long timeout) {
+        stringRedisTemplate.opsForValue().set(key, String.valueOf(object), timeout, TimeUnit.MINUTES);
+        return true;
+    }
+
     public String getRedis(String key) {
         return stringRedisTemplate.opsForValue().get(key);
+    }
+
+    public void removeRedis(String key) {
+        stringRedisTemplate.delete(key);
     }
 
 
