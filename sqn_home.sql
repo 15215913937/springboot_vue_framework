@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 22/09/2022 18:22:43
+ Date: 23/09/2022 18:24:31
 */
 
 SET NAMES utf8mb4;
@@ -137,7 +137,7 @@ CREATE TABLE `consumer_details`  (
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类别',
   `createtime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 56 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumer_details
@@ -175,6 +175,7 @@ INSERT INTO `consumer_details` VALUES (52, 1, 19.98, '支出', '午饭 梅菜扣
 INSERT INTO `consumer_details` VALUES (53, 1, 5.50, '支出', '下班回家，骑小电驴', '交通', '2022-09-21 20:10:58');
 INSERT INTO `consumer_details` VALUES (54, 1, 20.88, '支出', '晚饭 金鲜生外带寿司&日料食堂（越城店）', '餐饮', '2022-09-21 20:12:15');
 INSERT INTO `consumer_details` VALUES (55, 1, 20.60, '支出', '午饭 小菜馆（世茂店）', '餐饮', '2022-09-22 11:32:38');
+INSERT INTO `consumer_details` VALUES (56, 1, 29.80, '支出', '晚饭 肯德基', '餐饮', '2022-09-23 09:31:04');
 
 -- ----------------------------
 -- Table structure for consumption_category

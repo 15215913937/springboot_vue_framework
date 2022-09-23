@@ -50,8 +50,9 @@ public class RedisUtils {
         return true;
     }
 
-    public Boolean setObjectToRedis(String key, Object object, long timeout) {
-        stringRedisTemplate.opsForValue().set(key, String.valueOf(object), timeout, TimeUnit.MINUTES);
+    public Boolean setObjectToRedis(String key, Object value, long timeout) {
+        final String s = JSONUtil.toJsonStr(value);
+        stringRedisTemplate.opsForValue().set(key, s, timeout, TimeUnit.MINUTES);
         return true;
     }
 
