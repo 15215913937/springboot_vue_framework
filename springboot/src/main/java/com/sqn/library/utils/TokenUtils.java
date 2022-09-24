@@ -36,7 +36,7 @@ public class TokenUtils {
      * @param user
      * @return
      */
-    public static String genToken(User user) {
+    public static String getToken(User user) {
         return JWT.create().withExpiresAt(DateUtil.offsetDay(new Date(), 1)).withAudience(user.getId().toString())
                 .sign(Algorithm.HMAC256(user.getPassword()));
     }

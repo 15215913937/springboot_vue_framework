@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
  * @Date 2022/9/19  22:21
  */
 @Data
-public class LoginByPhoneDTO {
+public class LoginDTO {
+    private String username;
+    private String password;
     private String phone;
     private String code;
 }

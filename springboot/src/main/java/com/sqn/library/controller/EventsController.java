@@ -10,6 +10,7 @@ import com.sqn.library.entity.Events;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.EventsMapper;
 import com.sqn.library.service.IEventsService;
+import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,13 +56,14 @@ public class EventsController {
                               @RequestParam(defaultValue = "") String startTime,
                               @RequestParam(defaultValue = "") String endTime
     ) {
-        Page<Events> eventsPage = eventsMapper.findPage(new Page<>(pageNum, pageSize), title,author,startTime,endTime);
+        Page<Events> eventsPage = eventsMapper.findPage(new Page<>(pageNum, pageSize), title, author, startTime,
+                endTime);
         return Result.success(eventsPage);
     }
 
     @GetMapping("/{id}")
     public Result<?> findOneEvent(@PathVariable Integer id) {
-        Events event = eventsMapper.getById(id);
+        Events event = eventsService.queryById(id);
         return Result.success(event);
     }
 

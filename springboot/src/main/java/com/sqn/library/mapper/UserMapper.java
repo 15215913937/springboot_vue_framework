@@ -14,10 +14,6 @@ import java.util.List;
 
 public interface UserMapper extends BaseMapper<User> {
 
-    //查询用户名
-    @Select("select password from user where username = #{username}")
-    User selectByName(String username);
-
     // 一对多查询
     Page<User> findPage(Page<User> page, @Param("name") String name, @Param("role") String role);
 

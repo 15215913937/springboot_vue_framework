@@ -1,6 +1,7 @@
 package com.sqn.library.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -8,14 +9,16 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
-import com.sqn.library.controller.dto.LoginByPhoneDTO;
+import com.sqn.library.controller.dto.LoginDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
+import com.sqn.library.entity.Role;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.*;
 import com.sqn.library.service.IMenuService;
+import com.sqn.library.service.IRoleService;
 import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.SecurityUtils;
@@ -26,10 +29,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rest模式
@@ -47,10 +51,7 @@ public class UserController {
     IUserService iUserService;
 
     @Resource
-    RoleMapper roleMapper;
-
-    @Resource
-    RoleMenuMapper roleMenuMapper;
+    IRoleService iRoleService;
 
     @Resource
     IMenuService iMenuService;
@@ -60,82 +61,54 @@ public class UserController {
 
     //登录接口
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user) {
-        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
-        if (res == null || !SecurityUtils.matchesPassword(user.getPassword(), res.getPassword())) {
-            return Result.error(Constants.CODE_COMMON_ERR, "用户名或密码错误！");
-        }
-        Integer roleId = roleMapper.selectByFlag(res.getRole());
-        //当前角色的所有菜单id集合
-        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
-        //查出系统所有菜单
-        List<Menu> menus = iMenuService.findMenus("");
-        //new一个最后筛选后的list
-        List<Menu> roleMenus = new ArrayList<>();
-        //筛选当前用户角色的菜单
-        for (Menu menu : menus) {
-//            获取每个父菜单的子菜单
-            List<Menu> children = menu.getChildren();
-            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
-                roleMenus.add(menu);
-            }
-            //移除children里面不在menuIds集中的元素
-            children.removeIf(child -> !menuIds.contains(child.getId()));
-        }
-
-        res.setMenus(roleMenus);
-        // 生成token
-        String token = TokenUtils.genToken(res);
-        res.setToken(token);
-//        flushRedis(USER_KEY);
-        return Result.success(res);
-    }
-
-    //手机号登录或注册
-    @PostMapping("/loginByPhone")
-    public Result<?> loginByPhone(@RequestBody LoginByPhoneDTO loginByPhoneDTO) {
+    public Result<?> login(@RequestBody LoginDTO loginDTO) {
         User user = new User();
-        String cacheCode = redisUtils.getRedis(Constants.LOGIN_CODE_KEY);
-        if (!loginByPhoneDTO.getCode().equals(cacheCode)) {
-            return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
-        }
-        redisUtils.removeRedis(Constants.LOGIN_CODE_KEY);
-        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginByPhoneDTO.getPhone()));
-        if (res == null) {
-            user.setRole("ROLE_VISITOR");
-            user.setUsername(Constants.PREFIX_USERNAME + RandomUtil.randomString(8));
-            user.setPassword(SecurityUtils.encodePassword(Constants.DEFAULT_PASSWORD));
-            user.setName(Constants.PREFIX_NAME + RandomUtil.randomString(8));
-            user.setPhone(loginByPhoneDTO.getPhone());
-            userMapper.insert(user);
-            user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone,
-                    loginByPhoneDTO.getPhone()));
-        } else {
-            user = res;
-        }
-        Integer roleId = roleMapper.selectByFlag(user.getRole());
-        //当前角色的所有菜单id集合
-        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
-        //查出系统所有菜单
-        List<Menu> menus = iMenuService.findMenus("");
-        //new一个最后筛选后的list
-        List<Menu> roleMenus = new ArrayList<>();
-        //筛选当前用户角色的菜单
-        for (Menu menu : menus) {
-//            获取每个父菜单的子菜单
-            List<Menu> children = menu.getChildren();
-            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
-                roleMenus.add(menu);
+        if (StrUtil.isNotBlank(loginDTO.getUsername())) {
+            user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, loginDTO.getUsername()));
+            if (user == null || !SecurityUtils.matchesPassword(loginDTO.getPassword(), user.getPassword())) {
+                return Result.error(Constants.CODE_COMMON_ERR, "用户名或密码错误！");
             }
-            //移除children里面不在menuIds集中的元素
-            children.removeIf(child -> !menuIds.contains(child.getId()));
+        } else if (StrUtil.isNotBlank(loginDTO.getPhone())) {
+            String cacheCode = redisUtils.getRedis(Constants.LOGIN_CODE_KEY);
+            if (!loginDTO.getCode().equals(cacheCode)) {
+                return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
+            }
+            redisUtils.removeRedis(Constants.LOGIN_CODE_KEY);
+            User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginDTO.getPhone()));
+            if (res == null) {
+                user.setRole(Constants.ROLE_VISITOR);
+                user.setUsername(Constants.PREFIX_USERNAME + RandomUtil.randomString(8));
+                user.setPassword(SecurityUtils.encodePassword(Constants.DEFAULT_PASSWORD));
+                user.setName(Constants.PREFIX_NAME + RandomUtil.randomString(8));
+                user.setPhone(loginDTO.getPhone());
+                userMapper.insert(user);
+                user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone,
+                        loginDTO.getPhone()));
+            } else {
+                user = res;
+            }
         }
+        Role one = iRoleService.getOne(Wrappers.<Role>lambdaQuery().eq(Role::getFlag, user.getRole()));
+        ArrayList<Menu> roleMenus = iMenuService.findRoleMenus(one.getId());
         user.setMenus(roleMenus);
         // 生成token
-        String token = TokenUtils.genToken(user);
+        String token = TokenUtils.getToken(user);
         user.setToken(token);
-        redisUtils.setObjectToRedis(Constants.USER_KEY, user, 120);
-//        BeanUtil.copyProperties(user, LoginByPhoneDTO.class);//复制属性，用于隐藏敏感信息
+//      Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)
+//      功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
+//      参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
+//        setFieldValueEditor编辑键值对，使用箭头函数，例：（键，值）->值类型转字符串
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(),
+                CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> {
+                    if (fieldValue == null) {
+                        fieldValue = "0";
+                    } else {
+                        fieldValue = fieldValue + "";
+                    }
+                    return fieldValue;
+                }));
+        String key = Constants.USER_KEY + token;
+        redisUtils.saveMapObject(key, stringObjectMap, Constants.LOGIN_INFO_TTL);
         return Result.success(user);
     }
 
@@ -189,7 +162,7 @@ public class UserController {
             if (res != null) {
                 return Result.error(Constants.CODE_COMMON_ERR, "用户名已存在");
             }
-            user.setRole("ROLE_VISITOR");
+            user.setRole(Constants.ROLE_VISITOR);
             user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
@@ -215,7 +188,7 @@ public class UserController {
             user.setPassword(SecurityUtils.encodePassword("123456"));
         }
         if (user.getRole() == null) {
-            user.setRole("ROLE_VISITOR");
+            user.setRole(Constants.ROLE_VISITOR);
         }
         if (user.getName() == null) {
             user.setName(user.getUsername());

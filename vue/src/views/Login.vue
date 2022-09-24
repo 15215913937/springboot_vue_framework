@@ -18,54 +18,52 @@
                                 <el-button type="warning" @click="setLoginWayOne">手机号登录</el-button>
                             </div>
                         </div>
-                        <div v-if="loginWay===0">
-                            <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
-                                <el-form-item prop="username">
-                                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
-                                </el-form-item>
-                                <el-form-item prop="password">
-                                    <el-input :prefix-icon="Lock" show-password placeholder="请输入密码"
-                                              v-model="form.password"/>
-                                </el-form-item>
-                                <el-form-item>
-                                    <div style="display: flex">
-                                        <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
-                                                  placeholder="请输入验证码"/>
-                                        <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
-                                            <ValidCode @input="createValidCode"/>
-                                        </div>
+                        <div style="height: 150px">
+                            <div v-if="loginWay===0">
+                                <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
+                                    <el-form-item prop="username">
+                                        <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
+                                    </el-form-item>
+                                    <el-form-item prop="password">
+                                        <el-input :prefix-icon="Lock" show-password placeholder="请输入密码"
+                                                  v-model="form.password"/>
+                                    </el-form-item>
+                                    <el-form-item>
+                                        <div style="display: flex">
+                                            <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
+                                                      placeholder="请输入验证码"/>
+                                            <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
+                                                <ValidCode @input="createValidCode"/>
+                                            </div>
 
-                                    </div>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button style="flex:1;margin-bottom:20px" type="primary" @click="loginOne"
-                                               :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
+                                        </div>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                            <div v-if="loginWay===1">
+                                <el-form ref="form" :model="form" style="margin: 0 100px"
+                                         :rules="rules">
+                                    <el-form-item prop="phone" style="display: flex">
+                                        <el-input style="flex: 2" :prefix-icon="Iphone" placeholder="请输入手机号"
+                                                  v-model="form.phone"/>
+                                        <el-button style="flex: 1;line-height: 30px;border-radius:5px"
+                                                   @click="sendCode" :class="{disabled:this.clockStatus}">
+                                            {{sendContent}}
+                                        </el-button>
+                                    </el-form-item>
+                                    <el-form-item prop="code">
+                                        <el-input :prefix-icon="Key" placeholder="请输入验证码" v-model="form.code"/>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
                         </div>
-                        <div v-if="loginWay===1">
-                            <el-form ref="formByPhone" :model="formByPhone" style="margin: 0 100px"
-                                     :rules="rulesByPhone">
-                                <el-form-item prop="phone" style="display: flex">
-                                    <el-input style="flex: 2" :prefix-icon="Iphone" placeholder="请输入手机号"
-                                              v-model="formByPhone.phone"/>
-                                    <el-button style="flex: 1;line-height: 30px;border-radius:5px"
-                                               @click="sendCode" :class="{disabled:this.clockStatus}">
-                                        {{sendContent}}
-                                    </el-button>
-                                </el-form-item>
-                                <el-form-item prop="code">
-                                    <el-input :prefix-icon="Key" show-password placeholder="请输入验证码"
-                                              v-model="formByPhone.code"/>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button style="flex:1;margin-bottom:20px" type="primary" @click="loginTwo"
-                                               :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
+                        <div style="height: 30px;width:300px;margin:10px auto;text-align: center">
+                            <el-button type="primary" style="width: 300px"
+                                       @click="login"
+                                       :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
+                            </el-button>
                         </div>
+
                     </div>
                 </div>
                 <div :style="fixStyle" class="ivu-global-footer i-copyright">
@@ -104,7 +102,6 @@
                 vedioCanPlay: false,
                 fixStyle: '',
                 form: {},
-                formByPhone: {},
                 loading: false,
                 rules: {
                     username: [
@@ -112,9 +109,7 @@
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
-                    ]
-                },
-                rulesByPhone: {
+                    ],
                     phone: [
                         {required: true, message: '请输入手机号', trigger: 'blur'}
                     ],
@@ -144,17 +139,28 @@
             createValidCode(data) {
                 this.validCode = data
             },
-            loginOne() {
+            login() {
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
-                        if (!this.form.validCode) {
-                            this.$message.error("请填写验证码");
-                            return
-                        }
-                        if (this.form.validCode.toLowerCase() !== this.validCode.toLowerCase() && this.form.validCode.toLowerCase()
-                            !== '2') {
-                            this.$message.error("验证码错误");
-                            return
+                        if (this.loginWay === 0) {
+                            if (!this.form.validCode) {
+                                this.$message.error("请填写验证码");
+                                return
+                            }
+                            if (this.form.validCode.toLowerCase() !== this.validCode.toLowerCase() && this.form.validCode.toLowerCase()
+                                !== '2') {
+                                this.$message.error("验证码错误");
+                                return
+                            }
+                        } else if (this.loginWay === 1) {
+                            if (!this.form.phone) {
+                                this.$message.error("请填写验证码");
+                                return
+                            }
+                            if (!this.form.code && this.form.code !== '2') {
+                                this.$message.error("验证码不能为空");
+                                return
+                            }
                         }
                         this.loading = true;
                         request.post("/user/login", this.form).then(res => {
@@ -165,36 +171,6 @@
                                 sessionStorage.setItem("user", JSON.stringify(res.data));  // 缓存用户信息
                                 sessionStorage.setItem("menus", JSON.stringify(res.data.menus));//缓存用户菜单
                                 setRoutes();  //动态设置当前用户的路由
-                                this.$router.push("/"); //登录成功后自动跳转到首页
-                            } else {
-                                this.$message.error(res.msg)
-                            }
-                            setTimeout(() => {
-                                this.loading = false
-                            }, 500)
-                        })
-                    }
-                })
-            },
-            loginTwo() {
-                this.$refs['formByPhone'].validate(valid => {
-                    if (valid) {
-                        if (!this.formByPhone.phone) {
-                            this.$message.error("请填写验证码");
-                            return
-                        }
-                        if (!this.formByPhone.code && this.formByPhone.code !== '2') {
-                            this.$message.error("验证码不能为空");
-                            return
-                        }
-                        this.loading = true;
-                        request.post("/user/loginByPhone", this.formByPhone).then(res => {
-                            console.log(res);
-                            if (res.code === '0') {
-                                this.$message.success("登录成功");
-                                sessionStorage.setItem("user", JSON.stringify(res.data));  // 缓存用户信息
-                                sessionStorage.setItem("menus", JSON.stringify(res.data.menus));//缓存用户菜单
-                                setRoutes();
                                 this.$router.push("/"); //登录成功后自动跳转到首页
                             } else {
                                 this.$message.error(res.msg)
@@ -218,7 +194,7 @@
                 this.form = {};
             },
             sendCode() {
-                request.post("/user/sendCode", this.formByPhone.phone).then(res => {
+                request.post("/user/sendCode", this.form.phone).then(res => {
                     if (res.code === "0") {
                         console.log(this.clockStatus);
                         if (this.clockStatus) return;

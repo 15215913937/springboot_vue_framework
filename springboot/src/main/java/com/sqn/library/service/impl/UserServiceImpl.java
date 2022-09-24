@@ -52,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void updatePassword(UserPasswordDTO userPasswordDTO) {
         int update = userMapper.updatePassword(userPasswordDTO);
         if (update < 1) {
-            throw new CustomException("-1", "系统异常");
+            throw new CustomException(Constants.CODE_INTERNAL_ERR, "系统异常");
         }
     }
 
@@ -60,7 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void resetPwd(UserResetPwdDTO userResetPwdDTO) {
         int update = userMapper.resetPwd(userResetPwdDTO);
         if (update < 1) {
-            throw new CustomException("-1", "系统异常");
+            throw new CustomException(Constants.CODE_INTERNAL_ERR, "系统异常");
         }
     }
 
@@ -71,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return false;
         } else {
 //            格式正确，则生成6位随机数（即验证码）
-            String code = RandomUtil.randomNumbers(6);
+            String code = RandomUtil.randomNumbers(Constants.LOGIN_CODE_KEY_LENGTH);
 //            保存验证码到redis
             redisUtils.setStringToRedis(Constants.LOGIN_CODE_KEY, code, Constants.LOGIN_CODE_KEY_TTL);
 //            发送验证码

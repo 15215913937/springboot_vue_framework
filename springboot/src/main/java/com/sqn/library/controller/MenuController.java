@@ -61,21 +61,18 @@ public class MenuController {
             throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
         }
         menuService.saveOrUpdate(menu);
-        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         menuService.removeById(id);
-        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         menuService.removeByIds(ids);
-        redisUtils.flushRedis(Constants.MENUS_KEY);
         return Result.success();
     }
 
@@ -94,7 +91,7 @@ public class MenuController {
 //            menus = JSONUtil.toBean(jsonStr, new TypeReference<List<Menu>>() {
 //            }, true);
 //        }
-        List<Menu> menus = menuService.findMenus(name);
+        List<Menu> menus = menuService.findAllMenus(name);
         return Result.success(menus);
     }
 

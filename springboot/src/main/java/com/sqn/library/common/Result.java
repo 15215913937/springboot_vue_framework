@@ -18,14 +18,14 @@ public class Result<T> {
     public static Result success() {
         Result result = new Result<>();
         result.setCode(Constants.CODE_SUCCESS);
-        result.setMsg("操作成功");
+        result.setMsg(Constants.CODE_SUCCESS_MESSAGE);
         return result;
     }
 
     public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>(data);
         result.setCode(Constants.CODE_SUCCESS);
-        result.setMsg("操作成功");
+        result.setMsg(Constants.CODE_SUCCESS_MESSAGE);
         return result;
     }
 

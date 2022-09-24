@@ -6,9 +6,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import com.sqn.library.common.Constants;
+import com.sqn.library.common.Result;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.UserMapper;
+import com.sqn.library.utils.TokenUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
@@ -20,19 +22,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Resource
-    UserMapper userMapper;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-
         String token = request.getHeader("token");
         if (StrUtil.isBlank(token)) {
-            throw new CustomException(Constants.CODE_TOKEN_UNAUTHORIZED, "未获取到token, 请重新登录");
+            throw new CustomException(Constants.CODE_TOKEN_UNAUTHORIZED, "未获取到token, 请登录");
         }
-        Integer userId = Integer.valueOf(JWT.decode(token).getAudience().get(0));
-        User user = userMapper.selectById(userId);
+        User user = TokenUtils.getUser();
         if (user == null) {
             throw new CustomException(Constants.CODE_TOKEN_ILLEGAL, "token不合法");
         }

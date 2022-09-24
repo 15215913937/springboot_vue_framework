@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IEventsService extends IService<Events> {
 
     Integer getByAuthor(Integer id);
+
+    Events queryById(Integer id);
 }

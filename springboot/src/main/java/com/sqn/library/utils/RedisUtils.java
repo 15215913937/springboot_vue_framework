@@ -3,6 +3,7 @@ package com.sqn.library.utils;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.micrometer.core.instrument.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,12 +47,12 @@ public class RedisUtils {
      * @param value
      * @param timeout 有效期 ttl单位：分钟
      */
-    public Boolean setStringToRedis(String key, String value, long timeout) {
+    public Boolean setStringToRedis(String key, String value, Long timeout) {
         stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MINUTES);
         return true;
     }
 
-    public Boolean setObjectToRedis(String key, Object value, long timeout) {
+    public Boolean setObjectToRedis(String key, Object value, Long timeout) {
         final String s = JSONUtil.toJsonStr(value);
         stringRedisTemplate.opsForValue().set(key, s, timeout, TimeUnit.MINUTES);
         return true;
@@ -62,6 +64,11 @@ public class RedisUtils {
 
     public void removeRedis(String key) {
         stringRedisTemplate.delete(key);
+    }
+
+    public void saveMapObject(String key, Map<String, Object> map, Long timeout) {
+        stringRedisTemplate.opsForHash().putAll(key, map);
+        stringRedisTemplate.expire(key, timeout, TimeUnit.MINUTES);
     }
 
 
