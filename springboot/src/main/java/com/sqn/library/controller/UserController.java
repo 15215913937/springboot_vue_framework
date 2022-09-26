@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,12 +25,14 @@ import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
+import io.netty.util.concurrent.SucceededFuture;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,6 +198,7 @@ public class UserController {
             user.setName(user.getUsername());
         }
         iUserService.saveOrUpdate(user);
+        redisUtils.removeRedis(Constants.USER_KEY);
 //        redisUtils.flushRedis(USER_KEY);
         return Result.success();
 
@@ -221,18 +225,14 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
-//        设置缓存
-//        String s =
-//        User user;
-//        if (StrUtil.isBlank(s)) {
-//            user = userMapper.selectById(id);
-//            stringRedisTemplate.opsForValue().set(USER_KEY, JSONUtil.toJsonStr(user));
-//        } else {
-//            user = JSONUtil.toBean(s, new TypeReference<User>() {
-//            }, true);
+//        String s = redisUtils.getRedis(Constants.USER_KEY);
+//        if (StrUtil.isNotBlank(s)) {
+//            User user = JSONUtil.toBean(s, User.class);
+//            return Result.success(user);
 //        }
-        return Result.success(userMapper.selectById(id));
-
+        User user = iUserService.getById(id);
+//        redisUtils.setObjectToRedis(Constants.USER_KEY, user, Constants.LOGIN_INFO_TTL);
+        return Result.success(user);
     }
 
 

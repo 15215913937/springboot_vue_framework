@@ -23,8 +23,6 @@ public class RedisUtils {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    @Resource
-    RedisTemplate redisTemplate;
 
     /**
      * 清空缓存

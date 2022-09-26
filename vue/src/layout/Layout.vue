@@ -8,7 +8,7 @@
             <Aside/>
             <!--      内容区域-->
             <!--          当前页面的子路由会在router-view中展示-->
-            <router-view style="flex: 1" @userInfo="refreshUser"/>
+            <router-view style="flex: 1" @refreshUser="refreshUser"/>
         </div>
     </div>
 </template>

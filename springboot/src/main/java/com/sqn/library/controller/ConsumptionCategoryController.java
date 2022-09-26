@@ -2,6 +2,7 @@ package com.sqn.library.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.utils.RedisUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsumptionCategoryController {
 
     @Resource
-    private IConsumptionCategoryService consumptionCategoryService;
+    IConsumptionCategoryService consumptionCategoryService;
+    @Resource
+    RedisUtils redisUtils;
 
     // 新增或者更新
     @PostMapping

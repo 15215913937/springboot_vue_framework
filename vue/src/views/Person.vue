@@ -98,7 +98,7 @@
                                 //更新浏览器存储的用户信息
                                 sessionStorage.setItem("user", JSON.stringify(this.form));
                                 //触发父级更新user方法
-                                this.$emit("userInfo")
+                                this.$emit("refreshUser")
                             } else {
                                 this.$message.error(res.msg)
                             }

@@ -284,7 +284,6 @@
             },
             resetPwd(row) {
                 this.form = JSON.parse(JSON.stringify(row));
-                // console.log(this.form)
                 this.pwdVis = true;
             },
             saveNewPwd() {

@@ -187,7 +187,7 @@
             },
             setLoginWayZero() {
                 this.loginWay = 0;
-                this.formByPhone = {};
+                this.form = {};
             },
             setLoginWayOne() {
                 this.loginWay = 1;
