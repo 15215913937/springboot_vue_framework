@@ -57,7 +57,6 @@ public class BookController {
         if (book.getBuyDate() == null) {
             book.setBuyDate(new Date());
         }
-
         iBookService.saveOrUpdate(book);
         return Result.success();
 
@@ -100,13 +99,6 @@ public class BookController {
         bookMapper.deleteBatchIds(ids);
         return Result.success();
     }
-
-    //    根据id查询
-//    @GetMapping("/{id}")
-//    public Result<?> getOneBookCount(@PathVariable Integer id) {
-//        final List<Book> byUid = iBookService.getByUid(id);
-//        return Result.success(byUid.size());
-//    }
 
     /**
      * 导出接口

@@ -23,8 +23,9 @@ public class Constants {
     public static final String PREFIX_NAME = "游客_";//自动注册姓名前缀
     public static final String DEFAULT_PASSWORD = "123456"; //默认密码
 
-    //    redis常量
+    //    信息常量
     public static final String USER_KEY = "info:user:"; //用户信息
+    public static final String ALL_USER_KEY = "info:users:"; //所有用户信息
     public static final String MENUS_KEY = "info:menus:";//菜单信息
     public static final String EVENT_KEY = "info:events:";//单个事件信息
     public static final String LOGIN_CODE_KEY = "login:code:"; //验证码

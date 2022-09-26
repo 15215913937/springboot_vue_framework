@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * <p>
@@ -27,5 +28,4 @@ public interface IUserService extends IService<User> {
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
 
     Boolean sendCode(String phone);
-
 }

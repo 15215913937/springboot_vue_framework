@@ -1,18 +1,13 @@
 package com.sqn.library.utils;
 
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import io.micrometer.core.instrument.util.JsonUtils;
+import com.sqn.library.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +23,8 @@ public class RedisUtils {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    RedisTemplate redisTemplate;
 
     /**
      * 清空缓存
@@ -42,20 +39,17 @@ public class RedisUtils {
 
     /**
      * 存入普通对象，该键值对存在有效期
-     *
-     * @param key
+     *  @param key
      * @param value
      * @param timeout 有效期 ttl单位：分钟
      */
-    public Boolean setStringToRedis(String key, String value, Long timeout) {
+    public void setStringToRedis(String key, String value, Long timeout) {
         stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MINUTES);
-        return true;
     }
 
-    public Boolean setObjectToRedis(String key, Object value, Long timeout) {
+    public void setObjectToRedis(String key, Object value, Long timeout) {
         final String s = JSONUtil.toJsonStr(value);
         stringRedisTemplate.opsForValue().set(key, s, timeout, TimeUnit.MINUTES);
-        return true;
     }
 
     public String getRedis(String key) {
@@ -71,5 +65,25 @@ public class RedisUtils {
         stringRedisTemplate.expire(key, timeout, TimeUnit.MINUTES);
     }
 
+    /**
+     * 获取list缓存的内容
+     *
+     * @param key   键
+     * @param start 开始
+     * @param end   结束 0 到 -1代表所有值
+     */
+    public List<String> lGet(String key, long start, long end) {
+        return stringRedisTemplate.opsForList().range(key, start, end);
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     */
+    public void lSet(String key, List<User> value) {
+        stringRedisTemplate.opsForList().rightPushAll(key, String.valueOf(value));
+    }
 
 }

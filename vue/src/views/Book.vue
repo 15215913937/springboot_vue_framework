@@ -232,7 +232,12 @@
         },
         created() {
             this.load();
-            // console.log(this.user)
+            request.get("/user/all").then(res => {
+                this.users = res.data;
+            });
+            request.get("/category-list").then(res => {
+                this.categories = res.data
+            })
         },
         setup() {
             return {
@@ -290,12 +295,6 @@
                     this.tableData = res.data.records;
                     this.total = res.data.total;
                 });
-                request.get("/user/all").then(res => {
-                    this.users = res.data;
-                });
-                request.get("/category-list").then(res => {
-                    this.categories = res.data
-                })
             },
             add() {
                 this.dialogVisible = true;

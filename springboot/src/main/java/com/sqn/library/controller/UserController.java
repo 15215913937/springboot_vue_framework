@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.LoginDTO;
+import com.sqn.library.controller.dto.UserListDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
@@ -237,7 +238,8 @@ public class UserController {
 
     @GetMapping("/all")
     public Result<?> findAll() {
-        return Result.success(iUserService.list());
+        ArrayList<UserListDTO> userAll = userMapper.getName();
+        return Result.success(userAll);
     }
 
 }

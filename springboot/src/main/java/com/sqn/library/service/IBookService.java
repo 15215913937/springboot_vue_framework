@@ -27,9 +27,4 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-
-//    Page<Book> findPageByUid(Page<Book> page, @Param("uid") Integer uid, @Param("name") String name,
-//                             @Param("author") String author,
-//                             @Param("category") String category);
-
 }
