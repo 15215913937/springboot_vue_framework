@@ -46,8 +46,7 @@ public class RedisUtils {
     }
 
     public void setObjectToRedis(String key, Object value, Long timeout) {
-        final String s = JSONUtil.toJsonStr(value);
-        stringRedisTemplate.opsForValue().set(key, s, timeout, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(value), timeout, TimeUnit.MINUTES);
     }
 
     public String getRedis(String key) {

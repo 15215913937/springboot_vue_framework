@@ -126,7 +126,10 @@ export default {
       rules: {
         cost: [
           {required: true, message: '金额不能为空', trigger: 'blur'},
-          {pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/, message: '请输入正确金额格式,可保留两位小数'}
+          {
+            pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+            message: '请输入正确金额格式,可保留两位小数'
+          }
         ],
         category: [
           {required: true, message: '类别不能为空', trigger: 'blur'}
