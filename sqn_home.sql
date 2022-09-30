@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 29/09/2022 17:16:29
+ Date: 30/09/2022 16:15:33
 */
 
 SET NAMES utf8mb4;
@@ -171,6 +171,10 @@ INSERT INTO `consumer_details` VALUES (67, 1, 18.90, '支出', '午饭 郑给力
 INSERT INTO `consumer_details` VALUES (68, 1, 66.07, '支出', '供销超市（燕甸园） 购物', '购物', '2022-09-29 09:09:57');
 INSERT INTO `consumer_details` VALUES (69, 1, 10.00, '支出', '停车费', '交通', '2022-09-29 09:10:16');
 INSERT INTO `consumer_details` VALUES (70, 1, 20.76, '支出', '午饭 失控猫·元気烧肉饭（越城店）', '餐饮', '2022-09-29 11:48:51');
+INSERT INTO `consumer_details` VALUES (71, 1, 5.00, '支出', '城南车管所停车费', '交通', '2022-09-30 09:46:02');
+INSERT INTO `consumer_details` VALUES (72, 1, 10.00, '支出', '上班停车费', '交通', '2022-09-30 09:46:16');
+INSERT INTO `consumer_details` VALUES (73, 1, 19.66, '支出', '午餐 失控猫·元気烧肉饭（越城店）', '餐饮', '2022-09-30 14:57:17');
+INSERT INTO `consumer_details` VALUES (74, 1, 7.90, '支出', '给老婆买按摩捶 淘宝消费 Catch凯奇萌物馆', '购物', '2022-09-30 16:15:12');
 
 -- ----------------------------
 -- Table structure for consumption_category
