@@ -33,6 +33,7 @@ public class Constants {
     public static final Integer LOGIN_CODE_KEY_LENGTH = 6;// 验证码长度
     public static final Long LOGIN_INFO_TTL = 30L;// 登录后相关信息缓存有效期
     public static final Long CACHE_NULL_TTL = 5L;// 空值缓存过期时间
+    public static final String LOCK_KEY = "lock:key:"; //互斥锁前缀名
 
     //     角色常量
     public static final String ROLE_ADMIN = "ROLE_ADMIN"; // 管理员
