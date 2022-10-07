@@ -7,6 +7,9 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author shenqn
@@ -33,7 +36,7 @@ public class RedisIdWorker {
         long count = stringRedisTemplate.opsForValue().increment("icr" + keyPreFix + ":" + date);
 
         // 拼接返回
-        // 左移32位 和count做或运算
+        // <<左移32位 和count做或运算
         return timestamp << 32 | count;
 
 
