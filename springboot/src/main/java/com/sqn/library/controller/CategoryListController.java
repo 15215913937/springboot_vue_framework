@@ -36,7 +36,11 @@ public class CategoryListController {
     @Resource
     CategoryListMapper categoryListMapper;
 
-    // 新增或者更新
+    /**
+     *  新增或者更新
+     * @param categoryList  消费类型
+     * @return
+     */
     @PostMapping
     public Result<?> save(@RequestBody CategoryList categoryList) {
         LambdaQueryWrapper<CategoryList> wrapper = Wrappers.<CategoryList>lambdaQuery()
@@ -51,6 +55,11 @@ public class CategoryListController {
         return Result.success();
     }
 
+    /**
+     *
+     * @param id 消费id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         categoryListService.removeById(id);

@@ -35,7 +35,10 @@ public class EchartsController {
 //        return Result.success(map);
 //    }
 
-    //新冠数据
+    /**新冠数据
+     *
+     * @return
+     */
     @GetMapping("/epidemic")
     public String getC19() {
         return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t=" + System.currentTimeMillis());
@@ -44,18 +47,18 @@ public class EchartsController {
     @GetMapping("/booksNumber")
     public Result<?> booksNumber() {
         List<Book> list = bookService.list();
-        int m1 = 0; //1月
-        int m2 = 0; //2月
-        int m3 = 0; //3月
-        int m4 = 0; //4月
-        int m5 = 0; //5月
-        int m6 = 0; //6月
-        int m7 = 0; //7月
-        int m8 = 0; //8月
-        int m9 = 0; //9月
-        int m10 = 0; //10月
-        int m11 = 0; //11月
-        int m12 = 0; //12月
+        int m1 = 0;
+        int m2 = 0;
+        int m3 = 0;
+        int m4 = 0;
+        int m5 = 0;
+        int m6 = 0;
+        int m7 = 0;
+        int m8 = 0;
+        int m9 = 0;
+        int m10 = 0;
+        int m11 = 0;
+        int m12 = 0;
         for (Book book : list) {
             Date buyDate = book.getBuyDate();
             Month month = DateTime.of(buyDate).monthEnum();
@@ -106,18 +109,18 @@ public class EchartsController {
     @PostMapping("/booksNumberOne")
     public Result<?> booksNumberOne(@RequestBody User user) {
         List<Book> list = bookService.OneList(user.getId());
-        int m1 = 0; //1月
-        int m2 = 0; //2月
-        int m3 = 0; //3月
-        int m4 = 0; //4月
-        int m5 = 0; //5月
-        int m6 = 0; //6月
-        int m7 = 0; //7月
-        int m8 = 0; //8月
-        int m9 = 0; //9月
-        int m10 = 0; //10月
-        int m11 = 0; //11月
-        int m12 = 0; //12月
+        int m1 = 0;
+        int m2 = 0;
+        int m3 = 0;
+        int m4 = 0;
+        int m5 = 0;
+        int m6 = 0;
+        int m7 = 0;
+        int m8 = 0;
+        int m9 = 0;
+        int m10 = 0;
+        int m11 = 0;
+        int m12 = 0;
         for (Book book : list) {
             Date buyDate = book.getBuyDate();
             Month month = DateTime.of(buyDate).monthEnum();

@@ -41,7 +41,11 @@ public class BookController {
     UserMapper userMapper;
 
 
-    //图书新增或修改接口
+    /**
+     * 图书新增或修改接口
+     * @param book 传入对象实体
+     * @return
+     */
     @PostMapping
     public Result<?> save(@RequestBody Book book) {
         if (StrUtil.isBlank(book.getBookname()) || StrUtil.isBlank(book.getAuthor()) || StrUtil.isBlank(book.getUid()) || book.getPrice() == null) {
