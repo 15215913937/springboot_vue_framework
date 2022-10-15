@@ -1,6 +1,7 @@
 package com.sqn.library.utils;
 
 import io.swagger.models.properties.StringProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
@@ -12,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author shenqn
+ * @author shenqn
  * @Date 2022/10/4  0:40
  */
 public class RedisIdWorker {

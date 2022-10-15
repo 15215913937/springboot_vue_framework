@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-<!--        <version>2.7.1</version>-->
+        <!--        <version>2.7.1</version>-->
         <version>2.5.4</version>
     </parent>
 
@@ -119,12 +119,18 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>2.5.4</version>
         </dependency>
-<!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
-<!--        <dependency>-->
-<!--            <groupId>com.sqn</groupId>-->
-<!--            <artifactId>ip-spring-boot-starter</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <!--        redisson-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.17.7</version>
+        </dependency>
+        <!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.sqn</groupId>-->
+        <!--            <artifactId>ip-spring-boot-starter</artifactId>-->
+        <!--            <version>0.0.1-SNAPSHOT</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>

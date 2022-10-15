@@ -96,8 +96,11 @@ public class BookController {
         return Result.success(bookPage);
     }
 
-
-    //批量删除
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         bookMapper.deleteBatchIds(ids);
@@ -133,16 +136,14 @@ public class BookController {
         writer.setOnlyAlias(true);
 
         writer.setColumnWidth(8, 20);
-        // 设置默认行高
-//        bigWriter.setDefaultRowHeight(18);
         // 设置冻结行
         writer.setFreezePane(1);
-        //一次性写出list内的对象到excel，使用默认样式，强制输出标题
+        // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
         writer.write(list, true);
-//        设置时间戳
+        // 设置时间戳
         SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
         String timeStamp = timestamp.format(new Date());
-        //设置浏览器响应格式
+        // 设置浏览器响应格式
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         String fileName = URLEncoder.encode("所有书籍", "UTF-8") + timeStamp;
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
