@@ -2,6 +2,9 @@ package com.sqn.library.common;
 
 import lombok.Data;
 
+/**
+ * @author sqn
+ */
 @Data
 public class Result<T> {
     private String code;
