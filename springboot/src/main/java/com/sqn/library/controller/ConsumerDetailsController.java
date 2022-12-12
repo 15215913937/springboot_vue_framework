@@ -49,7 +49,11 @@ public class ConsumerDetailsController {
     @Autowired
     ConsumeCalculate consumeCalculate;
 
-    // 新增消费记录
+    /**
+     * 新增消费记录
+     * @param consumerDetails
+     * @return
+     */
     @PostMapping
     public Result<?> save(@RequestBody ConsumerDetails consumerDetails) {
         List<ConsumerDetails> old_list =

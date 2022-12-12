@@ -29,7 +29,11 @@ public class EventsController {
     @Resource
     IEventsService eventsService;
 
-    //事件新增或修改接口
+    /**
+     * 事件新增或修改接口
+     * @param events
+     * @return
+     */
     @PostMapping
     public Result<?> save(@RequestBody Events events) {
         if (StrUtil.isBlank(events.getTitle()) || StrUtil.isBlank(events.getContent())) {
@@ -40,14 +44,27 @@ public class EventsController {
         return Result.success();
     }
 
-    //事件删除接口
+    /**
+     * 事件删除接口
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         eventsMapper.deleteById(id);
         return Result.success();
     }
 
-    //事件查询接口
+    /**
+     * 事件查询接口
+     * @param pageNum
+     * @param pageSize
+     * @param title
+     * @param author
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,

@@ -9,7 +9,7 @@ const {defineConfig} = require('@vue/cli-service')
 module.exports = {
     devServer: {                //记住，别写错了devServer
         // 设置本地默认端口  选填
-        port: 80, //设置端口号
+        port: 90, //设置端口号
         // host: '39.108.101.167',
         host: 'localhost',
         proxy: {                 //设置代理，必须填

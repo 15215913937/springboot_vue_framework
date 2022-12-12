@@ -22,5 +22,5 @@ files:
 
 mybatis-plus:
   configuration:
-#    #    开启MP的日志，标准输出
+#    开启MP的日志，标准输出
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

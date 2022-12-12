@@ -32,8 +32,4 @@ public class TestController {
         stringRedisTemplate.opsForValue().set("book", JSONUtil.toJsonStr(list), 10, TimeUnit.SECONDS);
         return true;
     }
-
-
-
-
 }

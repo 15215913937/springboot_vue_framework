@@ -28,4 +28,16 @@ public interface IUserService extends IService<User> {
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
 
     Boolean sendCode(String phone);
+
+    /**
+     * 更新最近登录时间
+     * @param id
+     */
+    void updateRecentLoginTime(int id);
+
+    /**
+     * 用户假删除
+     * @param id
+     */
+    void isDeleteById(Long id);
 }

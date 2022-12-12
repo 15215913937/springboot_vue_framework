@@ -98,7 +98,6 @@ public class BookController {
 
     /**
      * 批量删除
-     * @param ids
      * @return
      */
     @PostMapping("/deleteBatch")
@@ -111,7 +110,7 @@ public class BookController {
      * 导出接口
      */
     @GetMapping("/export")
-    private void export(HttpServletResponse response) throws Exception {
+    public void export(HttpServletResponse response) throws Exception {
         //从数据库获取全部数据
         List<Book> list = iBookService.list();
         for (Book book : list) {

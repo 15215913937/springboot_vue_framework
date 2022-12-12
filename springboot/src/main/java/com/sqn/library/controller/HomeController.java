@@ -53,12 +53,12 @@ public class HomeController {
 //        我的账单-支出和收入
         List<String> list1 = consumerDetailsMapper.getCurrentMonthExpense(id);
         List<String> list2 = consumerDetailsMapper.getLastMonthExpense(id);
-        billInfo.put("currentExpense", (list1.size() != 0 ? list1.get(0) : "0.00") + "元");
+        billInfo.put("currentExpense", (!list1.isEmpty() ? list1.get(0) : "0.00") + "元");
         billInfo.put("currentIncome", (list1.size() == 2 ? list1.get(1) : "0.00") + "元");
-        billInfo.put("lastExpense", (list2.size() != 0 ? list2.get(0) : "0.00") + "元");
+        billInfo.put("lastExpense", (!list2.isEmpty() ? list2.get(0) : "0.00") + "元");
         billInfo.put("lastIncome", (list2.size() == 2 ? list2.get(1) : "0.00") + "元");
 //        我的账单-同比增长率
-        final String s1 = consumeCalculate.ratioYearOnYear(list1.size() != 0 ? Double.parseDouble(list1.get(0)) : 0d, list2.size() != 0 ? Double.parseDouble(list2.get(0)) : 0d);
+        final String s1 = consumeCalculate.ratioYearOnYear(!list1.isEmpty() ? Double.parseDouble(list1.get(0)) : 0d, !list2.isEmpty() ? Double.parseDouble(list2.get(0)) : 0d);
         final String s2 = consumeCalculate.ratioYearOnYear(list1.size() == 2 ? Double.parseDouble(list1.get(1)) : 0d, list2.size() == 2 ? Double.parseDouble(list2.get(1)) : 0d);
         billInfo.put("expenseRatioYearOnYear", s1);
         billInfo.put("incomeRatioYearOnYear", s2);

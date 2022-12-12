@@ -39,7 +39,6 @@ public class CategoryListController {
     /**
      *  新增或者更新
      * @param categoryList  消费类型
-     * @return
      */
     @PostMapping
     public Result<?> save(@RequestBody CategoryList categoryList) {
@@ -58,7 +57,6 @@ public class CategoryListController {
     /**
      *
      * @param id 消费id
-     * @return
      */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {

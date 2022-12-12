@@ -4,7 +4,7 @@
     <select id="findPage" resultMap="userMap">
         SELECT *
         from `user`
-        where name like concat('%', #{name}, '%') and role like concat('%',#{role},'%')
+        where name like concat('%', #{name}, '%') and role like concat('%',#{role},'%') and is_delete = 0
         order by role
     </select>
     <resultMap id="userMap" type="com.sqn.library.entity.User">

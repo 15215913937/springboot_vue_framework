@@ -1,7 +1,5 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -25,19 +23,13 @@ import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.SecurityUtils;
 import com.sqn.library.utils.TokenUtils;
-import io.netty.util.concurrent.SucceededFuture;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Rest模式
@@ -63,7 +55,11 @@ public class UserController {
     @Resource
     RedisUtils redisUtils;
 
-    //登录接口
+    /**
+     * 登录接口
+     * @param loginDTO
+     * @return
+     */
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginDTO loginDTO) {
         User user = new User();
@@ -98,6 +94,8 @@ public class UserController {
         // 生成token
         String token = TokenUtils.getToken(user);
         user.setToken(token);
+        // 更新登录时间
+        iUserService.updateRecentLoginTime(user.getId());
 //      Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)
 //      功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
 //      参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
@@ -116,7 +114,11 @@ public class UserController {
         return Result.success(user);
     }
 
-    //    发送手机验证码
+    /**
+     * 发送手机验证码
+      * @param phone
+     * @return
+     */
     @PostMapping("/sendCode")
     public Result<?> sendCode(@RequestBody String phone) {
         Boolean isSend = iUserService.sendCode(phone);
@@ -145,7 +147,11 @@ public class UserController {
         return Result.success();
     }
 
-    //重置密码
+    /**
+     * 重置密码
+     * @param userResetPwdDTO
+     * @return
+     */
     @PostMapping("/resetPwd")
     public Result<?> resetPwd(@RequestBody UserResetPwdDTO userResetPwdDTO) {
         if (userResetPwdDTO.getNewPassword() == null) {
@@ -158,7 +164,12 @@ public class UserController {
         return Result.success();
     }
 
-    //注册接口
+    /**
+     * 注册接口
+     * @param user
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/register")
     public Result<?> register(@RequestBody User user) throws Exception {
         try {
@@ -178,7 +189,11 @@ public class UserController {
     }
 
 
-    //新增或更新接口
+    /**
+     * 新增或更新接口
+     * @param user
+     * @return
+     */
     @PostMapping
     public Result<?> save(@Valid @RequestBody User user) {
         User one = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
@@ -204,15 +219,27 @@ public class UserController {
 
     }
 
-    //删除接口
+    /**
+     * 用户删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
-        iUserService.removeById(id);
+        iUserService.isDeleteById(id);
+//        iUserService.removeById(id);
 //        redisUtils.flushRedis(USER_KEY);
         return Result.success();
     }
 
-    //分页查询接口
+    /**
+     * 分页查询接口
+     * @param pageNum
+     * @param pageSize
+     * @param name
+     * @param role
+     * @return
+     */
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -225,13 +252,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Result<?> getById(@PathVariable Integer id) {
-//        String s = redisUtils.getRedis(Constants.USER_KEY);
-//        if (StrUtil.isNotBlank(s)) {
-//            User user = JSONUtil.toBean(s, User.class);
-//            return Result.success(user);
-//        }
         User user = iUserService.getById(id);
-//        redisUtils.setObjectToRedis(Constants.USER_KEY, user, Constants.LOGIN_INFO_TTL);
         return Result.success(user);
     }
 

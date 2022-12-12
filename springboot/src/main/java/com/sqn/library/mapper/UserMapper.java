@@ -16,7 +16,9 @@ import java.util.List;
 
 public interface UserMapper extends BaseMapper<User> {
 
-    // 一对多查询
+    /**
+     * 一对多查询
+     */
     Page<User> findPage(Page<User> page, @Param("name") String name, @Param("role") String role);
 
     @Update("update user set password = #{newPassword} where username = #{username}")
