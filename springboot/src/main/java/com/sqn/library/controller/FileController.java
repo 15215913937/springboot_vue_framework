@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.jnlp.FileSaveService;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -72,7 +71,8 @@ public class FileController {
         String fileFlag = flag + StrUtil.DOT + type;
         File uploadFile = new File(fileUploadPath + fileFlag);
         //判断配置的文件目录是否存在，若不存在，则新建一个新的文件目录
-        File parentFile = uploadFile.getParentFile(); //取父级目录
+        //取父级目录
+        File parentFile = uploadFile.getParentFile();
         if (!parentFile.exists()) {
             parentFile.mkdirs();
         }
@@ -91,17 +91,16 @@ public class FileController {
         } else {
             //数据库不存在重复文件，新建链接
             url = ip + ":" + port + "/files/test/" + fileFlag;
+
+            //存储数据库
+            Files saveFiles = new Files();
+            saveFiles.setName(originalFilename);
+            saveFiles.setSize(size / 1024);
+            saveFiles.setType(type);
+            saveFiles.setUrl(url);
+            saveFiles.setMd5(md5);
+            fileMapper.insert(saveFiles);
         }
-
-
-        //存储数据库
-        Files saveFiles = new Files();
-        saveFiles.setName(originalFilename);
-        saveFiles.setSize(size / 1024);
-        saveFiles.setType(type);
-        saveFiles.setUrl(url);
-        saveFiles.setMd5(md5);
-        fileMapper.insert(saveFiles);
         return url;
     }
 

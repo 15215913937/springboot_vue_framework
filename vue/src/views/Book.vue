@@ -188,7 +188,7 @@
 
     import request from "../utils/request";
     import {Search, Delete, Upload} from "@element-plus/icons-vue";
-    import {serverIp} from "../../public/config";
+    import {serverIp, serverPort} from "../../public/config";
 
     export default {
         name: 'Book',
@@ -207,7 +207,7 @@
                 tableData: [],
                 multipleSelection: [],
                 ids: [],
-                filesUploadUrl: 'http://' + serverIp + ':9090/files/upload',
+                filesUploadUrl: 'http://' + serverIp + ':'+serverPort+'/files/upload',
                 users: [],
                 categories: [],
                 user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
@@ -357,7 +357,7 @@
                 this.load()
             },
             exportBooks() {
-                window.open('http://' + serverIp + ':9090/book/export')
+                window.open('http://' + serverIp + ':'+serverPort+'/book/export')
             }
         }
     }
