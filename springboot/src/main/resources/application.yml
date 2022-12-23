@@ -31,7 +31,7 @@ spring:
 
   #    切换配置版本
   profiles:
-    active: dev
+    active: prop
 
 
 mybatis-plus:

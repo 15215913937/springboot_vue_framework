@@ -84,14 +84,22 @@ public class EventsController {
         return Result.success(event);
     }
 
-    //事件批量删除
+    /**事件批量删除
+     *
+     * @param ids
+     * @return
+     */
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         eventsMapper.deleteBatchIds(ids);
         return Result.success();
     }
 
-    //    点击查看计数
+    /**    点击查看计数
+     *
+     * @param id
+     * @return
+     */
     @PostMapping("/{id}")
     public Result<?> addCount(@PathVariable Integer id) {
         eventsMapper.updateViewCount(id);
