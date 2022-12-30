@@ -2,6 +2,7 @@ package com.sqn.library.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
@@ -12,6 +13,7 @@ import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -81,13 +83,11 @@ public class RoleController {
         return Result.success(roleService.getById(id));
     }
 
-    @GetMapping("/page")
-    public Result<?> findPage(@RequestParam(defaultValue = "") String role,
-                              @RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("role", role);
-        return Result.success(roleService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    @GetMapping("/allRole")
+    public Result<?> findAllRole() {
+        final QueryWrapper<Role> wrapper = new QueryWrapper<>();
+        final List<Role> roles = roleMapper.selectList(wrapper);
+        return Result.success(roles);
     }
 
     /**

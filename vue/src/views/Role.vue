@@ -9,15 +9,6 @@
                 &nbsp新增
             </el-button>
         </div>
-        <!--    搜索区-->
-        <div style="margin: 10px 0;display: block;clear: both">
-            <el-input v-model="role" placeholder="请输入角色名称" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                      clearable/>
-            <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-            <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-        </div>
-        <!--    列表区-->
-        <!--        stripe:斑马纹-->
         <el-table
                 v-loading="loading"
                 :data="tableData"
@@ -140,14 +131,13 @@
             }
         },
         methods: {
-            load() {
-                this.loading = true;
-                request.get("/role/page").then(res => {
-                    // console.log(res);
-                    this.loading = false;
-                    this.tableData = res.data.records;
-                });
-            },
+          load() {
+            this.loading = true;
+            request.get("/role/allRole").then(res => {
+              this.loading = false;
+              this.tableData = res.data;
+            });
+          },
             reset() {
                 this.role = '';
                 this.load();

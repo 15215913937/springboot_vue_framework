@@ -1,21 +1,21 @@
 #生产环境
 server:
   port: 9092
-  ip: http://192.168.3.111
+  ip: http://192.168.3.113
 spring:
   config:
     activate:
       on-profile: prop
   datasource:
     druid:
-      url: jdbc:mysql://192.168.3.111:3306/sqn_home_pro?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://192.168.3.113:3306/sqn_home_pro?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
       username: root
       password: root
   redis:
-    host: 192.168.3.111
+    host: 192.168.3.113
     port: 6379
     password: 1234
 files:
   upload:
-    path: /home/home/files/
+    path: /home/files/
 
