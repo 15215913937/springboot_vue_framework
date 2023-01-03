@@ -13,11 +13,17 @@ import java.util.List;
 
 @Mapper
 public interface EventsMapper extends BaseMapper<Events> {
-    //    查看数量点击一次加1
+    /** 查看数量点击一次加1
+     *
+     * @param id
+     */
     @Select("update events set `view_count` = `view_count`+1 where `id` = ${id}")
     void updateViewCount(Integer id);
 
-    //    获取作者列表
+    /** 获取作者列表
+     *
+     * @return
+     */
     @Select("SELECT DISTINCT `events`.author id, `user`.name FROM `events` LEFT JOIN `user` ON`events`.author = `user`.id")
     List<HashMap<Integer,String>> getAuthor();
 

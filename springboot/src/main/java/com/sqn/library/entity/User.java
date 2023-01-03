@@ -30,6 +30,7 @@ public class User {
     private Date createTime;
     private Timestamp recentLogin;
     private Integer isDelete;
+    private Integer status;
     @Length(min = 11, max = 11, message = "手机号只能是11位")
     @Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "手机号格式有误")
     private String phone;
