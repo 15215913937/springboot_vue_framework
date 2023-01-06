@@ -37,6 +37,25 @@
             </if>
         </where>
     </select>
+    <select id="getBooksCountsOfYear" parameterType="String" resultType="java.util.LinkedHashMap">
+        SELECT
+        count( CASE MONTH ( buy_date ) WHEN '1' THEN id END ) AS Jan,
+        count( CASE MONTH ( buy_date ) WHEN '2' THEN id END ) AS Feb,
+        count( CASE MONTH ( buy_date ) WHEN '3' THEN id END ) AS Mar,
+        count( CASE MONTH ( buy_date ) WHEN '4' THEN id END ) AS Apr,
+        count( CASE MONTH ( buy_date ) WHEN '5' THEN id END ) AS May,
+        count( CASE MONTH ( buy_date ) WHEN '6' THEN id END ) AS June,
+        count( CASE MONTH ( buy_date ) WHEN '7' THEN id END ) AS July,
+        count( CASE MONTH ( buy_date ) WHEN '8' THEN id END ) AS Aug,
+        count( CASE MONTH ( buy_date ) WHEN '9' THEN id END ) AS Sept,
+        count( CASE MONTH ( buy_date ) WHEN '10' THEN id END ) AS Oct,
+        count( CASE MONTH ( buy_date ) WHEN '11' THEN id END ) AS Nov,
+        count( CASE MONTH ( buy_date ) WHEN '12' THEN id END ) AS Dece
+        FROM
+        book
+        WHERE
+        YEAR ( buy_date )= #{year};
+    </select>
 </mapper>
 
 

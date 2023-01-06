@@ -7,6 +7,7 @@ import com.sqn.library.entity.Book;
 import org.apache.ibatis.annotations.Mapper;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 
 @Mapper
 public interface BookMapper extends BaseMapper<Book> {
@@ -15,4 +16,6 @@ public interface BookMapper extends BaseMapper<Book> {
     Page<Book> findPage(Page<Book> page, String name, String author, String category);
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
+
+    ArrayList getBooksCountsOfYear(String year);
 }

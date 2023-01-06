@@ -77,8 +77,7 @@
         },
         methods: {
             logout() {
-                sessionStorage.removeItem("user");  // 清空缓存
-                sessionStorage.removeItem("menus");
+                sessionStorage.clear()
                 this.$router.push('/login');
                 // resetRouter()  //重置路由
             }

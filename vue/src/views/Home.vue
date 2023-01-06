@@ -122,6 +122,12 @@
       </div>
       <!--          购书图表区-->
       <div style="flex: 1">
+        <el-date-picker
+            v-model="year"
+            type="year"
+            placeholder="请选择年份"
+            @change="searchYear"
+        />
         <el-row style="margin-top: 30px">
           <el-col :span="12">
             <div id="main" style="height: 300px"/>
@@ -160,10 +166,10 @@ export default {
       currentMonthIncome: '',
       lastMonthExpense: '',
       lastMonthIncome: '',
+      year: ''
     }
   },
   mounted() {  //页面元素渲染完成后再触发mounted
-    let that = this;
     //获取个人数据
     request.get("/home/getHomeOneInfo/" + this.user.id).then(res => {
       this.currentMonthExpense = res.data.billInfo.currentExpense;
@@ -265,13 +271,18 @@ export default {
         },
       ]
     };
-    request.get("/echarts/booksNumber").then(res => {
-      option1.series[0].data = res.data;
-      //数据准备完毕后再setOption
-      myChart1.setOption(option1);
-      // console.log(res)
-
-    });
+    // let toyear = this.year;
+    // console.log(toyear)
+    // request.get("/echarts/booksNumber", {
+    //   params: {
+    //     year: toyear
+    //   }
+    // }).then(res => {
+    //   // option1.series[0].data = res.data;
+    //   // //数据准备完毕后再setOption
+    //   // myChart1.setOption(option1);
+    //   console.log(res)
+    // });
     //个人购书折线图
     request.post("/echarts/booksNumberOne", this.user).then(res => {
       option1.series[1].data = res.data;

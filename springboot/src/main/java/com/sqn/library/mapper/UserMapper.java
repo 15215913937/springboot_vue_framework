@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Update;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface UserMapper extends BaseMapper<User> {
+public interface    UserMapper extends BaseMapper<User> {
 
     /**
      * 一对多查询

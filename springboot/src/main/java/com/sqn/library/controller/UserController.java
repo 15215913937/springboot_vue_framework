@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
+import com.sqn.library.common.listener.UserLoginListener;
 import com.sqn.library.controller.dto.LoginDTO;
 import com.sqn.library.controller.dto.UserListDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
@@ -28,11 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 
 /**
  * Rest模式
+ * @author sqn
  */
 @Validated
 @RestController
@@ -61,7 +64,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result<?> login(@RequestBody LoginDTO loginDTO) {
+    public Result<?> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
         User user = new User();
         if (StrUtil.isNotBlank(loginDTO.getUsername())) {
             user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, loginDTO.getUsername()));
@@ -94,6 +97,9 @@ public class UserController {
         // 生成token
         String token = TokenUtils.getToken(user);
         user.setToken(token);
+        session.setAttribute("user",user);
+        session.setAttribute("userOnlineListener", new UserLoginListener(user.getId()));
+        System.out.println("当前登录用户的sessionId==>"+session.getId());
         // 更新登录时间
         iUserService.updateRecentLoginTime(user.getId());
 //      Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)

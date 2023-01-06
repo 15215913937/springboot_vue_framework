@@ -5,6 +5,7 @@ import com.sqn.library.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,14 @@ public interface IBookService extends IService<Book> {
 
     List<Book> OneList(Integer UId);
 
-    //@Param  取别名，和xml文件里的参数一致
+    /**@Param  取别名，和xml文件里的参数一致
+     *
+     * @param tPage
+     * @param name
+     * @param author
+     * @param category
+     * @return
+     */
     Page<Book> findPage(Page<Book> tPage, @Param("name") String name, @Param("author") String author, @Param(
             "category") String category);
 
@@ -27,4 +35,5 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
+    ArrayList getBooksCountsOfYear(String year);
 }

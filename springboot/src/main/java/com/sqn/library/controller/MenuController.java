@@ -50,7 +50,11 @@ public class MenuController {
     @Resource
     RedisUtils redisUtils;
 
-    // 新增或者更新
+    /** 新增或者更新
+     *
+     * @param menu
+     * @return
+     */
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
         Menu res = menuMapper.selectOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getName, menu.getName()));

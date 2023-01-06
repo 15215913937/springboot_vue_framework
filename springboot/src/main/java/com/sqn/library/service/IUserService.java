@@ -40,4 +40,5 @@ public interface IUserService extends IService<User> {
      * @param id
      */
     void isDeleteById(Long id);
+
 }

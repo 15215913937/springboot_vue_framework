@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,5 +49,10 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
     @Override
     public Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category) {
         return bookMapper.findPageByUid(objectPage, uid, name, author, category);
+    }
+
+    @Override
+    public ArrayList getBooksCountsOfYear(String year) {
+        return bookMapper.getBooksCountsOfYear(year);
     }
 }
