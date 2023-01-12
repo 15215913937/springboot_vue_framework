@@ -144,10 +144,10 @@
 <script>
 import request from "../utils/request";
 import * as echarts from 'echarts';
-import china from '@/utils/china'
 
 export default {
   name: "Home",
+
   data() {
     return {
       expenseRatioYearOnYear: '',
@@ -166,11 +166,124 @@ export default {
       currentMonthIncome: '',
       lastMonthExpense: '',
       lastMonthIncome: '',
-      year: ''
+      year: new Date(),
+      option1: {
+        // title: {
+        //   text: '购书趋势图',
+        // },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['总体购书趋势', '个人购书趋势']
+        },
+        xAxis: {
+          axisLabel: {   //显示全部月份
+            interval: 0
+          },
+          type: 'category',
+          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+        },
+        yAxis: {
+          minInterval: 1, //显示整数
+          type: 'value',
+          axisLabel: {
+            formatter: '{value} 本'
+          }
+        },
+        series: [
+          {
+            name: '总体购书趋势',
+            data: [],
+            // data: this.chart1Data1,
+            type: 'line'
+          },
+          {
+            name: '个人购书趋势',
+            data: [],
+            // data: this.chart1Data2,
+            type: 'line'
+          }
+        ]
+      },
+      option2: {
+        title: {
+          text: '个人购书年比例图',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{b} <br/>{c}本  ({d}%)'
+        },
+        // legend: {
+        //     top: '5%',
+        //     left: 'center'
+        // },
+        series: [
+          {
+            // name: '总体每月购书',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            data: [],
+            // data: this.chart2Data,
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            labelLine: {
+              show: false
+            },
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2
+            }
+          },
+        ]
+      }
     }
   },
-  mounted() {  //页面元素渲染完成后再触发mounted
-    //获取个人数据
+  created() {
+    this.searchYear(this.year)
+  },
+  methods: {
+    searchYear(n) {
+      n = n.toString().split(' ')
+      let changeYear = n[3]
+      // console.log(changeYear)
+      let toChangeYear = changeYear.toString()
+      request.get("/echarts/booksNumber", {
+        params: {
+          year: toChangeYear
+        }
+      }).then(res => {
+        this.option1.series[0].data = res.data;
+      });
+      request.get("/echarts/booksNumberOne", {
+        params: {
+          year: this.year,
+          id: this.user.id
+        }
+      }).then(res => {
+        this.option1.series[1].data = res.data;
+        for (let i = 0; i < res.data.length; i++) {
+          this.option2.series[0].data[i] = {name: i + "月", value: res.data[i]};
+        }
+      });
+    }
+  },
+  watch(){
+    this.option1.
+  },
+  mounted() {
+    // 获取个人数据
     request.get("/home/getHomeOneInfo/" + this.user.id).then(res => {
       this.currentMonthExpense = res.data.billInfo.currentExpense;
       this.currentMonthIncome = res.data.billInfo.currentIncome;
@@ -185,114 +298,17 @@ export default {
       this.myEventCount = parseInt(res.data.commonInfo.myEventCount);
       this.fileCount = parseInt(res.data.commonInfo.filesCount);
     })
-    //折线图
-    const chartDom1 = document.getElementById('main');
-    const myChart1 = echarts.init(chartDom1);
-    const option1 = {
-      // title: {
-      //   text: '购书趋势图',
-      // },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['总体购书趋势', '个人购书趋势']
-      },
-      xAxis: {
-        axisLabel: {   //显示全部月份
-          interval: 0
-        },
-        type: 'category',
-        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-      },
-      yAxis: {
-        minInterval: 1, //显示整数
-        type: 'value',
-        axisLabel: {
-          formatter: '{value} 本'
-        }
-      },
-      series: [
-        {
-          name: '总体购书趋势',
-          data: [],
-          type: 'line'
-        },
-        {
-          name: '个人购书趋势',
-          data: [],
-          type: 'line'
-        }
-      ]
-    };
+    // 折线图
+    let myChart1 = echarts.init(document.getElementById('main'));
 
+    // 饼图
+    let myChart2 = echarts.init(document.getElementById('pie'));
 
-    //饼图
-    const chartDom2 = document.getElementById('pie');
-    const myChart2 = echarts.init(chartDom2);
-    const option2 = {
-      title: {
-        text: '个人购书年比例图',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b} <br/>{c}本  ({d}%)'
-      },
-      // legend: {
-      //     top: '5%',
-      //     left: 'center'
-      // },
-      series: [
-        {
-          // name: '总体每月购书',
-          type: 'pie',
-          radius: ['40%', '60%'],
-          data: [],
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '30',
-              fontWeight: 'bold'
-            }
-          },
-          label: {
-            show: false,
-            position: 'center'
-          },
-          labelLine: {
-            show: false
-          },
-          itemStyle: {
-            borderRadius: 10,
-            borderColor: '#fff',
-            borderWidth: 2
-          }
-        },
-      ]
-    };
-    // let toyear = this.year;
-    // console.log(toyear)
-    // request.get("/echarts/booksNumber", {
-    //   params: {
-    //     year: toyear
-    //   }
-    // }).then(res => {
-    //   // option1.series[0].data = res.data;
-    //   // //数据准备完毕后再setOption
-    //   // myChart1.setOption(option1);
-    //   console.log(res)
-    // });
-    //个人购书折线图
-    request.post("/echarts/booksNumberOne", this.user).then(res => {
-      option1.series[1].data = res.data;
-      myChart1.setOption(option1);
-      for (let i = 0; i < res.data.length; i++) {
-        option2.series[0].data[i] = {name: i + "月", value: res.data[i]};
-      }
-      myChart2.setOption(option2);
-    });
+    myChart1.setOption(this.option1);
+    myChart2.setOption(this.option2);
+
   },
+
 }
 
 </script>

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface IBookService extends IService<Book> {
 
-    List<Book> OneList(Integer UId);
+    ArrayList<Integer> OneList(String year,Integer id);
 
     /**@Param  取别名，和xml文件里的参数一致
      *
@@ -35,5 +35,5 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-    ArrayList getBooksCountsOfYear(String year);
+    ArrayList<Integer> getNumberOfBooksPurchasedeEachMonthByYear(String year);
 }
