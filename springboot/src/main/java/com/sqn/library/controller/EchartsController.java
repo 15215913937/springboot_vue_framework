@@ -47,15 +47,12 @@ public class EchartsController {
      * 按年获取每月购书数量
      *
      * @param year 获取年份
+     * @param id
      * @return
      */
-    @GetMapping("/booksNumber")
-    public Result<?> booksNumber(@RequestParam String year) {
-        return Result.success(bookService.getNumberOfBooksPurchasedeEachMonthByYear(year));
-    }
 
-    @GetMapping("/booksNumberOne")
-    public Result<?> booksNumberOne(@RequestParam String year, @RequestParam Integer id) {
-        return Result.success(bookService.OneList(year, id));
+    @GetMapping("/booksPurchaseStatistics")
+    public Result<?> booksPurchaseStatistics(@RequestParam String year, @RequestParam Integer id) {
+        return Result.success(bookService.booksPurchaseStatistics(year, id));
     }
 }

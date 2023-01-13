@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -17,8 +18,6 @@ import java.util.List;
  * @since 2022-07-11
  */
 public interface IBookService extends IService<Book> {
-
-    ArrayList<Integer> OneList(String year,Integer id);
 
     /**@Param  取别名，和xml文件里的参数一致
      *
@@ -35,5 +34,5 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-    ArrayList<Integer> getNumberOfBooksPurchasedeEachMonthByYear(String year);
+    Map<String,ArrayList<Integer>> booksPurchaseStatistics(String year, Integer id);
 }
