@@ -46,7 +46,7 @@ public class ConsumerDetailsController {
     IConsumerDetailsService consumerDetailsService;
     @Resource
     ConsumerDetailsMapper consumerDetailsMapper;
-    @Autowired
+    @Resource
     ConsumeCalculate consumeCalculate;
 
     /**

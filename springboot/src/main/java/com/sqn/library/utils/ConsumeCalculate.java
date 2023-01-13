@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 
+/**
+ * @author sqn
+ */
 @Component
 public class ConsumeCalculate {
     public String ratioYearOnYear(Double currentExpense, Double lastExpense) {

@@ -17,22 +17,22 @@
             <div style="flex:1;display: flex;margin: 20px 0">
               <div style="flex: 1;text-align: left;font-size: 20px">本月支出:&nbsp&nbsp<span
                   style="color:green">{{
-                  currentMonthExpense
-                }}</span>&nbsp<span style="font-size: 10px">{{ expenseRatioYearOnYear }}</span>
+                  billInfo.currentExpense
+                }}</span>&nbsp<span style="font-size: 10px">{{ billInfo.expenseRatioYearOnYear }}</span>
               </div>
               <div style="flex: 1;text-align: left;font-size: 20px">本月收入:&nbsp&nbsp<span
                   style="color: red">{{
-                  currentMonthIncome
-                }}</span>&nbsp<span style="font-size: 10px">{{ incomeRatioYearOnYear }}</span>
+                  billInfo.currentIncome
+                }}</span>&nbsp<span style="font-size: 10px">{{ billInfo.incomeRatioYearOnYear }}</span>
               </div>
             </div>
             <div style="flex:1;display: flex;margin: 20px 0">
               <div style="flex: 1;text-align: left;font-size: 17px">上月支出:&nbsp&nbsp&nbsp{{
-                  lastMonthExpense
+                  billInfo.lastExpense
                 }}
               </div>
               <div style="flex: 1;text-align: left;font-size: 17px">上月收入:&nbsp&nbsp&nbsp{{
-                  lastMonthIncome
+                  billInfo.lastIncome
                 }}
               </div>
             </div>
@@ -57,7 +57,7 @@
                 </el-icon>
                 家庭成员
               </div>
-              <div class="number"><span>{{ userCount }} 人</span></div>
+              <div class="number"><span>{{ commonInfo.usersCount }} 人</span></div>
             </el-card>
           </el-col>
           <el-col :span="6">
@@ -68,7 +68,7 @@
                 </el-icon>
                 现藏有书籍
               </div>
-              <div class="number"><span>{{ bookCount }} 本</span></div>
+              <div class="number"><span>{{ commonInfo.booksCount }} 本</span></div>
             </el-card>
           </el-col>
           <el-col :span="6">
@@ -79,7 +79,7 @@
                 </el-icon>
                 事件总数
               </div>
-              <div class="number"><span>{{ eventCount }} 件</span></div>
+              <div class="number"><span>{{ commonInfo.eventsCount }} 件</span></div>
             </el-card>
           </el-col>
           <el-col :span="6">
@@ -90,7 +90,7 @@
                 </el-icon>
                 文件总数
               </div>
-              <div class="number"><span>{{ fileCount }} 份</span></div>
+              <div class="number"><span>{{ commonInfo.filesCount }} 份</span></div>
             </el-card>
           </el-col>
 
@@ -104,7 +104,7 @@
                 </el-icon>
                 你拥有的书籍
               </div>
-              <div class="userNumber"><span>{{ myBookCount }} 本</span></div>
+              <div class="userNumber"><span>{{ commonInfo.myBookCount }} 本</span></div>
             </el-card>
           </el-col>
           <el-col :span="12">
@@ -115,7 +115,7 @@
                 </el-icon>
                 你的事件
               </div>
-              <div class="userNumber"><span>{{ myEventCount }} 件</span></div>
+              <div class="userNumber"><span>{{ commonInfo.myEventCount }} 件</span></div>
             </el-card>
           </el-col>
         </el-row>
@@ -150,24 +150,47 @@ export default {
 
   data() {
     return {
-      expenseRatioYearOnYear: '',
-      incomeRatioYearOnYear: '',
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
-      userCount: 0,
-      bookCount: 0,
-      eventCount: 0,
-      fileCount: 0,
-      myBookCount: 0,
-      myEventCount: 0,
+      billInfo: {
+        lastExpense: null,
+        incomeRatioYearOnYear: null,
+        currentIncome: null,
+        expenseRatioYearOnYear: null,
+        lastIncome: null,
+        currentExpense: null
+      },
+      commonInfo: {
+        filesCount: null,
+        myBookCount: null,
+        usersCount: null,
+        eventsCount: null,
+        myEventCount: null,
+        booksCount: null
+      },
       total: 0,
       today: 0,
       extData: 0,
-      currentMonthExpense: '',
-      currentMonthIncome: '',
-      lastMonthExpense: '',
-      lastMonthIncome: '',
       year: new Date(),
-      option1: {
+      oneData: [],
+      allData: []
+    }
+  },
+  created() {
+    // 获取个人数据
+    request.get("/home/getHomeOneInfo/" + this.user.id).then(res => {
+      this.billInfo = res.data.billInfo;
+      this.commonInfo = res.data.commonInfo;
+    })
+
+  },
+  mounted() {
+    this.searchYear(this.year)
+  },
+  methods: {
+    getChart1() {
+      // 折线图
+      let myChart1 = echarts.init(document.getElementById('main'));
+      let option1 = {
         // title: {
         //   text: '购书趋势图',
         // },
@@ -194,19 +217,25 @@ export default {
         series: [
           {
             name: '总体购书趋势',
-            data: [],
+            data: this.allData,
             // data: this.chart1Data1,
             type: 'line'
           },
           {
             name: '个人购书趋势',
-            data: [],
+            data: this.oneData,
             // data: this.chart1Data2,
             type: 'line'
           }
         ]
-      },
-      option2: {
+      };
+      myChart1.setOption(option1);
+      console.log(3)
+    },
+    getChart2() {
+      // 饼图
+      let myChart2 = echarts.init(document.getElementById('pie'));
+      let option2 = {
         title: {
           text: '个人购书年比例图',
           left: 'center'
@@ -224,7 +253,7 @@ export default {
             // name: '总体每月购书',
             type: 'pie',
             radius: ['40%', '60%'],
-            data: [],
+            data: this.oneData,
             // data: this.chart2Data,
             emphasis: {
               label: {
@@ -247,24 +276,24 @@ export default {
             }
           },
         ]
-      }
-    }
-  },
-  created() {
-    this.searchYear(this.year)
-  },
-  methods: {
+      };
+      myChart2.setOption(option2);
+      console.log(4)
+    },
     searchYear(n) {
+      if (n === '') {
+        n = this.year;
+      }
       n = n.toString().split(' ')
-      let changeYear = n[3]
-      // console.log(changeYear)
-      let toChangeYear = changeYear.toString()
+      this.year = n[3];
       request.get("/echarts/booksNumber", {
         params: {
-          year: toChangeYear
+          year: this.year
         }
       }).then(res => {
-        this.option1.series[0].data = res.data;
+        console.log("all:  " + res.data)
+        this.allData = res.data;
+        console.log(1)
       });
       request.get("/echarts/booksNumberOne", {
         params: {
@@ -272,42 +301,18 @@ export default {
           id: this.user.id
         }
       }).then(res => {
-        this.option1.series[1].data = res.data;
-        for (let i = 0; i < res.data.length; i++) {
-          this.option2.series[0].data[i] = {name: i + "月", value: res.data[i]};
-        }
-      });
+            this.oneData = res.data;
+            console.log("one:  " + res.data)
+            for (let i = 0; i < res.data.length; i++) {
+              this.oneData[i] = {name: i + "月", value: res.data[i]};
+            }
+            console.log(2)
+          }
+      );
+      this.getChart1()
+      this.getChart2()
     }
-  },
-  watch(){
-    this.option1.
-  },
-  mounted() {
-    // 获取个人数据
-    request.get("/home/getHomeOneInfo/" + this.user.id).then(res => {
-      this.currentMonthExpense = res.data.billInfo.currentExpense;
-      this.currentMonthIncome = res.data.billInfo.currentIncome;
-      this.lastMonthExpense = res.data.billInfo.lastExpense;
-      this.lastMonthIncome = res.data.billInfo.lastIncome;
-      this.expenseRatioYearOnYear = res.data.billInfo.expenseRatioYearOnYear;
-      this.incomeRatioYearOnYear = res.data.billInfo.incomeRatioYearOnYear;
-      this.myBookCount = parseInt(res.data.commonInfo.myBookCount);
-      this.bookCount = parseInt(res.data.commonInfo.booksCount);
-      this.userCount = parseInt(res.data.commonInfo.usersCount);
-      this.eventCount = parseInt(res.data.commonInfo.eventsCount);
-      this.myEventCount = parseInt(res.data.commonInfo.myEventCount);
-      this.fileCount = parseInt(res.data.commonInfo.filesCount);
-    })
-    // 折线图
-    let myChart1 = echarts.init(document.getElementById('main'));
-
-    // 饼图
-    let myChart2 = echarts.init(document.getElementById('pie'));
-
-    myChart1.setOption(this.option1);
-    myChart2.setOption(this.option2);
-
-  },
+  }
 
 }
 

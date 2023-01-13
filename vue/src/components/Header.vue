@@ -4,10 +4,10 @@
     <div style="width: 180px;  text-align: center;" @click="$router.push('/')">
       <span class="titleName">SQN系统管理</span>
     </div>
-<!--    <div style="flex: 1" class="weather">-->
-<!--      &lt;!&ndash;      和风天气插件&ndash;&gt;-->
-<!--      <div id="he-plugin-simple"></div>-->
-<!--    </div>-->
+    <div style="flex: 1" class="weather">
+      <!--      和风天气插件-->
+      <div id="he-plugin-simple"></div>
+    </div>
     <div>
       <img :src="user.avatar" alt=""
            style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
@@ -45,36 +45,36 @@ export default {
       ArrowDown
     }
   },
-  // mounted() {
-  //   window.WIDGET = {
-  //     "CONFIG": {
-  //       "modules": "21034",
-  //       "background": "1",
-  //       "tmpColor": "FFFFFF",
-  //       "tmpSize": "16",
-  //       "cityColor": "FFFFFF",
-  //       "citySize": "16",
-  //       "aqiColor": "FFFFFF",
-  //       "aqiSize": "16",
-  //       "weatherIconSize": "24",
-  //       "alertIconSize": "18",
-  //       "padding": "10px 10px 10px 10px",
-  //       "shadow": "0",
-  //       "language": "auto",
-  //       "borderRadius": "5",
-  //       "fixed": "true",
-  //       "vertical": "center",
-  //       "horizontal": "center",
-  //       "left": "180",
-  //       "top": "3",
-  //       "key": "af9a153d00174b4682bd2acd5761b695"
-  //     }
-  //   };
-  //   const script = document.createElement('script');
-  //   script.type = 'text/javascript';
-  //   script.src = "https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0";
-  //   document.getElementById('he-plugin-simple').appendChild(script);
-  // },
+  mounted() {
+    window.WIDGET = {
+      "CONFIG": {
+        "modules": "21034",
+        "background": "1",
+        "tmpColor": "FFFFFF",
+        "tmpSize": "16",
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiColor": "FFFFFF",
+        "aqiSize": "16",
+        "weatherIconSize": "24",
+        "alertIconSize": "18",
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "borderRadius": "5",
+        "fixed": "true",
+        "vertical": "center",
+        "horizontal": "center",
+        "left": "180",
+        "top": "3",
+        "key": "af9a153d00174b4682bd2acd5761b695"
+      }
+    };
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0";
+    document.getElementById('he-plugin-simple').appendChild(script);
+  },
   methods: {
     logout() {
       sessionStorage.clear()
