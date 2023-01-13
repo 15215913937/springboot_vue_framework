@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author shenqn
@@ -16,4 +19,5 @@ import org.apache.ibatis.annotations.Select;
 public interface RoleMapper extends BaseMapper<Role> {
     @Select("select id from role where flag = #{flag}")
     Integer selectByFlag(@Param("flag") String flag);
+
 }

@@ -1,13 +1,13 @@
 <template>
-  <div style="overflow: hidden; height: 100vh">
-    testPage
-  </div>
+    <div style="overflow: hidden; height: 100vh">
+        testPage
+    </div>
 </template>
 
 <script>
-export default {
-  name: "TestPage"
-}
+    export default {
+        name: "TestPage"
+    }
 </script>
 
 <style>

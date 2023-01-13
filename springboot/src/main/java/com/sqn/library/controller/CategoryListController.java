@@ -1,7 +1,5 @@
 package com.sqn.library.controller;
 
-
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Constants;
@@ -38,7 +36,10 @@ public class CategoryListController {
     @Resource
     CategoryListMapper categoryListMapper;
 
-    // 新增或者更新
+    /**
+     *  新增或者更新
+     * @param categoryList  消费类型
+     */
     @PostMapping
     public Result<?> save(@RequestBody CategoryList categoryList) {
         LambdaQueryWrapper<CategoryList> wrapper = Wrappers.<CategoryList>lambdaQuery()
@@ -53,6 +54,10 @@ public class CategoryListController {
         return Result.success();
     }
 
+    /**
+     *
+     * @param id 消费id
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         categoryListService.removeById(id);
@@ -69,10 +74,9 @@ public class CategoryListController {
     @GetMapping("/search")
     public Result<?> searchTo(@RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String flag) {
-        List<CategoryList> lists =  categoryListMapper.findBooks(name,flag);
+        List<CategoryList> lists = categoryListMapper.findBooks(name, flag);
         return Result.success(lists);
     }
-
 
 
 }

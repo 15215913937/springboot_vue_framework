@@ -7,7 +7,6 @@
     <artifactId>library</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>library</name>
-    <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>8</maven.compiler.source>
@@ -16,8 +15,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
-        <relativePath/>
+        <!--        <version>2.7.1</version>-->
+        <version>2.5.4</version>
     </parent>
 
     <dependencies>
@@ -34,7 +33,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-<!--        redis-->
+        <!--        redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -71,19 +70,20 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+
         <!--  JWT  -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>3.4.0</version>
         </dependency>
-<!--        mybaties-plus 代码生成器-->
+        <!--        mybaties-plus 代码生成器-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.5.2</version>
         </dependency>
-<!--        模板引擎-->
+        <!--        模板引擎-->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
@@ -97,17 +97,45 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-<!--        druid数据池-->
+        <!--        druid数据池-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.10</version>
         </dependency>
+        <!--热部署-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+        <!--        定时器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
 
-
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+        <!--        redisson-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.17.7</version>
+        </dependency>
+        <!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.sqn</groupId>-->
+        <!--            <artifactId>ip-spring-boot-starter</artifactId>-->
+        <!--            <version>0.0.1-SNAPSHOT</version>-->
+        <!--        </dependency>-->
     </dependencies>
+
     <build>
         <plugins>
+            <!--    jar支持命令行启动需要依赖maven插件支持，请确认打包时是否具有SpringBoot对应的maven插件-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

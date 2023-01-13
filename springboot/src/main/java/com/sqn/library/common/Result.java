@@ -2,6 +2,9 @@ package com.sqn.library.common;
 
 import lombok.Data;
 
+/**
+ * @author sqn
+ */
 @Data
 public class Result<T> {
     private String code;
@@ -10,6 +13,7 @@ public class Result<T> {
 
     public Result() {
     }
+
     public Result(T data) {
         this.data = data;
     }
@@ -17,18 +21,18 @@ public class Result<T> {
     public static Result success() {
         Result result = new Result<>();
         result.setCode(Constants.CODE_SUCCESS);
-        result.setMsg("操作成功");
+        result.setMsg(Constants.CODE_SUCCESS_MESSAGE);
         return result;
     }
 
     public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>(data);
         result.setCode(Constants.CODE_SUCCESS);
-        result.setMsg("操作成功");
+        result.setMsg(Constants.CODE_SUCCESS_MESSAGE);
         return result;
     }
 
-    public static Result error(String code, String msg){
+    public static Result error(String code, String msg) {
         Result result = new Result<>();
         result.setCode(code);
         result.setMsg(msg);

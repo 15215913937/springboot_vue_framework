@@ -3,11 +3,12 @@ package com.sqn.library.service;
 import com.sqn.library.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shenqn
@@ -15,5 +16,7 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
 
-    List<Menu> findMenus(String name);
+    List<Menu> findAllMenus(String name);
+
+    ArrayList<Menu> findRoleMenus(Integer roleId);
 }

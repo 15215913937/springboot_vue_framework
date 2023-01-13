@@ -3,12 +3,15 @@
     padding: 0;
     box-sizing: border-box;
 }
-.mr-10{
+
+.mr-10 {
     margin-right: 10px;
 }
-.mb-10{
+
+.mb-10 {
     margin-bottom: 5px;
 }
-.el-sub-menu .el-menu-item{
+
+.el-sub-menu .el-menu-item {
     min-width: 180px;
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shenqn
@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEventsService extends IService<Events> {
 
+    Integer getByAuthor(Integer id);
+
+    Events queryById(Integer id);
 }

@@ -8,14 +8,19 @@
         </el-icon>
         &nbsp发表新事件
       </el-button>
-
     </div>
     <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
       <el-input v-model="title" placeholder="请输入标题" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
-      <el-input v-model="author" placeholder="请输入作者" style="width: 20%" :prefix-icon="Search" class="mr-10"
-                clearable/>
+      <el-select v-model="author" style="width: 15%;bottom: 2px" class="mr-10" placeholder="选择作者" clearable>
+        <el-option
+            v-for="item in authorList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+        />
+      </el-select>
       <el-date-picker
           class="mr-10"
           v-model="timeHorizon"
@@ -49,11 +54,12 @@
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="title" label="标题" align="center"/>
-      <el-table-column prop="author" label="作者" align="center"/>
+      <el-table-column prop="username" label="作者" align="center"/>
       <el-table-column prop="createTime" label="创建时间" align="center"/>
+      <el-table-column prop="viewCount" label="查看次数" align="center"/>
       <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template #default="scope">
-          <el-button plain type="success" @click="details(scope.row)">详情</el-button>
+          <el-button plain type="success" @click="details(scope.row)">查看</el-button>
           <el-button plain type="primary" @click="handleEdit(scope.row)"
                      v-if="scope.row.author===this.user.name">编辑
           </el-button>
@@ -101,7 +107,7 @@
                     </span>
         </template>
       </el-dialog>
-      <el-dialog v-model="vis" title="事件详情" width="50%">
+      <el-dialog v-model="vis" :title=detail.title width="50%">
         <el-card>
           <div v-html="detail.content" style="min-height: 100px"></div>
         </el-card>
@@ -118,7 +124,7 @@ import {Search, Delete} from "@element-plus/icons-vue";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import E from 'wangeditor'
-import {serverIp} from "../../public/config";
+import {serverIp, serverPort} from "../../public/config";
 //设置全局变量
 let editor;
 
@@ -126,11 +132,13 @@ export default {
   name: 'Events',
   data() {
     return {
+      count: 1,
       loading: false,
       form: {},
       dialogVisible: false,
       title: '',
       author: '',
+      authorList: [],
       timeHorizon: [],
       currentPage: 1,
       pageSize: 10,
@@ -144,13 +152,17 @@ export default {
       rules: {
         title: [
           {required: true, message: '标题不能为空', trigger: 'blur'},
-          {min: 1, max: 10, message: '长度在1~100位之间', trigger: 'blur'},
+          {min: 1, max: 100, message: '长度在1~100位之间', trigger: 'blur'},
         ],
       }
     }
   },
   created() {
     this.load();
+    request.get('/events/authorList').then(res => {
+      // console.log(res.data)
+      this.authorList = res.data;
+    })
   },
   setup() {
     return {
@@ -160,8 +172,10 @@ export default {
   },
   methods: {
     details(row) {
+      request.post("/events/" + row.id);
+      this.load();
       this.detail = row;
-      this.vis = true
+      this.vis = true;
     },
     reset() {
       this.title = '';
@@ -171,7 +185,6 @@ export default {
     },
     load() {
       let time = this.timeHorizon;
-      // console.log(time);
       request.get("/events", {
         params: {
           pageNum: this.currentPage,
@@ -196,7 +209,7 @@ export default {
           //关联add弹窗里面的div，new一个editor对象
           editor = new E('#div1');
           //本地图片上传设置注意后端设置返回json格式
-          editor.config.uploadImgServer = 'http://' + serverIp + ':9090/files/editor/upload';
+          editor.config.uploadImgServer = 'http://' + serverIp + ':' + serverPort + '/files/editor/upload';
           editor.config.uploadFileName = "file";
           editor.create()
         }
@@ -218,8 +231,8 @@ export default {
             this.$message.error("正文不能为空")
             return false;
           }
-          this.form.author = this.user.name;
-          request.post("/events/", this.form).then(res => {
+          this.form.author = this.user.id;
+          request.post("/events", this.form).then(res => {
             // console.log(res);
             if (res.code === '0') {
               this.$message.success("编辑成功")
@@ -231,12 +244,6 @@ export default {
           });
         }
       })
-
-
-      // else {
-      //     this.$message.error("不是作者本人，编辑无效！")
-      // }
-
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
@@ -245,7 +252,7 @@ export default {
       this.$nextTick(() => {
         if (!editor) {
           editor = new E('#div1');
-          editor.config.uploadImgServer = 'http://' + serverIp + ':9090/files/editor/upload';
+          editor.config.uploadImgServer = 'http://' + serverIp + ':' + serverPort + '/files/editor/upload';
           editor.config.uploadFileName = "file";
           editor.create()
         }
@@ -255,7 +262,7 @@ export default {
     ,
     handleDelete(row) {
       // console.log(this.user)
-      if (row.author === this.user.name || this.user.role === "ROLE_ADMIN") {
+      if (row.author === this.user.id || this.user.role === "ROLE_ADMIN") {
         this.id = row.id;
         request.delete("/events/" + this.id).then(res => {
           if (res.code === '0') {

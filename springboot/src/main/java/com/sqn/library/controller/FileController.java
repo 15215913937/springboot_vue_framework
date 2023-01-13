@@ -14,6 +14,8 @@ import com.sqn.library.common.Result;
 import com.sqn.library.entity.Files;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.FileMapper;
+import com.sqn.library.service.IFileService;
+import com.sqn.library.service.impl.FileServiceImpl;
 import io.swagger.annotations.Api;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public class FileController {
     @Resource
     FileMapper fileMapper;
 
+    @Resource
+    IFileService iFileService;
+
     @PostMapping("/testUpload")
     public String testUpload(@RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
@@ -66,7 +71,8 @@ public class FileController {
         String fileFlag = flag + StrUtil.DOT + type;
         File uploadFile = new File(fileUploadPath + fileFlag);
         //判断配置的文件目录是否存在，若不存在，则新建一个新的文件目录
-        File parentFile = uploadFile.getParentFile(); //取父级目录
+        //取父级目录
+        File parentFile = uploadFile.getParentFile();
         if (!parentFile.exists()) {
             parentFile.mkdirs();
         }
@@ -76,7 +82,7 @@ public class FileController {
         //获取文件的MD5
         String md5 = SecureUtil.md5(uploadFile);
         //从数据库查询是否存在相同的记录
-        Files dbFiles = getFileByMd5(md5);
+        Files dbFiles = iFileService.getFileByMd5(md5);
         //获取文件的url
         if (dbFiles != null) {
             url = dbFiles.getUrl();
@@ -85,17 +91,16 @@ public class FileController {
         } else {
             //数据库不存在重复文件，新建链接
             url = ip + ":" + port + "/files/test/" + fileFlag;
+
+            //存储数据库
+            Files saveFiles = new Files();
+            saveFiles.setName(originalFilename);
+            saveFiles.setSize(size / 1024);
+            saveFiles.setType(type);
+            saveFiles.setUrl(url);
+            saveFiles.setMd5(md5);
+            fileMapper.insert(saveFiles);
         }
-
-
-        //存储数据库
-        Files saveFiles = new Files();
-        saveFiles.setName(originalFilename);
-        saveFiles.setSize(size / 1024);
-        saveFiles.setType(type);
-        saveFiles.setUrl(url);
-        saveFiles.setMd5(md5);
-        fileMapper.insert(saveFiles);
         return url;
     }
 
@@ -113,18 +118,6 @@ public class FileController {
         outputStream.close();
     }
 
-    /**
-     * 通过文件的md5查询文件
-     *
-     * @param md5
-     */
-    public Files getFileByMd5(String md5) {
-        //查询文件的md5是否存在
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("md5", md5);
-        List<Files> filesList = fileMapper.selectList(queryWrapper);
-        return filesList.size() == 0 ? null : filesList.get(0);
-    }
 
     //更新接口
     @PostMapping("/update")
@@ -144,14 +137,7 @@ public class FileController {
     //批量删除
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        //select * from files where id in (id,id,id...)
-        queryWrapper.in("id", ids);
-        List<Files> files = fileMapper.selectList(queryWrapper);
-        for (Files file : files) {
-            file.setIsDelete(true);
-            fileMapper.updateById(file);
-        }
+        iFileService.deleteBatch(ids);
         return Result.success();
     }
 
@@ -161,22 +147,15 @@ public class FileController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
                               @RequestParam(defaultValue = "") String type) {
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Files> wrapper = Wrappers.<Files>lambdaQuery();
+        wrapper.eq(Files::getIsDelete, false).orderByDesc(Files::getId);
         //查询未删除的数据
-        queryWrapper.eq("is_delete", false);
-        queryWrapper.orderByDesc("id");
         if (StrUtil.isNotBlank(name) || StrUtil.isNotBlank(type)) {
-            queryWrapper.like("name", name).like("type",type);
+            wrapper.like(Files::getName, name).like(Files::getType, type);
         }
-        return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), wrapper));
     }
 
-//    @GetMapping("/{id}")
-//    private Result<?> getById(@PathVariable Long id) {
-//        Files files = fileMapper.selectById(id);
-//        return Result.success(files);
-//
-//    }
 
     //--------------------------------以下是事件论坛文件上传接口-------------------------------------
 

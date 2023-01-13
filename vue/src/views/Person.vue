@@ -4,7 +4,7 @@
       <el-form label-width="80px" :rules="rules" :model="form" ref="pass">
         <el-upload
             class="avatar-uploader"
-            :action="'http://'+ serverIp +':9090/files/testUpload'"
+            :action="'http://'+ serverIp +':'+serverPort+'/files/testUpload'"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
         >
@@ -13,9 +13,6 @@
             <Plus/>
           </el-icon>
         </el-upload>
-        <el-form-item label="余额" prop="balance">
-          <el-input v-model="form.balance" disabled></el-input>
-        </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
@@ -36,13 +33,13 @@
           />
         </el-form-item>
         <el-form-item label="性别">
-          <el-input v-model="form.sex"></el-input>
+          <el-input v-model="form.sex" disabled></el-input>
         </el-form-item>
         <el-form-item label="角色">
-          <text type="primary" v-if="form.role === 'ROLE_ADMIN'">管理员</text>
-          <text type="warning" v-if="form.role === 'ROLE_USER'">普通用户</text>
-          <text type="success" v-if="form.role === 'ROLE_VISITOR'">游客</text>
-          <text type="error" v-if="form.role === 'ROLE_TESTER'">测试用户</text>
+          <el-tag type="primary" v-if="form.role === 'ROLE_ADMIN'">管理员</el-tag>
+          <el-tag type="warning" v-if="form.role === 'ROLE_USER'">普通用户</el-tag>
+          <el-tag type="success" v-if="form.role === 'ROLE_VISITOR'">游客</el-tag>
+          <el-tag type="error" v-if="form.role === 'ROLE_TESTER'">测试用户</el-tag>
         </el-form-item>
         <div style="text-align: center">
           <el-button type="primary" @click="update" :loading="loading">保存</el-button>
@@ -55,16 +52,14 @@
 
 <script>
 import request from "../utils/request";
-import {serverIp} from "../../public/config";
+import {serverIp, serverPort} from "../../public/config";
 
 export default {
   name: "Person",
   data() {
-    var isMobileNumber = (rule, value, callback) => {
+    const isMobileNumber = (rule, value, callback) => {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
       const isPhone = reg.test(value);
-      // value = Number(value); //转换为数字
-      // value = value.toString(); //转换成字符串
       if (value.length < 0 || value.length > 11 || !isPhone) { //判断是否为11位手机号
         callback(new Error("手机号码格式不正确"));
       } else {
@@ -84,19 +79,19 @@ export default {
           {required: true, message: '用户名不能为空', trigger: 'blur'},
           {validator: isMobileNumber, trigger: 'blur'},
         ],
-      }
+      },
+      serverPort: serverPort
     }
   },
   created() {
-    let str = sessionStorage.getItem("user") || "{}"
-    this.form = JSON.parse(str)
+    this.form = JSON.parse(sessionStorage.getItem("user") || {});
   },
   methods: {
     update() {
       this.$refs.pass.validate(valid => {
         if (valid) {
           this.loading = true;
-          console.log(this.form);
+          // console.log(this.form);
           request.post("/user", this.form).then(res => {
             // console.log(res);
             if (res.code === '0') {
@@ -104,7 +99,7 @@ export default {
               //更新浏览器存储的用户信息
               sessionStorage.setItem("user", JSON.stringify(this.form));
               //触发父级更新user方法
-              this.$emit("userInfo")
+              this.$emit("refreshUser")
             } else {
               this.$message.error(res.msg)
             }

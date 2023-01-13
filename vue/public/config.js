@@ -1,2 +1,4 @@
-// export const serverIp = '39.108.101.167';
+// export const serverIp = '192.168.3.113';
+// export const serverPort = '9092'
 export const serverIp = 'localhost';
+export const serverPort = '9090'

@@ -10,8 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 //开启缓存
 //@EnableCaching
+//@EnableAdminServer
 public class LibraryApplication {
     public static void main(String[] args) {
+//        设置高优先级属性禁用热部署
+        System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(LibraryApplication.class, args);
     }
 }

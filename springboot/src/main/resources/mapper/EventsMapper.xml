@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqn.library.mapper.EventsMapper">
+
+    <select id="findPage" resultType="com.sqn.library.entity.Events">
+        select events.*, user.name as username from events
+        left join user
+        on events.author = user.id
+        <where>
+            <if test="title != null and title != ''">
+                and events.title like concat('%',#{title},'%')
+            </if>
+            <if test="author != null and author != ''">
+                and events.author = #{author}
+            </if>
+            <if test="(startTime != null and startTime != '')||(endTime != null and endTime != '')">
+                and events.create_time between #{startTime} and #{endTime}
+            </if>
+        </where>
+    </select>
+</mapper>
+

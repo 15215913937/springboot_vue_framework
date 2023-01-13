@@ -25,9 +25,9 @@
         border
         stripe
         style="width: 100%">
-      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+      <el-table-column fixed="left" prop="id" label="ID" sortable="" align="center" width="50px"/>
       <el-table-column prop="username" label="用户名" align="center"/>
-      <el-table-column prop="role" label="角色" align="center">
+      <el-table-column prop="role" label="角色" width="100px" align="center">
         <template #default="scope">
           <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
           <el-tag type="warning" v-if="scope.row.role === 'ROLE_USER'">普通用户</el-tag>
@@ -39,7 +39,14 @@
       <el-table-column prop="phone" label="电话" align="center"/>
       <el-table-column prop="birthday" label="出生日期" align="center"/>
       <el-table-column prop="sex" label="性别" width="70px" align="center"/>
-
+      <el-table-column prop="createTime" label="创建时间" width="180" align="center"/>
+      <el-table-column prop="recentLogin" label="最近登录时间" width="180" align="center"/>
+      <el-table-column prop="status" label="状态" width="70px" align="center">
+        <template #default="scope">
+          <el-tag type="error" v-if="scope.row.status === 1">在线</el-tag>
+          <el-tag type="info" v-if="scope.row.status === 0">离线</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="400px" align="center">
         <template #default="scope">
           <!--                  后端也要有个bookList属性-->
@@ -217,7 +224,6 @@ export default {
           role: this.role,
         }
       }).then(res => {
-        // console.log(res.data.records);
         this.loading = false;
         this.tableData = res.data.records;
         this.total = res.data.total;
@@ -239,7 +245,7 @@ export default {
     },
 
     save() {
-      this.$refs.pass.validate((valid) => {
+      this.$refs['pass'].validate((valid) => {
         if (valid) {
           this.loading = true
           // if (this.form.id) {//若果id存在，更新
@@ -264,9 +270,8 @@ export default {
       this.dialogVisible = true
     },
     handleDelete(row) {
-      this.id = row.id
-      // console.log(this.id);
-      request.delete("/user/" + this.id).then(res => {
+      //row,绑定当前行数据
+      request.delete("/user/" + row.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")
         } else {
@@ -285,7 +290,6 @@ export default {
     },
     resetPwd(row) {
       this.form = JSON.parse(JSON.stringify(row));
-      // console.log(this.form)
       this.pwdVis = true;
     },
     saveNewPwd() {

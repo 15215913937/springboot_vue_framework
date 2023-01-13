@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 10px">
     <div style="margin: 10px 0">
-      <el-upload :action="'http://'+serverIp+':9090/files/testUpload'" :show-file-list="false"
+      <el-upload :action="'http://'+serverIp+':'+serverPort+'/files/testUpload'" :show-file-list="false"
                  :on-success="handleFileUploadSuccess" style="display: inline">
         <el-button type="primary">
           <el-icon>
@@ -86,7 +86,7 @@
 <script>
 import request from "../utils/request";
 import {Search} from "@element-plus/icons-vue";
-import {serverIp} from "../../public/config";
+import {serverIp, serverPort} from "../../public/config";
 
 export default {
   name: "File",
@@ -99,13 +99,14 @@ export default {
       total: 10,
       tableData: [],
       multipleSelection: [],
-      serverIp: serverIp
+      serverIp: serverIp,
+      serverPort: serverPort
     }
   },
   created() {
-    let userStr = sessionStorage.getItem("user") || "{}"
+    let userStr = sessionStorage.getItem("user") || {};
     // console.log(userStr)
-    this.user = JSON.parse(userStr)
+    this.user = JSON.parse(userStr);
     // 请求服务端，确认当前登录用户的 合法信息
     request.get("/user/" + this.user.id).then(res => {
       if (res.code === '0') {
@@ -140,7 +141,7 @@ export default {
       }
       request.post("/files/deleteBatch", this.ids).then(res => {
         if (res.code === '0') {
-          this.$message.success("批量删除成功")
+          this.$message.success("批量删除成功");
           this.load()
         } else {
           this.$message.error(res.msg)
@@ -174,8 +175,7 @@ export default {
       })
     },
     handleDelete(row) {
-      this.id = row.id
-      // console.log(this.id);
+      this.id = row.id;
       request.delete("/files/" + this.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")

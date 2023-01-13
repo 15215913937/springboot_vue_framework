@@ -1,10 +1,16 @@
 package com.sqn.library.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
+import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.validation.annotation.Validated;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * <p>
@@ -18,5 +24,21 @@ import org.springframework.validation.annotation.Validated;
 public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
+
     void resetPwd(UserResetPwdDTO userResetPwdDTO);
+
+    Boolean sendCode(String phone);
+
+    /**
+     * 更新最近登录时间
+     * @param id
+     */
+    void updateRecentLoginTime(int id);
+
+    /**
+     * 用户假删除
+     * @param id
+     */
+    void isDeleteById(Long id);
+
 }

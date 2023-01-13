@@ -3,16 +3,18 @@ package com.sqn.library.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author shenqn
@@ -33,7 +35,7 @@ public class ConsumerDetails implements Serializable {
     private Integer uid;
 
     @ApiModelProperty("金额")
-    private Float cost;
+    private Double cost;
 
     @ApiModelProperty("消费类型")
     private String type;
