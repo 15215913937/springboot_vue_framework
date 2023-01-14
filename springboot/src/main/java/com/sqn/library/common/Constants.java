@@ -5,10 +5,16 @@ package com.sqn.library.common;
  * @Date 2022/7/17  22:49
  */
 public class Constants {
-    // dict表type
+    /**
+     * dict表type
+     */
+
     public static final String DICT_TYPE_ICON = "icon";
 
-    // 响应code
+    /**
+     * 响应code
+     */
+
     public static final String CODE_SUCCESS = "0"; // 操作成功
     public static final String CODE_COMMON_ERR = "400"; // 操作失败
     public static final String CODE_INTERNAL_ERR = "600"; // 内部错误
@@ -18,12 +24,18 @@ public class Constants {
     public static final String CODE_SUCCESS_MESSAGE = "操作成功";// 操作成功
     public static final String CODE_ERROR_MESSAGE = "操作失败";// 操作失败
 
-    //     系统常量
+    /**
+     * 系统常量
+     */
+
     public static final String PREFIX_USERNAME = "sqn_"; // 自动注册用户名前缀
     public static final String PREFIX_NAME = "游客_";// 自动注册姓名前缀
     public static final String DEFAULT_PASSWORD = "123456"; // 默认密码
 
-    //     信息常量
+    /**
+     * 信息常量
+     */
+
     public static final String USER_KEY = "info:user:"; // 用户信息
     public static final String ALL_USER_KEY = "info:users:"; // 所有用户信息
     public static final String MENUS_KEY = "info:menus:";// 菜单信息
@@ -35,7 +47,10 @@ public class Constants {
     public static final Long CACHE_NULL_TTL = 5L;// 空值缓存过期时间
     public static final String LOCK_KEY = "lock:key:"; //互斥锁前缀名
 
-    //     角色常量
+    /**
+     * 角色常量
+     */
+
     public static final String ROLE_ADMIN = "ROLE_ADMIN"; // 管理员
     public static final String ROLE_USER = "ROLE_USER"; // 普通用户
     public static final String ROLE_VISITOR = "ROLE_VISITOR"; // 游客

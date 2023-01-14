@@ -171,7 +171,8 @@
                 today: 0,
                 extData: 0,
                 year: new Date(),
-                oneData: [],
+                oneData1: [],
+                oneData2: [],
                 allData: []
             }
         },
@@ -223,14 +224,13 @@
                         },
                         {
                             name: '个人购书趋势',
-                            data: this.oneData,
+                            data: this.oneData1,
                             // data: this.chart1Data2,
                             type: 'line'
                         }
                     ]
                 };
                 myChart1.setOption(option1);
-                console.log(2)
             },
             getChart2() {
                 // 饼图
@@ -252,9 +252,8 @@
                         {
                             // name: '总体每月购书',
                             type: 'pie',
-                            radius: ['40%', '60%'],
-                            data: this.oneData,
-                            // data: this.chart2Data,
+                            radius: ['30%', '70%'],
+                            data: this.oneData2,
                             emphasis: {
                                 label: {
                                     show: true,
@@ -278,7 +277,6 @@
                     ]
                 };
                 myChart2.setOption(option2);
-                console.log(3)
             },
             searchYear(n) {
                 if (n === '') {
@@ -293,15 +291,12 @@
                     }
                 }).then(res => {
                         this.allData = res.data.all;
-                        this.oneData = res.data.one;
-                        console.log("all:  " + this.allData);
-                        console.log("one:  " + this.oneData);
-                        for (let i = 0; i < res.data.length; i++) {
-                            this.oneData[i] = {name: i + "月", value: res.data[i]};
+                        this.oneData1 = res.data.one;
+                        for (let i = 0; i < res.data.one.length; i++) {
+                            this.oneData2[i] = {name: i + "月", value: res.data.one[i]};
                         }
                         this.getChart1()
                         this.getChart2()
-                        console.log(1)
                     }
                 );
 
