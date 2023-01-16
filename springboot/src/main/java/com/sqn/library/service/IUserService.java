@@ -31,14 +31,19 @@ public interface IUserService extends IService<User> {
 
     /**
      * 更新最近登录时间
+     *
      * @param id
      */
     void updateRecentLoginTime(int id);
 
     /**
      * 用户假删除
+     *
      * @param id
      */
     void isDeleteById(Long id);
 
+    Boolean setStatusOnline(Integer userId);
+
+    Boolean setStatusOffline(Integer userId);
 }

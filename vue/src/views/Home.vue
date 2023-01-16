@@ -219,13 +219,11 @@
                         {
                             name: '总体购书趋势',
                             data: this.allData,
-                            // data: this.chart1Data1,
                             type: 'line'
                         },
                         {
                             name: '个人购书趋势',
                             data: this.oneData1,
-                            // data: this.chart1Data2,
                             type: 'line'
                         }
                     ]
