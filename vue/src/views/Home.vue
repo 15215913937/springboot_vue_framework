@@ -41,7 +41,7 @@
             </div>
             <!--          消费图表区-->
             <div style="flex: 1">
-                消费图表区
+                <div id="billChart" style="height: 300px"/>
             </div>
         </div>
 
@@ -185,9 +185,46 @@
 
         },
         mounted() {
-            this.searchYear(this.year)
+            this.searchYear(this.year);
+            this.getChart3()
         },
         methods: {
+            getChart3() {
+                // 消费折线图
+                let myChart3 = echarts.init(document.getElementById('billChart'));
+                let option3 = {
+                    title: {
+                      text: '消费金额趋势图',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['每月消费']
+                    },
+                    xAxis: {
+                        axisLabel: {   //显示全部月份
+                            interval: 0
+                        },
+                        type: 'category',
+                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} 元'
+                        }
+                    },
+                    series: [
+                        {
+                            name: '每月消费金额',
+                            data: [1,2,3,4,5,6,7,8,9,0,1,2],
+                            type: 'line'
+                        }
+                    ]
+                };
+                myChart3.setOption(option3);
+            },
             getChart1() {
                 // 折线图
                 let myChart1 = echarts.init(document.getElementById('main'));
