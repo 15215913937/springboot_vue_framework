@@ -9,8 +9,10 @@ import com.sqn.library.mapper.ConsumerDetailsMapper;
 import com.sqn.library.utils.ConsumeCalculate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
+
 import com.sqn.library.common.Result;
 
 
@@ -41,6 +43,7 @@ public class ConsumerDetailsController {
 
     /**
      * 新增消费记录
+     *
      * @param consumerDetails
      * @return
      */
@@ -78,6 +81,11 @@ public class ConsumerDetailsController {
         return Result.success(consumerDetailsService.list());
     }
 
+    @GetMapping("/findById")
+    public Result<?> StatisticsByIdAndYear(@RequestParam Integer id, @RequestParam String year) {
+        return Result.success(consumerDetailsService.statisticsByIdAndYear(id, year));
+    }
+
 
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
@@ -93,8 +101,4 @@ public class ConsumerDetailsController {
         }
         return Result.success(consumerDetailsService.page(new Page<>(pageNum, pageSize), wrapper));
     }
-
-
-
 }
-

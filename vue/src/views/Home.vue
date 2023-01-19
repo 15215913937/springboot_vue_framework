@@ -41,7 +41,15 @@
             </div>
             <!--          消费图表区-->
             <div style="flex: 1">
-                <div id="billChart" style="height: 300px"/>
+                <div style="padding-top: 10px">
+                    <el-date-picker
+                            v-model="toYearLeft"
+                            type="year"
+                            placeholder="请选择年份"
+                            @change="searchYearLeft"
+                    />
+                </div>
+                <div id="billChart" style="height: 300px;padding:10px"/>
             </div>
         </div>
 
@@ -123,7 +131,7 @@
             <!--          购书图表区-->
             <div style="flex: 1">
                 <el-date-picker
-                        v-model="year"
+                        v-model="toYear"
                         type="year"
                         placeholder="请选择年份"
                         @change="searchYear"
@@ -170,10 +178,12 @@
                 total: 0,
                 today: 0,
                 extData: 0,
-                year: new Date(),
+                toYearLeft: new Date(),
+                toYear: new Date(),
                 oneData1: [],
                 oneData2: [],
-                allData: []
+                allData: [],
+                billData: []
             }
         },
         created() {
@@ -185,8 +195,8 @@
 
         },
         mounted() {
-            this.searchYear(this.year);
-            this.getChart3()
+            this.searchYear(this.toYear);
+            this.searchYearLeft(this.toYearLeft);
         },
         methods: {
             getChart3() {
@@ -194,7 +204,7 @@
                 let myChart3 = echarts.init(document.getElementById('billChart'));
                 let option3 = {
                     title: {
-                      text: '消费金额趋势图',
+                        text: '年度消费趋势图',
                     },
                     tooltip: {
                         trigger: 'axis'
@@ -218,7 +228,7 @@
                     series: [
                         {
                             name: '每月消费金额',
-                            data: [1,2,3,4,5,6,7,8,9,0,1,2],
+                            data: this.billData,
                             type: 'line'
                         }
                     ]
@@ -315,13 +325,13 @@
             },
             searchYear(n) {
                 if (n === '') {
-                    n = this.year;
+                    n = this.toYear;
                 }
-                n = n.toString().split(' ')
-                this.year = n[3];
+                n = n.toString().split(' ');
+                this.toYear = n[3];
                 request.get("/echarts/booksPurchaseStatistics", {
                     params: {
-                        year: this.year,
+                        year: this.toYear,
                         id: this.user.id
                     }
                 }).then(res => {
@@ -330,11 +340,28 @@
                         for (let i = 0; i < res.data.one.length; i++) {
                             this.oneData2[i] = {name: i + "月", value: res.data.one[i]};
                         }
-                        this.getChart1()
-                        this.getChart2()
+                        this.getChart1();
+                        this.getChart2();
                     }
                 );
-
+            },
+            searchYearLeft(n) {
+                if (n === '') {
+                    n = this.toYearLeft;
+                }
+                n = n.toString().split(' ');
+                this.toYearLeft = n[3];
+                request.get("/consumer-details/findById", {
+                    params: {
+                        year: this.toYearLeft,
+                        id: this.user.id
+                    }
+                }).then(res => {
+                        console.log(res);
+                        this.billData = res.data;
+                        this.getChart3();
+                    }
+                );
             }
         }
 
