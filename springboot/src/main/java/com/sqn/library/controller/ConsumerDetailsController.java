@@ -38,8 +38,6 @@ public class ConsumerDetailsController {
     IConsumerDetailsService consumerDetailsService;
     @Resource
     ConsumerDetailsMapper consumerDetailsMapper;
-    @Resource
-    ConsumeCalculate consumeCalculate;
 
     /**
      * 新增消费记录
@@ -49,17 +47,10 @@ public class ConsumerDetailsController {
      */
     @PostMapping
     public Result<?> save(@RequestBody ConsumerDetails consumerDetails) {
-        List<ConsumerDetails> old_list =
-                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
-                        consumerDetails.getUid()));
+//        List<ConsumerDetails> oldList =
+//                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
+//                        consumerDetails.getUid()));
         consumerDetailsService.save(consumerDetails);
-        List<ConsumerDetails> new_list =
-                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
-                        consumerDetails.getUid()).orderByDesc(ConsumerDetails::getCreatetime));
-        if (old_list.size() < new_list.size()) {
-            ConsumerDetails new_detail = new_list.get(0);
-            return Result.success(new_detail.getCost());
-        }
         return Result.success();
     }
 
