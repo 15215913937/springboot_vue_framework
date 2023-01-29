@@ -3,7 +3,7 @@ package com.sqn.library.service;
 import com.sqn.library.entity.ConsumerDetails;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -14,5 +14,5 @@ import java.util.List;
  * @since 2022-08-30
  */
 public interface IConsumerDetailsService extends IService<ConsumerDetails> {
-    List<Float> statisticsByIdAndYear(Integer id, String year);
+    ArrayList<Float> statisticsByIdAndYear(Integer id, String year);
 }

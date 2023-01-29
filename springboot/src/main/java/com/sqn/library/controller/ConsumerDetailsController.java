@@ -82,7 +82,7 @@ public class ConsumerDetailsController {
     }
 
     @GetMapping("/findById")
-    public Result<?> StatisticsByIdAndYear(@RequestParam Integer id, @RequestParam String year) {
+    public Result<?> statisticsByIdAndYear(@RequestParam Integer id, @RequestParam String year) {
         return Result.success(consumerDetailsService.statisticsByIdAndYear(id, year));
     }
 

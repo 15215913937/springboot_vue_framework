@@ -10,7 +10,7 @@
     </div>
     <div>
       <img :src="user.avatar" alt=""
-           style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
+           style="height:30px;width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
     </div>
     <el-dropdown style="width: 150px;cursor: pointer;text-align: center">
       <span style="position: absolute;top: 18px">{{ user.username }}({{ user.name }})</span>

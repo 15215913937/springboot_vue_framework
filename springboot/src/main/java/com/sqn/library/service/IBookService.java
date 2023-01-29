@@ -34,5 +34,5 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-    Map<String,ArrayList<Integer>> booksPurchaseStatistics(String year, Integer id);
+    Map<String,List<Integer>> booksPurchaseStatistics(String year, Integer id);
 }
