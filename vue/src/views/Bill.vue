@@ -207,7 +207,7 @@ export default {
           request.post("/consumer-details", this.form).then(res => {
             setTimeout(() => {
               this.loading = false;
-            }, 500);
+            }, 500)
             if (res.code === '0') {
               this.$message.success("提交成功");
               this.load()

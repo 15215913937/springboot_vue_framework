@@ -18,9 +18,6 @@
         data() {
             return {}
         },
-        created() {
-
-        },
         mounted() {
             var map = new AMap.Map('container', {
                 // position:'center',

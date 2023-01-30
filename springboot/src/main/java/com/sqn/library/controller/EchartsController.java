@@ -19,16 +19,6 @@ public class EchartsController {
     IBookService bookService;
 
     /**
-     * 新冠数据
-     *
-     * @return
-     */
-    @GetMapping("/epidemic")
-    public String getC19() {
-        return HttpUtil.get("https://c.m.163.com/ug/api/wuhan/app/data/list-total?t=" + System.currentTimeMillis());
-    }
-
-    /**
      * 指定年份每月购书数量统计
      *
      * @param year 获取年份

@@ -183,7 +183,10 @@ export default {
       oneData1: [],
       oneData2: [],
       allData: [],
-      billData: []
+      billData: {
+        income: [],
+        outcome: []
+      }
     }
   },
   created() {
@@ -204,13 +207,13 @@ export default {
       let myChart3 = echarts.init(document.getElementById('billChart'));
       let option3 = {
         title: {
-          text: '年度消费趋势图',
+          text: '月消费趋势图',
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['每月消费']
+          data: ['支出', '收入']
         },
         xAxis: {
           axisLabel: {   //显示全部月份
@@ -227,8 +230,12 @@ export default {
         },
         series: [
           {
-            name: '每月消费金额',
-            data: this.billData,
+            name: '支出',
+            data: this.billData.outcome,
+            type: 'line'
+          }, {
+            name: '收入',
+            data: this.billData.income,
             type: 'line'
           }
         ]
@@ -282,7 +289,7 @@ export default {
       let myChart2 = echarts.init(document.getElementById('pie'));
       let option2 = {
         title: {
-          text: '个人购书年比例图',
+          text: '个人购书月比例图',
           left: 'center'
         },
         tooltip: {
@@ -357,8 +364,8 @@ export default {
           id: this.user.id
         }
       }).then(res => {
-            // console.log(res);
-            this.billData = res.data;
+            this.billData.outcome = res.data.outcome;
+            this.billData.income = res.data.income;
             this.getChart3();
           }
       );

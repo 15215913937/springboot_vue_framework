@@ -34,6 +34,9 @@ public interface ConsumerDetailsMapper extends BaseMapper<ConsumerDetails> {
             "date_format( date_sub(curdate(), interval 1 MONTH), '%Y %m' ) GROUP BY type ORDER BY type")
     List<String> getLastMonthExpense(Integer id);
 
-    @Select("SELECT * FROM consumer_details  WHERE YEAR ( createtime )= #{year} AND uid = #{id}")
-    List<ConsumerDetails> statisticsByIdAndYear(Integer id, String year);
+    @Select("SELECT * FROM consumer_details  WHERE YEAR ( createtime )= #{year} AND uid = #{id} AND type = '支出'")
+    List<ConsumerDetails> monthlyExpenditureStatistics(Integer id, String year);
+
+    @Select("SELECT * FROM consumer_details  WHERE YEAR ( createtime )= #{year} AND uid = #{id} AND type = '收入'")
+    List<ConsumerDetails> monthlyIncomeStatistics(Integer id, String year);
 }
