@@ -6,19 +6,16 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import com.sqn.library.common.Constants;
-import com.sqn.library.common.Result;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
-import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.utils.TokenUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录拦截器
+ * @author sqn
  */
 public class AuthInterceptor implements HandlerInterceptor {
 

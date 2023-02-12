@@ -96,9 +96,7 @@
             <el-input v-model="form.title" style="width: 50%"/>
           </el-form-item>
           <!--                    正文-->
-          <div id="div1">
-
-          </div>
+          <div id="div1"/>
         </el-form>
         <template #footer>
                     <span class="dialog-footer">
@@ -111,6 +109,10 @@
         <el-card>
           <div v-html="detail.content" style="min-height: 100px"></div>
         </el-card>
+        <h3 style="size: 10px;padding: 10px;opacity: .5">评论:</h3>
+        <el-input type="textarea"></el-input>
+        <el-button @click="pushComment">提交
+        </el-button>
       </el-dialog>
     </div>
 

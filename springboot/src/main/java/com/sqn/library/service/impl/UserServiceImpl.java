@@ -90,4 +90,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setIsDelete(1);
         userMapper.updateById(user);
     }
+
+    @Override
+    public Boolean setStatusOnline(Integer userId) {
+        final User user = userMapper.selectById(userId);
+        user.setStatus(1);
+        userMapper.updateById(user);
+        return true;
+    }
+
+    @Override
+    public Boolean setStatusOffline(Integer userId) {
+        final User user = userMapper.selectById(userId);
+        user.setStatus(0);
+        userMapper.updateById(user);
+        return true;
+    }
 }

@@ -1,7 +1,5 @@
 package com.sqn.library.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Book;
 import com.sqn.library.entity.Events;
@@ -13,17 +11,18 @@ import com.sqn.library.service.IEventsService;
 import com.sqn.library.service.IFileService;
 import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.ConsumeCalculate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sqn
+ */
 @RestController
 @RequestMapping("/home")
 public class HomeController {

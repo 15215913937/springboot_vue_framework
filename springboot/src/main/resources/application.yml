@@ -1,11 +1,11 @@
 #通用环境
 #数据库配置
 spring:
-#  admin client配置
-#  boot:
-#    admin:
-#      client:
-#        url: http://localhost:8080
+  #  admin client配置
+  #  boot:
+  #    admin:
+  #      client:
+  #        url: http://localhost:8080
 
   datasource:
     druid:
@@ -63,3 +63,8 @@ logging:
 #tools:
 #  ip:
 #    log-cycle: 3
+
+server:
+  servlet:
+    session:
+      timeout: 10s

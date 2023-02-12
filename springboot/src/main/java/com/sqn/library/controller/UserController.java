@@ -1,8 +1,9 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -28,13 +29,17 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Rest模式
+ *
  * @author sqn
  */
 @Validated
@@ -60,6 +65,7 @@ public class UserController {
 
     /**
      * 登录接口
+     *
      * @param loginDTO
      * @return
      */
@@ -97,38 +103,41 @@ public class UserController {
         // 生成token
         String token = TokenUtils.getToken(user);
         user.setToken(token);
-        session.setAttribute("user",user);
+        session.setAttribute("user", user);
         session.setAttribute("userOnlineListener", new UserLoginListener(user.getId()));
-        System.out.println("当前登录用户的sessionId==>"+session.getId());
+//        System.out.println("当前登录用户的sessionId==>" + session.getId());
         // 更新登录时间
         iUserService.updateRecentLoginTime(user.getId());
+        iUserService.setStatusOnline(user.getId());
 //      Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)
 //      功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
 //      参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
 //        setFieldValueEditor编辑键值对，使用箭头函数，例：（键，值）->值类型转字符串
-//        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(),
-//                CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> {
-//                    if (fieldValue == null) {
-//                        fieldValue = "0";
-//                    } else {
-//                        fieldValue = fieldValue + "";
-//                    }
-//                    return fieldValue;
-//                }));
-//        String key = Constants.USER_KEY + token;
-//        redisUtils.saveMapObject(key, stringObjectMap, Constants.LOGIN_INFO_TTL);
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(),
+                CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> {
+                    if (fieldValue == null) {
+                        fieldValue = "0";
+                    } else {
+                        fieldValue = fieldValue + "";
+                    }
+                    return fieldValue;
+                }));
+        String key = Constants.USER_KEY + token;
+//        redisUtils.setObjectToRedis(key, user, Constants.LOGIN_INFO_TTL);
+        redisUtils.saveMapObject(key, stringObjectMap, Constants.LOGIN_INFO_TTL);
         return Result.success(user);
     }
 
     /**
      * 发送手机验证码
-      * @param phone
+     *
+     * @param phone
      * @return
      */
     @PostMapping("/sendCode")
     public Result<?> sendCode(@RequestBody String phone) {
         Boolean isSend = iUserService.sendCode(phone);
-        if (!isSend) {
+        if (Boolean.FALSE.equals(isSend)) {
             return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
         }
         return Result.success();
@@ -155,6 +164,7 @@ public class UserController {
 
     /**
      * 重置密码
+     *
      * @param userResetPwdDTO
      * @return
      */
@@ -172,6 +182,7 @@ public class UserController {
 
     /**
      * 注册接口
+     *
      * @param user
      * @return
      * @throws Exception
@@ -197,6 +208,7 @@ public class UserController {
 
     /**
      * 新增或更新接口
+     *
      * @param user
      * @return
      */
@@ -227,6 +239,7 @@ public class UserController {
 
     /**
      * 用户删除
+     *
      * @param id
      * @return
      */
@@ -240,6 +253,7 @@ public class UserController {
 
     /**
      * 分页查询接口
+     *
      * @param pageNum
      * @param pageSize
      * @param name

@@ -2,8 +2,6 @@ package com.sqn.library.utils;
 
 import cn.hutool.json.JSONUtil;
 import com.sqn.library.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisUtils {
-    @Autowired
+    @Resource
     StringRedisTemplate stringRedisTemplate;
 
 

@@ -1,9 +1,6 @@
 package com.sqn.library.controller;
 
-
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Constants;
 import com.sqn.library.exception.CustomException;
@@ -112,7 +109,9 @@ public class MenuController {
         return Result.success(dictMapper.selectList(null));
     }
 
-    //查询出menu表中所有菜单id
+    /**
+     * 查询出menu表中所有菜单id
+     */
     @GetMapping("/ids")
     public Result<?> findAllIds() {
         return Result.success(menuService.list().stream().map(Menu::getId));

@@ -1,8 +1,6 @@
 package com.sqn.library.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
@@ -10,7 +8,6 @@ import com.sqn.library.entity.Events;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.EventsMapper;
 import com.sqn.library.service.IEventsService;
-import com.sqn.library.utils.RedisUtils;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 

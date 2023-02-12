@@ -5,22 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sqn.library.common.Constants;
-import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.ConsumerDetailsMapper;
 import com.sqn.library.utils.ConsumeCalculate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sqn.library.common.Result;
 
 
@@ -46,27 +38,19 @@ public class ConsumerDetailsController {
     IConsumerDetailsService consumerDetailsService;
     @Resource
     ConsumerDetailsMapper consumerDetailsMapper;
-    @Resource
-    ConsumeCalculate consumeCalculate;
 
     /**
      * 新增消费记录
+     *
      * @param consumerDetails
      * @return
      */
     @PostMapping
     public Result<?> save(@RequestBody ConsumerDetails consumerDetails) {
-        List<ConsumerDetails> old_list =
-                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
-                        consumerDetails.getUid()));
+//        List<ConsumerDetails> oldList =
+//                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
+//                        consumerDetails.getUid()));
         consumerDetailsService.save(consumerDetails);
-        List<ConsumerDetails> new_list =
-                consumerDetailsMapper.selectList(Wrappers.<ConsumerDetails>lambdaQuery().eq(ConsumerDetails::getUid,
-                        consumerDetails.getUid()).orderByDesc(ConsumerDetails::getCreatetime));
-        if (old_list.size() < new_list.size()) {
-            ConsumerDetails new_detail = new_list.get(0);
-            return Result.success(new_detail.getCost());
-        }
         return Result.success();
     }
 
@@ -88,6 +72,11 @@ public class ConsumerDetailsController {
         return Result.success(consumerDetailsService.list());
     }
 
+    @GetMapping("/findById")
+    public Result<?> statisticsByIdAndYear(@RequestParam Integer id, @RequestParam String year) {
+        return Result.success(consumerDetailsService.statisticsByIdAndYear(id, year));
+    }
+
 
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
@@ -103,8 +92,4 @@ public class ConsumerDetailsController {
         }
         return Result.success(consumerDetailsService.page(new Page<>(pageNum, pageSize), wrapper));
     }
-
-
-
 }
-

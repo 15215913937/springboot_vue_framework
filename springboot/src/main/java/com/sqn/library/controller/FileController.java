@@ -7,18 +7,13 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Files;
-import com.sqn.library.entity.User;
 import com.sqn.library.mapper.FileMapper;
 import com.sqn.library.service.IFileService;
-import com.sqn.library.service.impl.FileServiceImpl;
 import io.swagger.annotations.Api;
-import org.apache.catalina.security.SecurityUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,24 +28,24 @@ import java.net.URLEncoder;
 import java.util.List;
 
 /**
+ * 文件上传
+ *
  * @Author shenqn
  * @Date 2022/6/29  21:08
  */
-//文件上传
 @RestController
 @RequestMapping("/files")
 @Api(tags = "文件上传管理")
 public class FileController {
-    //获取当前端口
+    // 获取当前端口
     @Value("${server.port}")
     private String port;
 
-    //获取当前ip
+    // 获取当前ip
     @Value("${server.ip}")
     private String ip;
-    //定义返回接口的ip
-//    private static final String ip = "http://localhost";
-    //定义文件存储的路径
+
+    // 定义文件存储的路径
     @Value("${files.upload.path}")
     private String fileUploadPath;
 
@@ -62,6 +57,7 @@ public class FileController {
 
     @PostMapping("/testUpload")
     public String testUpload(@RequestParam MultipartFile file) throws IOException {
+
         String originalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(originalFilename);
         long size = file.getSize();
@@ -88,6 +84,7 @@ public class FileController {
             url = dbFiles.getUrl();
             //由于文件已存在，删除刚刚上传的文件
             uploadFile.delete();
+
         } else {
             //数据库不存在重复文件，新建链接
             url = ip + ":" + port + "/files/test/" + fileFlag;
@@ -119,13 +116,17 @@ public class FileController {
     }
 
 
-    //更新接口
+    /**
+     * 更新接口
+     */
     @PostMapping("/update")
     public Result<?> update(@RequestBody Files files) {
         return Result.success(fileMapper.updateById(files));
     }
 
-    //删除接口
+    /**
+     * 删除接口
+     */
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         Files files = fileMapper.selectById(id);
@@ -134,14 +135,18 @@ public class FileController {
         return Result.success();
     }
 
-    //批量删除
+    /**
+     * 批量删除
+     */
     @PostMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
         iFileService.deleteBatch(ids);
         return Result.success();
     }
 
-    //分页查询接口
+    /**
+     * 分页查询接口
+     */
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -169,8 +174,8 @@ public class FileController {
      */
     @PostMapping("/upload")
     public Result<?> upload(MultipartFile file) throws IOException {
-
-        String originalFilename = file.getOriginalFilename(); //获取原文件名称
+        // 获取原文件名称
+        String originalFilename = file.getOriginalFilename();
         //定义上传文件的唯一标识（前缀）
         String flag = IdUtil.fastSimpleUUID();
         //定义文件名
@@ -178,9 +183,11 @@ public class FileController {
                 System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" +
                         originalFilename;
 
-        //获取上传路径
-        FileUtil.writeBytes(file.getBytes(), rootFilePath);//利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
-        return Result.success(ip + ":" + port + "/files/" + flag); //返回结果url
+        // 获取上传路径
+        // 利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
+        FileUtil.writeBytes(file.getBytes(), rootFilePath);
+        // 返回结果url
+        return Result.success(ip + ":" + port + "/files/" + flag);
     }
 
     /**
@@ -188,16 +195,17 @@ public class FileController {
      */
     @PostMapping("/editor/upload")
     public JSONObject editorUpload(MultipartFile file) throws IOException {
-
-        String originalFilename = file.getOriginalFilename(); //获取原文件名称
-        //定义上传文件的唯一标识（前缀）
+        // 获取原文件名称
+        String originalFilename = file.getOriginalFilename();
+        // 定义上传文件的唯一标识（前缀）
         String flag = IdUtil.fastSimpleUUID();
         String rootFilePath =
                 System.getProperty("user.dir") + "/springboot/src/main/resources/files/" + flag + "_" + originalFilename;
-        //获取上传路径
-        FileUtil.writeBytes(file.getBytes(), rootFilePath);//利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
+        // 获取上传路径
+        // 利用工具hutool完成文件写入到上传路径文件下的操作，获取字节流要抛出异常
+        FileUtil.writeBytes(file.getBytes(), rootFilePath);
         String url = ip + ":" + port + "/files/" + flag;
-        //富文本图片上传格式
+        // 富文本图片上传格式
         JSONObject json = new JSONObject();
         json.set("errno", 0);
         JSONArray array = new JSONArray();
@@ -205,7 +213,8 @@ public class FileController {
         array.add(data);
         data.set("url", url);
         json.set("data", array);
-        return json; //返回结果url
+        // 返回结果url
+        return json;
     }
 
     /**
@@ -216,19 +225,23 @@ public class FileController {
      */
     @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response) {
-        OutputStream os;//新建一个输出流对象
-        //定义文件上传的根路径
+        // 新建一个输出流对象
+        OutputStream os;
+        // 定义文件上传的根路径
         String basePath = System.getProperty("user.dir") + "/springboot/src/main/resources/files/";
-        List<String> fileNames = FileUtil.listFileNames(basePath);//获取根路径下所有文件名称
-        //找到跟参数一致的文件
+        // 获取根路径下所有文件名称
+        List<String> fileNames = FileUtil.listFileNames(basePath);
+        // 找到跟参数一致的文件
         String fileName = fileNames.stream().filter(name -> name.contains(flag)).findAny().orElse("");
         try {
             if (StrUtil.isNotEmpty(fileName)) {
                 response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"
                 ));
                 response.setContentType("application/octet-stream");
-                byte[] bytes = FileUtil.readBytes(basePath + fileName);//通过文件的路径读取的文件字节流
-                os = response.getOutputStream();//通过输出流返回文件
+                // 通过文件的路径读取的文件字节流
+                byte[] bytes = FileUtil.readBytes(basePath + fileName);
+                // 通过输出流返回文件
+                os = response.getOutputStream();
                 os.write(bytes);
                 os.flush();
                 os.close();

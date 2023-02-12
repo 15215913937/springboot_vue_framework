@@ -1,7 +1,5 @@
 package com.sqn.library.common.listener;
 
-import io.swagger.models.auth.In;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
