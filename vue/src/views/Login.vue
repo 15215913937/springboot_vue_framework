@@ -171,14 +171,12 @@ export default {
           }
           this.loading = true;
           request.post("/user/login", this.form).then(res => {
-            // console.log(res)
             if (res.code === '0') {
               this.$message.success("登录成功");
-              // console.log(res)
               sessionStorage.setItem("user", JSON.stringify(res.data));  // 缓存用户信息
-              sessionStorage.setItem("menus", JSON.stringify(res.data.menus));//缓存用户菜单
-              setRoutes();  //动态设置当前用户的路由
-              this.$router.push("/"); //登录成功后自动跳转到首页
+              sessionStorage.setItem("menus", JSON.stringify(res.data.menus));// 缓存用户菜单
+              setRoutes();  // 动态设置当前用户的路由
+              this.$router.push("/"); // 登录成功后自动跳转到首页
             } else {
               this.$message.error(res.msg)
             }

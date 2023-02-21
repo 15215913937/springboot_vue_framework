@@ -109,10 +109,35 @@
         <el-card>
           <div v-html="detail.content" style="min-height: 100px"></div>
         </el-card>
-        <h3 style="size: 10px;padding: 10px;opacity: .5">评论:</h3>
-        <el-input type="textarea"></el-input>
-        <el-button @click="pushComment">提交
-        </el-button>
+        <el-card>
+          <div>
+            <h3 style="size: 10px;padding: 10px;opacity: .5">评论:</h3>
+            <el-input type="textarea" :rows="2" v-model="comment.content"></el-input>
+            <div style="padding: 10px 0;display: flex;justify-content: flex-end">
+              <el-button type="primary" @click="pushComment(detail.id)">留言</el-button>
+            </div>
+          </div>
+          <div style="display: flex;padding: 20px;flex-direction: column" v-for="item in comments">
+            <div style="flex: 1;padding: 10px">最新评论（{{this.commentsSize}}条）</div>
+            <!--                      <div style="text-align: center;flex: 1">-->
+            <!--                        <el-image style="width: 60px;height: 60px;border-radius: 50%" :src="item.avatar"/>-->
+            <!--                      </div>-->
+            <div style="flex: 5;padding: 0 10px">
+              <div style="padding:10px 0">
+                {{ item.username }}：{{ item.content }}
+                <el-button type="text" size="mini" @click="del(item.id,item.eventId)" v-if="item.userId=user.id">删除
+                </el-button>
+              </div>
+              <div style="background-color: #eee;padding: 10px" v-if="item.childList">
+                @{{ item.childList[0].username }}：{{ item.childList[0].content }}
+              </div>
+              <div style="color: #888;font-size: 10px">
+                <span>{{ item.createTime }}</span>
+                <el-button style="margin-left: 20px" type="text" @click="rePlay(item.id,item.eventId)">回复</el-button>
+              </div>
+            </div>
+          </div>
+        </el-card>
       </el-dialog>
     </div>
 
@@ -156,13 +181,22 @@ export default {
           {required: true, message: '标题不能为空', trigger: 'blur'},
           {min: 1, max: 100, message: '长度在1~100位之间', trigger: 'blur'},
         ],
-      }
+      },
+      comment: {
+        content: '',
+        userId: null,
+        isDelete: 0,
+        eventId: null,
+        parentId: null,
+        rootParentId: null
+      },
+      comments: [],
+      commentsSize: 0
     }
   },
   created() {
     this.load();
     request.get('/events/authorList').then(res => {
-      // console.log(res.data)
       this.authorList = res.data;
     })
   },
@@ -173,10 +207,17 @@ export default {
     }
   },
   methods: {
+    queryComment(i) {
+      request.get("/comment/" + i).then(res => {
+        this.comments = res.data;
+        this.commentsSize = res.data.length;
+      })
+    },
     details(row) {
       request.post("/events/" + row.id);
       this.load();
       this.detail = row;
+      this.queryComment(row.id)
       this.vis = true;
     },
     reset() {
@@ -235,7 +276,6 @@ export default {
           }
           this.form.author = this.user.id;
           request.post("/events", this.form).then(res => {
-            // console.log(res);
             if (res.code === '0') {
               this.$message.success("编辑成功")
               this.load();//刷新表格数据
@@ -260,10 +300,8 @@ export default {
         }
         editor.txt.html(row.content)
       })
-    }
-    ,
+    },
     handleDelete(row) {
-      // console.log(this.user)
       if (row.author === this.user.id || this.user.role === "ROLE_ADMIN") {
         this.id = row.id;
         request.delete("/events/" + this.id).then(res => {
@@ -272,24 +310,21 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
-          this.load();//刷新表格数据
+          this.load();
         })
       } else {
         this.$message.error("不是你创建的不能删哦")
       }
 
-    }
-    ,
+    },
     handleSizeChange() {
-      //改变当前每页个数的触发
+      // 改变当前每页个数的触发
       this.load()
-    }
-    ,
+    },
     handleCurrentChange() {
-      //改变当前页数的触发
+      // 改变当前页数的触发
       this.load()
-    }
-    ,
+    },
     deleteBatch() {
       if (!this.ids.length) {
         this.$message.warning("请选择要删除的事件");
@@ -303,12 +338,31 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    }
-    ,
+    },
     handleSelectionChange(val) {
       this.ids = val.map(v => v.id)
+    },
+    pushComment(id) {
+      this.comment.userId = this.user.id
+      this.comment.eventId = id;
+      request.post("/comment", this.comment).then(res => {
+        this.$message.success(res.msg)
+      })
+      setTimeout(() => {
+        this.queryComment(id);
+      }, 500)
+
+      this.comment.content = '';
+    },
+    del(cId, eId) {
+      request.delete("/comment/" + cId);
+      setTimeout(() => {
+        this.queryComment(eId);
+      }, 500)
+    },
+    rePlay(cId, eId) {
+
     }
-    ,
   }
 }
 </script>

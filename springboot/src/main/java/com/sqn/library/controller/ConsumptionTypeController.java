@@ -31,7 +31,9 @@ public class ConsumptionTypeController {
     @Resource
     private IConsumptionTypeService consumptionTypeService;
 
-    // 新增或者更新
+    /**
+     * 新增或者更新
+     */
     @PostMapping
     public Result<?> save(@RequestBody ConsumptionType consumptionType) {
         consumptionTypeService.saveOrUpdate(consumptionType);

@@ -27,7 +27,7 @@ import java.util.List;
 
 @Api(tags = "书籍管理")
 @RestController
-@RequestMapping("/book")//统一接口加前缀
+@RequestMapping("/book")// 统一接口加前缀
 public class BookController {
     @Resource
     BookMapper bookMapper;
