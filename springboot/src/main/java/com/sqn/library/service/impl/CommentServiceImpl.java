@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,13 +29,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public boolean rmById(Long cId) {
+        final Date date = new Date();
+        final Timestamp time = new Timestamp(date.getTime());
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         List<Comment> comments = commentMapper.selectList(wrapper.eq(Comment::getId, cId).or().eq(Comment::getParentId, cId));
-        List<Long> list = new ArrayList<>();
         for (Comment comment : comments) {
-            list.add(comment.getId());
+            comment.setDelTime(time);
+            comment.setIsDelete(true);
+            commentMapper.updateById(comment);
         }
-        commentMapper.deleteBatchIds(list);
         return true;
     }
 }

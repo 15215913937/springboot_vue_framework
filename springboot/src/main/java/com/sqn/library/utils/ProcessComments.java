@@ -31,6 +31,7 @@ public class ProcessComments {
                 break;
             }
             comment.setUsername(user.getUsername());
+            comment.setAvatar(user.getAvatar());
         }
         //将所有父评论加入map
         for (Comment comment : list) {

@@ -93,7 +93,7 @@
       <el-dialog v-model="dialogVisible" title="编辑事件" width="50%">
         <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
           <el-form-item label="标题" prop="title">
-            <el-input v-model="form.title" style="width: 50%"/>
+            <el-input v-model="form.title" style="width: 50%" maxlength="30" show-word-limit/>
           </el-form-item>
           <!--                    正文-->
           <div id="div1"/>
@@ -112,50 +112,58 @@
         <el-card>
           <div>
             <h3 style="size: 10px;padding: 10px;opacity: .5">评论:</h3>
-            <el-input type="textarea" :rows="2" show-word-limit maxlength="100" v-model="comment.content"></el-input>
+            <el-input type="textarea" :rows="2" show-word-limit maxlength="500" placeholder="留下你的友善发言吧~~~"
+                      v-model="comment.content"></el-input>
             <div style="padding: 10px 0;display: flex;justify-content: flex-end">
               <el-button type="primary" @click="pushComment(detail.id)">留言</el-button>
             </div>
           </div>
-          <div style="flex: 1;padding: 10px">最新评论（{{ this.commentsSize }}条）</div>
-          <div style="display: flex;padding: 10px;flex-direction: column" v-for="item in comments">
-            <!--                      <div style="text-align: center;flex: 1">-->
-            <!--                        <el-image style="width: 60px;height: 60px;border-radius: 50%" :src="item.avatar"/>-->
-            <!--                      </div>-->
+          <div style="flex: 1;padding: 10px">收到留言（{{ this.commentsSize }}）</div>
+          <div style="display: flex;padding: 10px" v-for="item in comments">
+            <div style="text-align: center;width:40px">
+              <el-image style="width: 30px;height: 30px;border-radius: 50%" :src="item.avatar"/>
+            </div>
             <div style="flex: 5;padding: 0 10px">
-              <div style="padding:10px 0">
-                {{ item.username }}：{{ item.content }}
-                <el-button type="danger" text="danger" size="mini" @click="del(item.id,item.eventId)"
+              <div>
+                {{ item.username }} ：{{ item.content }}
+                <el-button type="danger" text="danger" @click="del(item.id,item.eventId)"
                            v-if="item.userId===user.id">删除
                 </el-button>
               </div>
-              <div style="background-color: #eee;padding: 10px" v-if="item.childList">
-                <div style="display: flex;flex-direction: column" v-for="i in item.childList">
-                  <div style="padding:10px 0">
-                    @{{ i.username }}：{{ i.content }}
-                    <el-button type="danger" text="danger" size="mini"
-                               @click="del(i.id,i.eventId)"
-                               v-if="i.userId===user.id">删除
-                    </el-button>
-                  </div>
-                  <div style="color: #888;font-size: 10px">
-                    <span>{{ i.createTime }}</span>
-                  </div>
-                </div>
-              </div>
-              <div style="color: #888;font-size: 10px">
+              <div style="color: #888;font-size: 8px">
                 <span>{{ item.createTime }}</span>
                 <el-button style="margin-left: 20px" type="text" @click="rePlay(item.id,item.eventId)">回复
                 </el-button>
               </div>
+
+              <!--一级回复内容-->
+              <div style="background-color: #f4f4f4;padding: 10px" v-if="item.childList">
+                <div style="display: flex" v-for="i in item.childList">
+                  <div style="text-align: center;width:40px">
+                    <el-image style="width: 30px;height: 30px;border-radius: 50%" :src="i.avatar"/>
+                  </div>
+                  <div style="display: flex;flex-direction:column">
+                    <div style="padding-left: 10px;color: #888888">
+                      {{ i.username }} ：{{ i.content }}
+                      <el-button type="danger" text="danger" @click="del(i.id,i.eventId)" v-if="i.userId===user.id">删除
+                      </el-button>
+                    </div>
+                    <div style="color: #888;font-size: 8px;padding: 10px">
+                      <span>{{ i.createTime }}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </div>
         </el-card>
       </el-dialog>
 
-      <el-dialog v-model="replyVisible" title="回复评论" width="50%">
-        <el-form :model="reply" label-width="120px" :rules="replyRules" ref="pass">
-          <el-input v-model="reply.content" type="textarea" show-word-limit maxlength="100"
+      <el-dialog v-model="replyVisible" width="50%" title="回复评论">
+        <el-form :model="reply" label-width="120px">
+          <el-input v-model="reply.content" type="textarea" show-word-limit maxlength="500"
                     placeholder="良言一句三冬暖，恶语伤人六月寒哦~~~"/>
         </el-form>
         <template #footer>
@@ -211,7 +219,7 @@ export default {
       comment: {
         content: '',
         userId: null,
-        isDelete: 0,
+        isDelete: false,
         eventId: null,
         parentId: null,
         rootParentId: null
@@ -222,8 +230,8 @@ export default {
       reply: {
         content: '',
         userId: null,
-        isDelete: 0,
         eventId: null,
+        isDelete: false,
         parentId: null,
         rootParentId: null
       },
@@ -385,6 +393,10 @@ export default {
       this.comment.userId = this.user.id
       this.comment.eventId = id;
       request.post("/comment", this.comment).then(res => {
+        if (res.code === 400) {
+          this.$message.warning(res.msg)
+          return;
+        }
         this.$message.success(res.msg)
       })
       setTimeout(() => {
@@ -407,11 +419,17 @@ export default {
       this.reply.parentId = cId;
     },
     replySave() {
-      request.post("/comment", this.reply)
+      request.post("/comment", this.reply).then(res => {
+        if (res.code === 400) {
+          this.$message.warning(res.msg)
+        }
+        this.$message.success(res.msg)
+      })
       setTimeout(() => {
         this.queryComment(this.reply.eventId);
       }, 500)
-      this.reply.content = ''
+      this.comment.content = '';
+      this.reply.content = '';
       this.reply.parentId = null;
       this.replyVisible = false;
     }

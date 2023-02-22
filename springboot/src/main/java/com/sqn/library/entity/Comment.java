@@ -44,8 +44,12 @@ public class Comment implements Serializable {
     @ApiModelProperty("创建时间")
     private Date createTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty("删除时间")
+    private Date delTime;
+
     @ApiModelProperty("是否删除0：未删除；1：删除")
-    private Integer isDelete;
+    private Boolean isDelete;
 
     @ApiModelProperty("所属事件id")
     private Integer eventId;
@@ -63,6 +67,10 @@ public class Comment implements Serializable {
     // 评论人用户名
     @TableField(exist = false)
     private String username;
+
+    // 评论人头像
+    @TableField(exist = false)
+    private String avatar;
 
 
 }

@@ -1,5 +1,6 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
@@ -45,6 +46,9 @@ public class CommentController {
      */
     @PostMapping
     public Result<?> save(@RequestBody Comment comment) {
+        if (StrUtil.isBlank(comment.getContent())) {
+            return Result.error(Constants.CODE_COMMON_ERR, "留言不能为空哦！");
+        }
         commentService.saveOrUpdate(comment);
         return Result.success();
     }
@@ -61,7 +65,7 @@ public class CommentController {
     @GetMapping("/{id}")
     public Result<?> findByEventId(@PathVariable Integer id) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getEventId, id).orderByDesc(Comment::getCreateTime);
+        wrapper.eq(Comment::getEventId, id).eq(Comment::getIsDelete, false).orderByDesc(Comment::getCreateTime);
         final List<Comment> list = commentMapper.selectList(wrapper);
         return Result.success(processComments.processComments(list));
     }
