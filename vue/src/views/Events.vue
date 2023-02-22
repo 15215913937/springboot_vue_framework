@@ -112,32 +112,58 @@
         <el-card>
           <div>
             <h3 style="size: 10px;padding: 10px;opacity: .5">评论:</h3>
-            <el-input type="textarea" :rows="2" v-model="comment.content"></el-input>
+            <el-input type="textarea" :rows="2" show-word-limit maxlength="100" v-model="comment.content"></el-input>
             <div style="padding: 10px 0;display: flex;justify-content: flex-end">
               <el-button type="primary" @click="pushComment(detail.id)">留言</el-button>
             </div>
           </div>
-          <div style="display: flex;padding: 20px;flex-direction: column" v-for="item in comments">
-            <div style="flex: 1;padding: 10px">最新评论（{{this.commentsSize}}条）</div>
+          <div style="flex: 1;padding: 10px">最新评论（{{ this.commentsSize }}条）</div>
+          <div style="display: flex;padding: 10px;flex-direction: column" v-for="item in comments">
             <!--                      <div style="text-align: center;flex: 1">-->
             <!--                        <el-image style="width: 60px;height: 60px;border-radius: 50%" :src="item.avatar"/>-->
             <!--                      </div>-->
             <div style="flex: 5;padding: 0 10px">
               <div style="padding:10px 0">
                 {{ item.username }}：{{ item.content }}
-                <el-button type="text" size="mini" @click="del(item.id,item.eventId)" v-if="item.userId=user.id">删除
+                <el-button type="danger" text="danger" size="mini" @click="del(item.id,item.eventId)"
+                           v-if="item.userId===user.id">删除
                 </el-button>
               </div>
               <div style="background-color: #eee;padding: 10px" v-if="item.childList">
-                @{{ item.childList[0].username }}：{{ item.childList[0].content }}
+                <div style="display: flex;flex-direction: column" v-for="i in item.childList">
+                  <div style="padding:10px 0">
+                    @{{ i.username }}：{{ i.content }}
+                    <el-button type="danger" text="danger" size="mini"
+                               @click="del(i.id,i.eventId)"
+                               v-if="i.userId===user.id">删除
+                    </el-button>
+                  </div>
+                  <div style="color: #888;font-size: 10px">
+                    <span>{{ i.createTime }}</span>
+                  </div>
+                </div>
               </div>
               <div style="color: #888;font-size: 10px">
                 <span>{{ item.createTime }}</span>
-                <el-button style="margin-left: 20px" type="text" @click="rePlay(item.id,item.eventId)">回复</el-button>
+                <el-button style="margin-left: 20px" type="text" @click="rePlay(item.id,item.eventId)">回复
+                </el-button>
               </div>
             </div>
           </div>
         </el-card>
+      </el-dialog>
+
+      <el-dialog v-model="replyVisible" title="回复评论" width="50%">
+        <el-form :model="reply" label-width="120px" :rules="replyRules" ref="pass">
+          <el-input v-model="reply.content" type="textarea" show-word-limit maxlength="100"
+                    placeholder="良言一句三冬暖，恶语伤人六月寒哦~~~"/>
+        </el-form>
+        <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="replyVisible = false">取消</el-button>
+                        <el-button type="primary" @click="replySave()" :loading="loading">提交</el-button>
+                    </span>
+        </template>
       </el-dialog>
     </div>
 
@@ -191,7 +217,16 @@ export default {
         rootParentId: null
       },
       comments: [],
-      commentsSize: 0
+      commentsSize: 0,
+      replyVisible: false,
+      reply: {
+        content: '',
+        userId: null,
+        isDelete: 0,
+        eventId: null,
+        parentId: null,
+        rootParentId: null
+      },
     }
   },
   created() {
@@ -210,14 +245,18 @@ export default {
     queryComment(i) {
       request.get("/comment/" + i).then(res => {
         this.comments = res.data;
+        if (!res.data) {
+          return;
+        }
         this.commentsSize = res.data.length;
       })
     },
     details(row) {
+      this.comment.content = '';
       request.post("/events/" + row.id);
       this.load();
       this.detail = row;
-      this.queryComment(row.id)
+      this.queryComment(row.id);
       this.vis = true;
     },
     reset() {
@@ -361,7 +400,20 @@ export default {
       }, 500)
     },
     rePlay(cId, eId) {
-
+      this.reply.content = '';
+      this.replyVisible = true;
+      this.reply.userId = this.user.id
+      this.reply.eventId = eId;
+      this.reply.parentId = cId;
+    },
+    replySave() {
+      request.post("/comment", this.reply)
+      setTimeout(() => {
+        this.queryComment(this.reply.eventId);
+      }, 500)
+      this.reply.content = ''
+      this.reply.parentId = null;
+      this.replyVisible = false;
     }
   }
 }

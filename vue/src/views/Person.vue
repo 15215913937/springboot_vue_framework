@@ -14,7 +14,7 @@
           </el-icon>
         </el-upload>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username"></el-input>
+          <el-input show-word-limit maxlength="20" v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name"></el-input>

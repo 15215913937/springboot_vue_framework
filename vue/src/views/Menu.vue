@@ -59,13 +59,13 @@
             <el-dialog v-model="dialogVisible" title="菜单信息" width="30%">
                 <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
                     <el-form-item label="菜单名称" prop="name">
-                        <el-input v-model="form.name" style="width: 80%"/>
+                        <el-input v-model="form.name" show-word-limit maxlength="20" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="路径" prop="path">
-                        <el-input v-model="form.path" style="width: 80%"/>
+                        <el-input v-model="form.path" show-word-limit maxlength="20" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="页面路径" prop="pagePath">
-                        <el-input v-model="form.pagePath" style="width: 80%"/>
+                        <el-input v-model="form.pagePath" show-word-limit maxlength="20" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="图标" prop="icon">
                         <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
@@ -83,7 +83,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="描述" prop="description">
-                        <el-input type="textarea" v-model="form.description" style="width: 80%"/>
+                        <el-input type="textarea" v-model="form.description" show-word-limit maxlength="100" style="width: 80%"/>
                     </el-form-item>
                 </el-form>
                 <template #footer>
@@ -117,11 +117,11 @@
                 rules: {
                     name: [
                         {required: true, message: '菜单名称不能为空', trigger: 'blur'},
-                        {min: 2, max: 10, message: '长度在2~10位之间', trigger: 'blur'},
+                        {min: 2, max: 20, message: '长度在2~20位之间', trigger: 'blur'},
                     ],
                     pathPage: [
                         {required: true, message: '菜单路径不能为空', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3~10位之间', trigger: 'blur'},
+                        {min: 3, max: 20, message: '长度在3~20位之间', trigger: 'blur'},
                     ]
                 }
             }

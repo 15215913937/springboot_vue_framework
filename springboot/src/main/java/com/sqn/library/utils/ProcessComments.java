@@ -23,13 +23,16 @@ public class ProcessComments {
 
         HashMap<Long, Comment> map = new HashMap<>();
         List<Comment> result = new ArrayList<>();
-        final LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
 
         for (Comment comment : list) {
+            LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
             User user = userMapper.selectOne(wrapper.eq(User::getId, comment.getUserId()));
+            if (user == null) {
+                break;
+            }
             comment.setUsername(user.getUsername());
         }
-        //将所有根评论加入map
+        //将所有父评论加入map
         for (Comment comment : list) {
             if (comment.getParentId() == null) {
                 result.add(comment);

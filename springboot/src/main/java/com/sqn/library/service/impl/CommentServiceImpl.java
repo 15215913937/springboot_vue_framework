@@ -21,8 +21,7 @@ import java.util.List;
  */
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {
-    @Resource
-    ICommentService iCommentService;
+
     @Resource
     CommentMapper commentMapper;
 

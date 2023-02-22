@@ -168,7 +168,7 @@
                         />
                     </el-form-item>
                     <el-form-item label="备注">
-                        <el-input type="textarea" v-model="form.comment" style="width: 80%"/>
+                        <el-input type="textarea" show-word-limit maxlength="400" v-model="form.comment" style="width: 80%"/>
                     </el-form-item>
 
                 </el-form>

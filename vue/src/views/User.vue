@@ -111,7 +111,7 @@
       <el-dialog v-model="dialogVisible" title="家庭成员信息" width="30%">
         <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="form.username" style="width: 80%" autocomplete="off"/>
+            <el-input v-model="form.username" style="width: 80%" show-word-limit maxlength="20" autocomplete="off"/>
           </el-form-item>
           <el-form-item label="角色" prop="role">
             <el-select v-model="form.role" clearable placeholder="请选择角色" style="width: 80%">
@@ -124,7 +124,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="姓名" prop="name" autocomplete="off">
-            <el-input v-model="form.name" style="width: 80%"/>
+            <el-input v-model="form.name" show-word-limit maxlength="18" style="width: 80%"/>
           </el-form-item>
           <el-form-item label="电话" prop="phone" autocomplete="off">
             <el-input v-model="form.phone" style="width: 80%"/>

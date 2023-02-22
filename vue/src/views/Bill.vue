@@ -86,7 +86,7 @@
           <el-radio v-model="form.type" label="收入" size="large">收入</el-radio>
         </el-form-item>
         <el-form-item label="备注" prop="comment">
-          <el-input type="textarea" v-model="form.comment" style="width: 80%" autocomplete="off"/>
+          <el-input type="textarea" show-word-limit maxlength="100" v-model="form.comment" style="width: 80%" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <template #footer>

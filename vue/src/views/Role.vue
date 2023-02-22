@@ -63,13 +63,13 @@
             <el-dialog v-model="dialogVisible" title="角色信息" width="30%">
                 <el-form :model="roles" label-width="120px" ref="pass" :rules="rules">
                     <el-form-item label="角色" prop="role">
-                        <el-input v-model="roles.role" style="width: 80%"/>
+                        <el-input v-model="roles.role" show-word-limit maxlength="20" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="唯一标识" prop="flag">
-                        <el-input v-model="roles.flag" style="width: 80%"/>
+                        <el-input v-model="roles.flag" show-word-limit maxlength="20" style="width: 80%"/>
                     </el-form-item>
                     <el-form-item label="描述">
-                        <el-input type="textarea" v-model="roles.description" style="width: 80%"/>
+                        <el-input type="textarea" show-word-limit maxlength="100" v-model="roles.description" style="width: 80%"/>
                     </el-form-item>
                 </el-form>
                 <template #footer>
