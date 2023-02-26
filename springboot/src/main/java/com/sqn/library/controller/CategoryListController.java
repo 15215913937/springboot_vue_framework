@@ -37,8 +37,9 @@ public class CategoryListController {
     CategoryListMapper categoryListMapper;
 
     /**
-     *  新增或者更新
-     * @param categoryList  消费类型
+     * 新增或者更新
+     *
+     * @param categoryList 消费类型
      */
     @PostMapping
     public Result<?> save(@RequestBody CategoryList categoryList) {
@@ -47,15 +48,17 @@ public class CategoryListController {
                 .or()
                 .eq(CategoryList::getFlag, categoryList.getFlag());
         CategoryList one = categoryListMapper.selectOne(wrapper);
-        if ((one != null && categoryList.getId() == null) || (one != null && !one.getId().equals(categoryList.getId()))) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "该类别或标识已存在");
+        if (one == null) {
+            return Result.error(Constants.CODE_COMMON_ERR, "数据错误");
+        }
+        if (categoryList.getId() == null || !one.getId().equals(categoryList.getId())) {
+            return Result.error(Constants.CODE_COMMON_ERR, "该类别或标识已存在");
         }
         categoryListService.saveOrUpdate(categoryList);
         return Result.success();
     }
 
     /**
-     *
      * @param id 消费id
      */
     @DeleteMapping("/{id}")

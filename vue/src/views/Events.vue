@@ -262,7 +262,9 @@ export default {
     details(row) {
       this.comment.content = '';
       request.post("/events/" + row.id);
-      this.load();
+      setTimeout(() => {
+        this.load();
+      }, 500)
       this.detail = row;
       this.queryComment(row.id);
       this.vis = true;
@@ -420,8 +422,9 @@ export default {
     },
     replySave() {
       request.post("/comment", this.reply).then(res => {
-        if (res.code === 400) {
+        if (res.code === "400") {
           this.$message.warning(res.msg)
+          return
         }
         this.$message.success(res.msg)
       })

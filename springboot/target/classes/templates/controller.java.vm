@@ -88,6 +88,5 @@ public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
         queryWrapper.orderByDesc("id");
         return Result.success(${table.entityPath}Service.page(new Page<>(pageNum,pageSize),queryWrapper));
         }
-
-        }
+}
 #end

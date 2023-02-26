@@ -10,7 +10,6 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import '@/assets/css/global.css'
 import VueParticles from 'vue-particles'
 import mavonEditor from 'mavon-editor'
-// import request from './utils/request'
 
 
 const app = createApp(App);

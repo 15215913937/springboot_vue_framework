@@ -71,7 +71,7 @@
                         <el-select v-model="form.icon" clearable placeholder="选择图标" style="width: 80%">
                             <el-option
                                     v-for="item in options"
-                                    :key="item.id"
+                                    :key="item.name"
                                     :label="item.name"
                                     :value="item.value"
                             >
@@ -143,7 +143,6 @@
                         name: this.name
                     }
                 }).then(res => {
-                    // console.log(res);
                     this.loading = false;
                     this.tableData = res.data;
                 })
@@ -181,14 +180,13 @@
                 this.form = JSON.parse(JSON.stringify(row));
                 this.dialogVisible = true;
 
-                //请求图标的数据
+                // 请求图标的数据
                 request.get("/menu/icons").then(res => {
                     this.options = res.data;
                 })
             },
             handleDelete(row) {
                 this.id = row.id;
-                // console.log(this.id);
                 request.delete("/menu/" + this.id).then(res => {
                     if (res.code === '0') {
                         this.$message.success("删除成功")
