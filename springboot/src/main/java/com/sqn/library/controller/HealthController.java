@@ -1,14 +1,12 @@
 package com.sqn.library.controller;
 
-
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
 import java.util.List;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sqn.library.common.Result;
 
 
@@ -35,12 +33,15 @@ public class HealthController {
     /**
      * 新增或者更新
      */
-    @PostMapping
-    public Result<?> save(@RequestBody Health health) {
-        if (health.getHeight() == 0 || health.getWeight() == 0) {
+    @PostMapping("/save/{isSimple}")
+    public Result<?> save(@RequestBody Health health, @PathVariable boolean isSimple) {
+        if (isSimple && (health.getHeight() == 0 || health.getWeight() == 0)) {
             return Result.error(Constants.CODE_COMMON_ERR, "身高或体重输入错误");
         }
-        healthService.saveOrUpdate(health);
+        boolean add = healthService.add(health);
+        if (!add) {
+            return Result.error(Constants.CODE_COMMON_ERR, "提交错误");
+        }
         return Result.success();
     }
 
@@ -72,12 +73,5 @@ public class HealthController {
         return Result.success(healthService.getById(id));
     }
 
-    @GetMapping("/page")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<Health> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(healthService.page(new Page<>(pageNum, pageSize), queryWrapper));
-    }
 
 }

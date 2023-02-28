@@ -40,8 +40,8 @@
         </el-card>
       </div>
       <!--          消费图表区-->
-      <div style="flex: 1">
-        <div style="padding-top: 10px">
+      <div style="flex: 1;display: flex;flex-direction: column">
+        <div style="height:40px;margin: 10px;text-align: center">
           <el-date-picker
               v-model="toYearLeft"
               type="year"
@@ -49,13 +49,13 @@
               @change="searchYearLeft"
           />
         </div>
-        <div id="billChart" style="height: 300px;padding:10px"/>
+        <div id="billChart" style="height: 300px;margin:15px"/>
       </div>
     </div>
 
     <div style="flex: 1;display: flex;max-height:400px;flex-direction: column">
       <!--家庭信息统计区-->
-      <div style="flex: 1">
+      <div style="flex: 1;">
         <el-row :gutter="10" style="margin-bottom: 15px">
           <el-col :span="6">
             <el-card style="color: #E6A23C" @dblclick="$router.push('/user')">
@@ -103,7 +103,7 @@
           </el-col>
 
         </el-row>
-        <el-row :gutter="50" style="margin-bottom: 20px">
+        <el-row :gutter="50">
           <el-col :span="12">
             <el-card style="color: #409EFF">
               <div>
@@ -129,21 +129,25 @@
         </el-row>
       </div>
       <!--购书图表区-->
-      <div style="flex: 1">
-        <el-date-picker
-            v-model="toYear"
-            type="year"
-            placeholder="请选择年份"
-            @change="searchYear"
-        />
-        <el-row style="margin-top: 30px">
-          <el-col :span="12">
-            <div id="main" style="height: 300px"/>
-          </el-col>
-          <el-col :span="12">
-            <div id="pie" style="height: 300px"/>
-          </el-col>
-        </el-row>
+      <div style="flex: 1;display: flex;flex-direction: column">
+        <div style="margin: 10px;text-align: center">
+          <el-date-picker
+              v-model="toYear"
+              type="year"
+              placeholder="请选择年份"
+              @change="searchYear"
+          />
+        </div>
+        <div style="margin: 15px">
+          <el-row>
+            <el-col :span="12">
+              <div id="main" style="height: 300px"/>
+            </el-col>
+            <el-col :span="12">
+              <div id="pie" style="height: 300px"/>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </div>
   </div>

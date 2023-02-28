@@ -66,7 +66,7 @@ public class CommentController {
     public Result<?> findByEventId(@PathVariable Integer id) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Comment::getEventId, id).eq(Comment::getIsDelete, false).orderByDesc(Comment::getCreateTime);
-        final List<Comment> list = commentMapper.selectList(wrapper);
+        List<Comment> list = commentMapper.selectList(wrapper);
         return Result.success(processComments.processComments(list));
     }
 }

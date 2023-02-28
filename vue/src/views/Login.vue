@@ -2,69 +2,66 @@
   <div class="homepage-hero-module">
     <div class="video-container">
       <div :style="fixStyle" class="filter">
-        <div style="width: 600px; margin: 100px auto">
-          <div style="margin: 50px auto;width: 500px">
-            <div
-                style="color: #d7fd00;font-size:60px;text-align: center;font-family:KaiTi,serif;padding:80px 0">
-              家庭管理系统
-            </div>
-            <div
-                style="display: flex;width: 100%;height: 30px;text-align: center;padding: 0 80px;margin-bottom: 10px">
-
+        <div
+            style="width: 600px;height: 500px;margin: 100px auto;display: flex;flex-direction: column;align-items: center;">
+          <div
+              style="display:flex;flex:2;justify-content: center;align-items:center;color: #d7fd00;font-size:60px;font-family:KaiTi,serif">
+            <span>家庭管理系统</span>
+          </div>
+          <div style="flex: 3;width: 300px;display: flex;flex-direction: column;">
+            <div style="display: flex;height: 50px;align-items: center;text-align: center">
               <div style="flex: 1">
-                <el-button type="warning" @click="setLoginWayZero">账号登录</el-button>
+                <el-button type="warning" @click="setLoginWay(loginWay=0)">账号登录</el-button>
               </div>
               <div style="flex: 1">
-                <el-button type="warning" @click="setLoginWayOne">手机号登录</el-button>
+                <el-button type="warning" @click="setLoginWay(loginWay=1)">手机号登录</el-button>
               </div>
             </div>
-            <div style="height: 150px">
-              <div v-if="loginWay===0">
-                <el-form ref="form" :model="form" style="margin: 0 100px" :rules="rules">
-                  <el-form-item prop="username">
-                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
-                  </el-form-item>
-                  <el-form-item prop="password">
-                    <el-input :prefix-icon="Lock" show-password placeholder="请输入密码"
-                              v-model="form.password"/>
-                  </el-form-item>
-                  <el-form-item>
-                    <div style="display: flex">
-                      <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
-                                placeholder="请输入验证码"/>
-                      <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
-                        <ValidCode @input="createValidCode"/>
-                      </div>
-
+            <div style="flex: 1;display: flex;align-items: center">
+              <el-form v-if="loginWay===0" ref="form" :model="form" :rules="rules">
+                <el-form-item prop="username">
+                  <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="form.username"/>
+                </el-form-item>
+                <el-form-item prop="password">
+                  <el-input :prefix-icon="Lock" show-password placeholder="请输入密码"
+                            v-model="form.password"/>
+                </el-form-item>
+                <el-form-item>
+                  <div style="display: flex">
+                    <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
+                              placeholder="请输入验证码"/>
+                    <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
+                      <ValidCode @input="createValidCode"/>
                     </div>
-                  </el-form-item>
-                </el-form>
-              </div>
-              <div v-if="loginWay===1">
-                <el-form ref="form" :model="form" style="margin: 0 100px"
-                         :rules="rules">
-                  <el-form-item prop="phone" style="display: flex">
-                    <el-input style="flex: 2" :prefix-icon="Iphone" placeholder="请输入手机号"
-                              v-model="form.phone"/>
-                    <el-button style="flex: 1;line-height: 30px;border-radius:5px"
-                               @click="sendCode" :class="{disabled:this.clockStatus}">
-                      {{ sendContent }}
-                    </el-button>
-                  </el-form-item>
-                  <el-form-item prop="code">
-                    <el-input :prefix-icon="Key" placeholder="请输入验证码" v-model="form.code"/>
-                  </el-form-item>
-                </el-form>
-              </div>
-            </div>
-            <div style="height: 30px;width:300px;margin:10px auto;text-align: center">
-              <el-button type="primary" style="width: 300px"
-                         @click="login"
-                         @keyup.enter="keyDown(e)"
-                         :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
-              </el-button>
-            </div>
 
+                  </div>
+                </el-form-item>
+              </el-form>
+              <el-form v-if="loginWay===1" ref="form" :model="form" :rules="rules">
+                <el-form-item prop="phone" style="display: flex">
+                  <el-input style="flex: 2" :prefix-icon="Iphone" placeholder="请输入手机号"
+                            v-model="form.phone"/>
+                  <el-button
+                      style="flex: 1;line-height: 30px;border-radius:5px"
+                      @click="sendCode"
+                      :class="{disabled:this.clockStatus}"
+                  >
+                    {{ sendContent }}
+                  </el-button>
+                </el-form-item>
+                <el-form-item prop="code">
+                  <el-input :prefix-icon="Key" placeholder="请输入验证码" v-model="form.code"/>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+          <div style="flex: 1;display: flex;align-items: center">
+            <el-button type="primary"
+                       style="width: 300px"
+                       @click="login"
+                       @keyup.enter=login
+                       :loading=loading>登&nbsp&nbsp&nbsp&nbsp录
+            </el-button>
           </div>
         </div>
         <div :style="fixStyle" class="ivu-global-footer i-copyright">
@@ -140,12 +137,6 @@ export default {
     createValidCode(data) {
       this.validCode = data
     },
-    keyDown(e) {
-      // 回车则执行登录方法 enter键的ASCII是13
-      if (e.keyCode === 13 || e.keyCode === 100) {
-        this.login(); // 定义的登录方法
-      }
-    },
     login() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
@@ -170,6 +161,9 @@ export default {
             }
           }
           this.loading = true;
+          setTimeout(() => {
+            this.loading = false
+          }, 500)
           request.post("/user/login", this.form).then(res => {
             if (res.code === '0') {
               this.$message.success("登录成功");
@@ -180,9 +174,6 @@ export default {
             } else {
               this.$message.error(res.msg)
             }
-            setTimeout(() => {
-              this.loading = false
-            }, 500)
           })
         }
       })
@@ -190,18 +181,12 @@ export default {
     canplay() {
       this.vedioCanPlay = true
     },
-    setLoginWayZero() {
-      this.loginWay = 0;
-      this.form = {};
-    },
-    setLoginWayOne() {
-      this.loginWay = 1;
+    setLoginWay() {
       this.form = {};
     },
     sendCode() {
       request.post("/user/sendCode", this.form.phone).then(res => {
         if (res.code === "0") {
-          console.log(this.clockStatus);
           if (this.clockStatus) return;
           let clock = setInterval(() => {
             this.clockStatus = true;
@@ -221,15 +206,6 @@ export default {
       })
 
     }
-  },
-
-  mounted() {
-    // 绑定监听事件
-    window.addEventListener("keydown", this.keyDown);
-  },
-  destroyed() {
-    // 销毁事件
-    window.removeEventListener("keydown", this.keyDown, false);
   }
 }
 

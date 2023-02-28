@@ -56,7 +56,7 @@ public class Target implements Serializable {
     private Date endTime;
 
     @ApiModelProperty("完成状态；0：未开始，1：进行中，2：已完成，3：未完成")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("完成进度")
     private Integer schedule;

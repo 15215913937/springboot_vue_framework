@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shenqn
@@ -16,4 +16,6 @@ import java.util.List;
 public interface IHealthService extends IService<Health> {
 
     List<Health> getByUid(Integer uid);
+
+    boolean add(Health health);
 }
