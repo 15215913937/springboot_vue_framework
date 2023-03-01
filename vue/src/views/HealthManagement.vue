@@ -140,14 +140,15 @@
             >
               {{ tag }}
             </el-tag>
+            <!--            也可设置按回车触发@keyup.enter="handleInputConfirm"-->
             <el-input
                 v-if="inputVisible"
                 ref="saveTagInput"
                 v-model="inputValue"
                 style="width: 60px"
                 size="small"
-                @keyup.enter="handleInputConfirm"
                 @blur="handleInputConfirm"
+                @keyup.enter="handleInputConfirm"
             />
             <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
               + 新 活 动
@@ -158,12 +159,14 @@
             <span>上一次活动</span>
           </div>
           <div style="flex:1;border: #409EFF solid;padding: 0 10px;height: 50px;display: flex;align-items: center;">
+            <div v-if="latestActivityMarks===[]">很久没运动了~ 快去运动吧！</div>
             <el-tag
-                v-for="tag in latestActivityMarks"
-                :key=tag
+                v-else
+                v-for="tag1 in latestActivityMarks"
+                :key=tag1
                 style="margin-right: 10px"
             >
-              {{ tag }}
+              {{ tag1 }}
             </el-tag>
           </div>
         </div>
@@ -311,13 +314,13 @@ export default {
       historyDialogVisible: false,
       bodyInfo: {
         uid: "",
-        height: "",
-        weight: "",
-        bust: "",
-        waistline: "",
-        hipline: "",
-        shoulderWide: "",
-        activities: ""
+        height: 0,
+        weight: 0.0,
+        bust: 0.0,
+        waistline: 0.0,
+        hipline: 0.0,
+        shoulderWide: 0.0,
+        activities: 0.0
       }
     }
   },
@@ -327,6 +330,9 @@ export default {
   methods: {
     // 页面基础数据加载
     load() {
+      request.post('/target/queryTargets/' + this.user.id).then(res => {
+        this.targets = res.data;
+      })
 
       request.post('/health/queryLatestInfo/' + this.user.id).then(res => {
         if (res.data.length === 0) {
@@ -344,21 +350,17 @@ export default {
         let expectDate = res.data[0].createTime;
         expectDate = expectDate.split(" ")
 
-        console.log(res.data.length)
-        if (res.data.length !== 0 && expectDate[0] === nowDate) {
+        if (expectDate[0] === nowDate) {
           this.newActivityMarks = res.data[0].activityMarks;
-        }
-        if (res.data.length !== 0 && expectDate[0] !== nowDate) {
+          if (res.data.length !== 1) {
+            this.latestActivityMarks = res.data[1].activityMarks;
+          }
+        } else {
           this.latestActivityMarks = res.data[0].activityMarks;
         }
-        if (res.data.length > 1) {
-          this.latestActivityMarks = res.data[0].activityMarks;
-        }
+
         this.bmi = (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
       });
-      request.post('/target/queryTargets/' + this.user.id).then(res => {
-        this.targets = res.data;
-      })
     },
     // 查看小知识
     tips() {
@@ -391,15 +393,15 @@ export default {
           this.$message.error(res.msg)
           if (i === 1) {
             this.bodyInfo = {
-              height: "",
-              weight: "",
+              height: 0,
+              weight: 0.0,
             }
           } else {
             this.bodyInfo = {
-              bust: "",
-              waistline: "",
-              hipline: "",
-              shoulderWide: ""
+              bust: 0.0,
+              waistline: 0.0,
+              hipline: 0.0,
+              shoulderWide: 0.0
             }
           }
           return;
@@ -455,7 +457,6 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
-
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {

@@ -1,5 +1,6 @@
 package com.sqn.library.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.sqn.library.common.Constants;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,9 @@ public class HealthController {
      */
     @PostMapping("/save/{isSimple}")
     public Result<?> save(@RequestBody Health health, @PathVariable boolean isSimple) {
+        if (health.getHeight() == null || health.getWeight() == null) {
+            return Result.error(Constants.CODE_COMMON_ERR, "身高和体重都要填哦！");
+        }
         if (isSimple && (health.getHeight() == 0 || health.getWeight() == 0)) {
             return Result.error(Constants.CODE_COMMON_ERR, "身高或体重输入错误");
         }
