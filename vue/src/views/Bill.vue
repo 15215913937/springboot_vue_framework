@@ -67,7 +67,7 @@
 
     <!--    新增窗口-->
     <el-dialog v-model="dialogVisible" title="新增消费记录" width="30%">
-      <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
+      <el-form :model="form" label-width="120px" :rules="rules" ref="billRef">
         <el-form-item label="费用" prop="cost">
           <el-input v-model="form.cost" style="width: 80%" autocomplete="off"/>
         </el-form-item>
@@ -86,7 +86,8 @@
           <el-radio v-model="form.type" label="收入" size="large">收入</el-radio>
         </el-form-item>
         <el-form-item label="备注" prop="comment">
-          <el-input type="textarea" show-word-limit maxlength="100" v-model="form.comment" style="width: 80%" autocomplete="off"/>
+          <el-input type="textarea" show-word-limit maxlength="100" v-model="form.comment" style="width: 80%"
+                    autocomplete="off"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -201,13 +202,13 @@ export default {
       })
     },
     save() {
-      this.$refs.pass.validate((valid) => {
+      this.$refs.billRef.validate((valid) => {
         if (valid) {
           this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+          }, 500)
           request.post("/consumer-details", this.form).then(res => {
-            setTimeout(() => {
-              this.loading = false;
-            }, 500)
             if (res.code === '0') {
               this.$message.success("提交成功");
               this.load()

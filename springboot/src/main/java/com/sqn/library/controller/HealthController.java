@@ -1,7 +1,7 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.sqn.library.common.Constants;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -77,5 +77,8 @@ public class HealthController {
         return Result.success(healthService.getById(id));
     }
 
-
+    @GetMapping("/findHistoryActivities/{uid}")
+    public Result<?> findHistoryActivities(@PathVariable Integer uid) {
+        return Result.success(healthService.queryHistoryActivities(uid));
+    }
 }

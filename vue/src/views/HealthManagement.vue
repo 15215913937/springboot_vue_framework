@@ -3,7 +3,7 @@
     <div style="display: flex;flex-direction: column;">
       <!--计划列表-->
       <div style="display:flex;height: 200px;border: #ffd700 solid;padding: 10px;text-align: center">
-        <!--        当前计划进度区-->
+        <!--        当前计划查看区-->
         <div style="width: 200px;padding: 10px;display: flex;flex-direction: column">
           <span style="font-family: 华文楷体;font-size: 18px;height: 20px">当前计划完成进度</span>
           <div v-if="targets.length===0"
@@ -17,7 +17,7 @@
                 <span class="percentage-value" v-else>{{ targets[0].schedule }}%</span>
                 <br>
                 <div style="cursor: pointer;margin-top: 10px">
-                  <span class="percentage-label" @click="checkLatestTarget()">{{ targets[0].code }}</span>
+                  <span class="percentage-label" @click="checkTarget(targets[0].id)">{{ targets[0].code }}</span>
                 </div>
               </template>
             </el-progress>
@@ -53,7 +53,7 @@
             <el-button type="success" @click="addTarget(user.id)">新增计划</el-button>
           </div>
           <div class="alignCenter">
-            <el-button @click="menu(user.id)">历史计划</el-button>
+            <el-button @click="targetMenu(user.id)">历史计划</el-button>
           </div>
         </div>
       </div>
@@ -131,7 +131,7 @@
           </div>
           <div style="flex:1;border: #409EFF solid;padding: 0 10px;height: 50px;display: flex;align-items: center;">
             <el-tag
-                v-for="tag in newActivityMarks"
+                v-for="tag in newActivityMark"
                 :key=tag
                 closable
                 :disable-transitions="false"
@@ -156,13 +156,11 @@
           </div>
           <!--          上一次活动-->
           <div class="alignCenter_width150">
-            <span>上一次活动</span>
+            <span @click="viewHistoricalActivity()">上一次活动</span>
           </div>
           <div style="flex:1;border: #409EFF solid;padding: 0 10px;height: 50px;display: flex;align-items: center;">
-            <div v-if="latestActivityMarks===[]">很久没运动了~ 快去运动吧！</div>
             <el-tag
-                v-else
-                v-for="tag1 in latestActivityMarks"
+                v-for="tag1 in latestActivityMark"
                 :key=tag1
                 style="margin-right: 10px"
             >
@@ -177,28 +175,30 @@
     <div>
       <div>
         <el-dialog v-model="dialogVisible" title="我的计划" width="30%">
-          <el-form :model="newTarget" label-width="120px" :rules="rules" ref="pass">
+          <el-form :model="newTarget" label-width="120px" :rules="rules" ref="targetRef">
             <el-form-item label="计划代号" prop="code">
               <el-input v-model="newTarget.code" style="width: 80%" show-word-limit maxlength="5" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="计划开始日期" prop="start_time">
               <el-date-picker
-                  v-model="newTarget.start_time"
+                  v-model="newTarget.startTime"
                   type="date"
                   clearable
                   style="width: 80%"
                   format="YYYY/MM/DD"
                   value-format="YYYY-MM-DD"
+                  :disabled-date="disableStartDate"
               />
             </el-form-item>
             <el-form-item label="计划结束日期" prop="end_time">
               <el-date-picker
-                  v-model="newTarget.end_time"
+                  v-model="newTarget.endTime"
                   type="date"
                   clearable
                   style="width: 80%"
                   format="YYYY/MM/DD"
                   value-format="YYYY-MM-DD"
+                  :disabled-date="disableEndDate"
               />
             </el-form-item>
             <el-form-item label="级别" prop="level">
@@ -257,6 +257,20 @@
           </template>
         </el-dialog>
       </div>
+      <div>
+        <el-dialog v-model="historyActivitiesDV" title="历史活动">
+          <el-table :data="historyActivities" height="250" style="width: 100%" stripe>
+            <el-table-column prop="id" label="ID" width="100" align="center"/>
+            <el-table-column prop="activityMarks" label="运动集" align="center"/>
+            <el-table-column prop="createTime" label="记录时间" align="center"/>
+          </el-table>
+          <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="historyActivitiesDV = false">确定</el-button>
+                    </span>
+          </template>
+        </el-dialog>
+      </div>
     </div>
 
   </div>
@@ -265,8 +279,6 @@
 <script>
 import request from "../utils/request";
 import {ElMessageBox} from 'element-plus'
-
-const {nextTick} = require("vue");
 
 let n = new Date()
 let year = n.getFullYear()
@@ -278,8 +290,9 @@ export default {
   name: "HealthManagement",
   data() {
     return {
-      newActivityMarks: [],
-      latestActivityMarks: [],
+      newActivityMark: [],
+      latestActivityMark: [],
+      ActivityMark: [],
       inputValue: '',
       inputVisible: false,
       checked: false,
@@ -312,6 +325,7 @@ export default {
       loading: false,
       operate: true,
       historyDialogVisible: false,
+      historyActivitiesDV: false,
       bodyInfo: {
         uid: "",
         height: 0,
@@ -321,7 +335,20 @@ export default {
         hipline: 0.0,
         shoulderWide: 0.0,
         activities: 0.0
-      }
+      },
+      rules: {
+        code: [
+          {required: true, message: '计划代号不能为空', trigger: 'blur'},
+          {min: 1, max: 5, message: '长度在1~5位之间', trigger: 'blur'},
+        ],
+        start_time: [
+          {required: true, message: '计划开始时间不能为空', trigger: 'blur'},
+        ],
+        end_time: [
+          {required: true, message: '计划结束时间不能为空', trigger: 'blur'},
+        ],
+      },
+      historyActivities: {}
     }
   },
   created() {
@@ -334,7 +361,8 @@ export default {
         this.targets = res.data;
       })
 
-      request.post('/health/queryLatestInfo/' + this.user.id).then(res => {
+      request.get('/health/findHistoryActivities/' + this.user.id).then(res => {
+        console.log(res.data.length)
         if (res.data.length === 0) {
           return
         }
@@ -351,12 +379,10 @@ export default {
         expectDate = expectDate.split(" ")
 
         if (expectDate[0] === nowDate) {
-          this.newActivityMarks = res.data[0].activityMarks;
-          if (res.data.length !== 1) {
-            this.latestActivityMarks = res.data[1].activityMarks;
-          }
+          this.newActivityMark = res.data[0].activityMarks;
+          this.latestActivityMark = res.data[1].activityMarks;
         } else {
-          this.latestActivityMarks = res.data[0].activityMarks;
+          this.latestActivityMark = res.data[0].activityMarks;
         }
 
         this.bmi = (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
@@ -372,6 +398,53 @@ export default {
         }
       })
     },
+    // 查看指定计划
+    checkTarget(id) {
+      this.operate = false;
+      this.dialogVisible = true;
+      request.get('/target/' + id).then(res => {
+        this.newTarget = res.data;
+      })
+    },
+
+    // 打开计划
+    addTarget() {
+      this.dialogVisible = true;
+      this.operate = true;
+      this.newTarget = {}
+    },
+    // 添加计划
+    submitTarget(uid) {
+      this.$refs.targetRef.validate((v) => {
+        if (v) {
+          if (this.newTarget.startTime >= this.newTarget.endTime) {
+            return this.$message.error("开始日期不能大于或等于结束日期！");
+          }
+          this.newTarget.uid = uid;
+          request.post('/target', this.newTarget).then(res => {
+            this.dialogVisible = false;
+            if (res.code === '0') {
+              this.$message.success(res.msg);
+              this.load();
+              return;
+            }
+            this.$message.error(res.msg)
+          })
+        }
+      })
+    },
+    // 禁用指定日期
+    disableStartDate(i) {
+      return i.getTime() < Date.now() - 8.64e7;
+    },
+    disableEndDate(i) {
+      return i.getTime() < Date.now();
+    },
+    // 历史计划
+    targetMenu() {
+      this.historyDialogVisible = true;
+    },
+    // 今日运动数据更新
     onSubmit(uid, i) {
       let baseData = 2 * 10;
       let body = {
@@ -382,7 +455,7 @@ export default {
         waistline: this.bodyInfo.waistline * baseData,
         hipline: this.bodyInfo.hipline * baseData,
         shoulderWide: this.bodyInfo.shoulderWide * baseData,
-        activityMarks: this.newActivityMarks
+        activityMarks: this.newActivityMark
       }
       let is_simple = 1;
       if (i === "围度") {
@@ -412,59 +485,30 @@ export default {
         this.load();
       }, 500)
     },
-    checkLatestTarget() {
-      this.operate = false;
-      request.get('/target/' + this.targets[0].id).then(res => {
-        this.dialogVisible = true;
-        this.newTarget = res.data
-      })
-    },
-    checkTarget(id) {
-      this.operate = false;
-      request.get('/target/' + id).then(res => {
-        this.dialogVisible = true;
-        this.newTarget = res.data
-      })
-    },
-    addTarget() {
-      this.dialogVisible = true;
-      this.operate = true;
-      this.newTarget = {}
-    },
-    submitTarget(uid) {
-      // setTimeout(() => {
-      //   this.loading = true;
-      // }, 500);
-      this.newTarget.uid = uid;
-      console.log(this.newTarget.startTime)
-      console.log(typeof this.newTarget.startTime)
-      console.log(this.newTarget.endTime)
-      console.log(typeof this.newTarget.endTime)
-      // request.post('/target', this.newTarget).then(res => {
-      //   this.$message.success(res.msg);
-      //   this.newTarget = {}
-      // })
-    },
-    menu() {
-      this.historyDialogVisible = true;
-    },
+
+    // 今日运动标签删除
     handleClose(tag) {
-      this.newActivityMarks.splice(this.newActivityMarks.indexOf(tag), 1);
+      this.newActivityMark.splice(this.newActivityMark.indexOf(tag), 1);
     },
+
     showInput() {
       this.inputVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
+    // 今日运动标签提交
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
-        this.newActivityMarks.push(inputValue);
+        this.newActivityMark.push(inputValue);
       }
       this.inputVisible = false;
       this.inputValue = '';
     },
+    viewHistoricalActivity() {
+      this.historyActivitiesDV = true;
+    }
   }
 }
 </script>

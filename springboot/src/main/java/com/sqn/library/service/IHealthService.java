@@ -3,6 +3,7 @@ package com.sqn.library.service;
 import com.sqn.library.entity.Health;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,4 +19,10 @@ public interface IHealthService extends IService<Health> {
     List<Health> getByUid(Integer uid);
 
     boolean add(Health health);
+
+    ArrayList<Health> queryHistoryActivities(Integer uid);
+
+    Health transformActivitiesToName(Health health);
+
+    Health transformActivitiesToId(Health health);
 }
