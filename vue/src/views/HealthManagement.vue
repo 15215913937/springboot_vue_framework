@@ -15,7 +15,9 @@
                 <span class="percentage-value">{{ targets[0].schedule }}%</span>
                 <br>
                 <div style="cursor: pointer;margin-top: 10px">
-                  <span class="percentage-label" @click="updateTarget(targets[0].id)">{{ targets[0].code }}</span>
+                  <span class="percentage-label" @click="checkTarget(targets[0].id,is_update=true)">{{
+                      targets[0].code
+                    }}</span>
                 </div>
               </template>
             </el-progress>
@@ -45,7 +47,9 @@
                   </div>
                   <br>
                   <div style="cursor: pointer;margin-top: 10px">
-                    <span class="percentage-label" @click="checkTarget(target.id)">{{ target.code }}</span>
+                    <span class="percentage-label" @click="checkTarget(target.id,is_update=false)">{{
+                        target.code
+                      }}</span>
                   </div>
                 </template>
               </el-progress>
@@ -219,15 +223,17 @@
             </el-form-item>
           </el-form>
           <template #footer>
-                    <span class="dialog-footer">
-                      <div v-if="this.operate">
-                        <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="submitTarget(user.id)" :loading="loading">提交</el-button>
-                      </div>
-                      <div v-else>
-                        <el-button @click="dialogVisible = false">确定</el-button>
-                      </div>
-                    </span>
+            <span style="display: flex">
+              <div style="flex: 1">
+                <el-button @click="dialogVisible = false">取消</el-button>
+              </div>
+              <div v-if="this.operate||this.is_update" style="width: 100px">
+                <el-button type="primary" @click="submitTarget(user.id,newTarget)" :loading="loading">提交</el-button>
+              </div>
+              <div v-else style="width: 100px">
+                <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+              </div>
+            </span>
           </template>
         </el-dialog>
       </div>
@@ -358,7 +364,8 @@ export default {
         ],
       },
       historyActivities: {},
-      is_empty: false
+      is_empty: false,
+      is_update: false
     }
   },
   created() {
@@ -418,11 +425,6 @@ export default {
         this.newTarget = res.data;
       })
     },
-    // 更新计划
-    updateTarget(id) {
-      console.log(id)
-    },
-
     // 打开计划
     addTarget() {
       if (this.targets[0].status === 0 || this.targets[0].status === 1) {
@@ -432,16 +434,16 @@ export default {
       this.operate = true;
       this.newTarget = {}
     },
+
     // 添加计划
-    submitTarget(uid) {
+    submitTarget(uid, t) {
       this.$refs.targetRef.validate(v => {
-        console.log(v)
         if (v) {
-          if (this.newTarget.startTime >= this.newTarget.endTime) {
+          if (t.startTime >= t.endTime) {
             return this.$message.error("开始日期不能大于或等于结束日期！");
           }
-          this.newTarget.uid = uid;
-          request.post('/target', this.newTarget).then(res => {
+          t.uid = uid;
+          request.post('/target', t).then(res => {
             this.dialogVisible = false;
             if (res.code === '0') {
               this.$message.success(res.msg);
