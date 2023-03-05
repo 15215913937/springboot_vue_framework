@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface ITargetService extends IService<Target> {
 
-    List<Target> getByUid(Integer uid);
+    boolean refreshStatus(Integer uid);
 }

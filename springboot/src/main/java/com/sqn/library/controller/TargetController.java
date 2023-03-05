@@ -1,8 +1,10 @@
 package com.sqn.library.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.entity.Health;
+import com.sqn.library.mapper.TargetMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +34,9 @@ public class TargetController {
     @Resource
     private ITargetService targetService;
 
+    @Resource
+    TargetMapper targetMapper;
+
     /**
      * 新增或者更新
      */
@@ -52,9 +57,11 @@ public class TargetController {
         targetService.removeByIds(ids);
         return Result.success();
     }
+
     @PostMapping("/queryTargets/{uid}")
     public Result<?> queryLatestTarget(@PathVariable Integer uid) {
-        List<Target> list = targetService.getByUid(uid);
+        targetService.refreshStatus(uid);
+        List<Target> list = targetMapper.selectList(Wrappers.<Target>lambdaQuery().eq(Target::getUid, uid).orderByDesc(Target::getStartTime));
         return Result.success(list);
     }
 

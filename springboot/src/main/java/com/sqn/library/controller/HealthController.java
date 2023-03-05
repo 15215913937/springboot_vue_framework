@@ -1,6 +1,7 @@
 package com.sqn.library.controller;
 
 import com.sqn.library.common.Constants;
+import com.sqn.library.mapper.HealthMapper;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class HealthController {
 
     @Resource
     private IHealthService healthService;
+
 
     /**
      * 新增或者更新

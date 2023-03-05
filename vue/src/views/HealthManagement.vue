@@ -6,18 +6,16 @@
         <!--        当前计划查看区-->
         <div style="width: 200px;padding: 10px;display: flex;flex-direction: column">
           <span style="font-family: 华文楷体;font-size: 18px;height: 20px">当前计划完成进度</span>
-          <div v-if="targets.length===0"
+          <div v-if="targets.length===0||targets[0].status===2||targets[0].status===3"
                style="flex:1;color: #888888;display: flex;justify-content: center;align-items: center">当前没有计划正在进行
           </div>
           <div v-else style="margin-top: 10px;flex:1;">
             <el-progress type="dashboard" :percentage=targets[0].schedule>
               <template #default="{ percentage }">
-                <span style="color: red;font-family: 幼圆;font-size: larger;font-weight: bolder"
-                      v-if="targets[0].schedule===100">已完成</span>
-                <span class="percentage-value" v-else>{{ targets[0].schedule }}%</span>
+                <span class="percentage-value">{{ targets[0].schedule }}%</span>
                 <br>
                 <div style="cursor: pointer;margin-top: 10px">
-                  <span class="percentage-label" @click="checkTarget(targets[0].id)">{{ targets[0].code }}</span>
+                  <span class="percentage-label" @click="updateTarget(targets[0].id)">{{ targets[0].code }}</span>
                 </div>
               </template>
             </el-progress>
@@ -25,7 +23,7 @@
         </div>
         <!--        历史计划查看区-->
         <div style="flex: 1;padding: 10px;display: flex;flex-direction: column">
-          <span style="font-family: 华文楷体;font-size: 18px;height: 20px">历史计划</span>
+          <span style="font-family: 华文楷体;font-size: 18px;height: 20px">最近计划</span>
           <div v-if="targets.length===0"
                style="color: #888888;flex:1;display: flex;justify-content: center;align-items: center">暂无历史记录
           </div>
@@ -33,11 +31,18 @@
             <div style="flex: 1;" v-for="target in targets.slice(0,6)">
               <el-progress type="dashboard" :percentage=target.schedule>
                 <template #default="{ percentage }">
-                  <span style="color: red;font-family: 幼圆;font-size: larger;font-weight: bolder"
-                        v-if="target.schedule===100">已完成</span>
-                  <span style="color: #888888;font-family: 幼圆;font-size: larger;font-weight: bolder"
-                        v-else-if="target.schedule!==100">未完成</span>
-                  <span class="percentage-value" v-else>{{ target.schedule }}%</span>
+                  <div v-if="target.status===0">
+                    <span style="color: #888888;font-family: 幼圆;font-size: larger;font-weight: bolder">未开始</span>
+                  </div>
+                  <div v-if="target.status===1">
+                    <span style="color: forestgreen;font-family: 幼圆;font-size: larger;font-weight: bolder">进行中</span>
+                  </div>
+                  <div v-if="target.status===2">
+                    <span style="color: deepskyblue;font-family: 幼圆;font-size: larger;font-weight: bolder">已完成</span>
+                  </div>
+                  <div v-if="target.status===3">
+                    <span style="color: #888888;font-family: 幼圆;font-size: larger;font-weight: bolder">未完成</span>
+                  </div>
                   <br>
                   <div style="cursor: pointer;margin-top: 10px">
                     <span class="percentage-label" @click="checkTarget(target.id)">{{ target.code }}</span>
@@ -156,7 +161,7 @@
           </div>
           <!--          上一次活动-->
           <div class="alignCenter_width150">
-            <span @click="viewHistoricalActivity()">上一次活动</span>
+            <span @click="viewHistoricalActivity">上一次活动</span>
           </div>
           <div style="flex:1;border: #409EFF solid;padding: 0 10px;height: 50px;display: flex;align-items: center;">
             <el-tag
@@ -179,7 +184,7 @@
             <el-form-item label="计划代号" prop="code">
               <el-input v-model="newTarget.code" style="width: 80%" show-word-limit maxlength="5" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="计划开始日期" prop="start_time">
+            <el-form-item label="计划开始日期" prop="startTime">
               <el-date-picker
                   v-model="newTarget.startTime"
                   type="date"
@@ -190,7 +195,7 @@
                   :disabled-date="disableStartDate"
               />
             </el-form-item>
-            <el-form-item label="计划结束日期" prop="end_time">
+            <el-form-item label="计划结束日期" prop="endTime">
               <el-date-picker
                   v-model="newTarget.endTime"
                   type="date"
@@ -229,7 +234,6 @@
       <div>
         <el-dialog v-model="historyDialogVisible" title="历史计划">
           <el-table :data="targets" height="250" style="width: 100%" stripe>
-            <el-table-column prop="id" label="ID" width="100" align="center"/>
             <el-table-column prop="code" label="代号" align="center"/>
             <el-table-column prop="level" label="级别" align="center">
               <template #default="scope">
@@ -245,7 +249,7 @@
                 <el-tag effect="plain" type="info" v-if="scope.row.status === 0">未开始</el-tag>
                 <el-tag effect="plain" type="" v-if="scope.row.status === 1">进行中</el-tag>
                 <el-tag effect="plain" type="success" v-if="scope.row.status === 2">已完成</el-tag>
-                <el-tag effect="plain" type="danger" v-if="scope.row.status === 3">未完成</el-tag>
+                <el-tag effect="plain" type="danger" v-if="scope.row.status === 3">已过期</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="schedule" label="进度" align="center"/>
@@ -259,11 +263,16 @@
       </div>
       <div>
         <el-dialog v-model="historyActivitiesDV" title="历史活动">
-          <el-table :data="historyActivities" height="250" style="width: 100%" stripe>
-            <el-table-column prop="id" label="ID" width="100" align="center"/>
-            <el-table-column prop="activityMarks" label="运动集" align="center"/>
-            <el-table-column prop="createTime" label="记录时间" align="center"/>
-          </el-table>
+          <div v-if="is_empty">
+            <el-empty :image-size="200" description="暂无数据"/>
+          </div>
+          <div v-else>
+            <el-table :data="historyActivities" height="250" style="width: 100%" stripe>
+              <el-table-column prop="id" label="ID" width="100" align="center"/>
+              <el-table-column prop="activityMarks" label="运动集" align="center"/>
+              <el-table-column prop="createTime" label="记录时间" align="center"/>
+            </el-table>
+          </div>
           <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="historyActivitiesDV = false">确定</el-button>
@@ -341,14 +350,15 @@ export default {
           {required: true, message: '计划代号不能为空', trigger: 'blur'},
           {min: 1, max: 5, message: '长度在1~5位之间', trigger: 'blur'},
         ],
-        start_time: [
+        startTime: [
           {required: true, message: '计划开始时间不能为空', trigger: 'blur'},
         ],
-        end_time: [
+        endTime: [
           {required: true, message: '计划结束时间不能为空', trigger: 'blur'},
         ],
       },
-      historyActivities: {}
+      historyActivities: {},
+      is_empty: false
     }
   },
   created() {
@@ -362,8 +372,8 @@ export default {
       })
 
       request.get('/health/findHistoryActivities/' + this.user.id).then(res => {
-        console.log(res.data.length)
         if (res.data.length === 0) {
+          this.is_empty = true;
           return
         }
         this.bodyInfo = {
@@ -380,11 +390,13 @@ export default {
 
         if (expectDate[0] === nowDate) {
           this.newActivityMark = res.data[0].activityMarks;
-          this.latestActivityMark = res.data[1].activityMarks;
+          if (res.data.length > 1) {
+            this.latestActivityMark = res.data[1].activityMarks;
+          }
         } else {
           this.latestActivityMark = res.data[0].activityMarks;
         }
-
+        this.historyActivities = res.data;
         this.bmi = (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
       });
     },
@@ -406,16 +418,24 @@ export default {
         this.newTarget = res.data;
       })
     },
+    // 更新计划
+    updateTarget(id) {
+      console.log(id)
+    },
 
     // 打开计划
     addTarget() {
+      if (this.targets[0].status === 0 || this.targets[0].status === 1) {
+        return this.$message.warning("当前还有未结束的任务哟");
+      }
       this.dialogVisible = true;
       this.operate = true;
       this.newTarget = {}
     },
     // 添加计划
     submitTarget(uid) {
-      this.$refs.targetRef.validate((v) => {
+      this.$refs.targetRef.validate(v => {
+        console.log(v)
         if (v) {
           if (this.newTarget.startTime >= this.newTarget.endTime) {
             return this.$message.error("开始日期不能大于或等于结束日期！");
