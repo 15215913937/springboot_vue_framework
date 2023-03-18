@@ -46,6 +46,7 @@ public class Constants {
     public static final Long LOGIN_INFO_TTL = 30L;// 登录后相关信息缓存有效期
     public static final Long CACHE_NULL_TTL = 5L;// 空值缓存过期时间
     public static final String LOCK_KEY = "lock:key:"; //互斥锁前缀名
+    public static final String ALL_ACTIVITY_KEY = "info:activities:"; // 运动集
 
     /**
      * 角色常量

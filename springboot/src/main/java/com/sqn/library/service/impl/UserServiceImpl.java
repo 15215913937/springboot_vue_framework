@@ -1,10 +1,7 @@
 package com.sqn.library.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.hash.Hash;
 import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.common.Constants;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
@@ -12,18 +9,14 @@ import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.utils.RedisUtils;
 import com.sqn.library.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -77,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void updateRecentLoginTime(int id) {
+    public void updateRecentLoginTime(Long id) {
         final Date date = new Date();
         User user = userMapper.selectById(id);
         user.setRecentLogin(new Timestamp(date.getTime()));
@@ -92,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Boolean setStatusOnline(Integer userId) {
+    public Boolean setStatusOnline(Long userId) {
         final User user = userMapper.selectById(userId);
         user.setStatus(1);
         userMapper.updateById(user);
@@ -100,8 +93,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Boolean setStatusOffline(Integer userId) {
-        final User user = userMapper.selectById(userId);
+    public Boolean setStatusOffline(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            return false;
+        }
         user.setStatus(0);
         userMapper.updateById(user);
         return true;

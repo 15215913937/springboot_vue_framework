@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 
+/**
+ * @author sqn
+ */
 @Api(tags = "书籍管理")
 @RestController
 @RequestMapping("/book")// 统一接口加前缀

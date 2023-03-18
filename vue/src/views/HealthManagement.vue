@@ -1,12 +1,12 @@
 <template>
   <div style="margin: 20px;">
-    <div style="display: flex;flex-direction: column;">
+    <div style="display: flex;flex-direction: column;height: 100%">
       <!--计划列表-->
       <div style="display:flex;height: 200px;border: #ffd700 solid;padding: 10px;text-align: center">
         <!--        当前计划查看区-->
         <div style="width: 200px;padding: 10px;display: flex;flex-direction: column">
           <span style="font-family: 华文楷体;font-size: 18px;height: 20px">当前计划完成进度</span>
-          <div v-if="targets.length===0||targets[0].status===2||targets[0].status===3"
+          <div v-if="targets.length===0||targets[0].status===2||targets[0].status===3||targets[0].status===4"
                style="flex:1;color: #888888;display: flex;justify-content: center;align-items: center">当前没有计划正在进行
           </div>
           <div v-else style="margin-top: 10px;flex:1;">
@@ -45,6 +45,9 @@
                   <div v-if="target.status===3">
                     <span style="color: #888888;font-family: 幼圆;font-size: larger;font-weight: bolder">未完成</span>
                   </div>
+                  <div v-if="target.status===4">
+                    <span style="color: red;font-family: 幼圆;font-size: larger;font-weight: bolder">已终止</span>
+                  </div>
                   <br>
                   <div style="cursor: pointer;margin-top: 10px">
                     <span class="percentage-label" @click="checkTarget(target.id,is_update=false)">{{
@@ -59,7 +62,7 @@
         <!--        操作区-->
         <div style="width: 150px;display: flex;flex-direction: column">
           <div class="alignCenter">
-            <el-button type="success" @click="addTarget(user.id)">新增计划</el-button>
+            <el-button type="success" @click="addTarget(user.id,is_update=false)">新增计划</el-button>
           </div>
           <div class="alignCenter">
             <el-button @click="targetMenu(user.id)">历史计划</el-button>
@@ -93,18 +96,16 @@
                 <span style="margin-left: 10px">kg</span>
               </el-form-item>
               <el-form-item label="身体质量指数（BMI）:" class="bodySingle">
-                <h3>{{
-                    (!this.bodyInfo.weight || !this.bodyInfo.weight) ? 0 : (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
-                  }}</h3>
+                <h3>{{ getBmi }}</h3>
                 <el-icon style="margin-left: 20px;cursor: pointer" @click="tips()">
                   <QuestionFilled/>
                 </el-icon>
               </el-form-item>
               <el-form-item class="bodySingle">
-                <el-tag v-if="bmi>0&&bmi<=18.4">偏瘦</el-tag>
-                <el-tag type="success" v-else-if="bmi>18.4&&bmi<=23.9">正常</el-tag>
-                <el-tag type="warning" v-else-if="bmi>23.9&&bmi<=27.9">偏胖</el-tag>
-                <el-tag type="error" v-else-if="bmi>27.9">肥胖</el-tag>
+                <el-tag v-if="getBmi>0&&getBmi<=18.4">偏瘦</el-tag>
+                <el-tag type="success" v-else-if="getBmi>18.4&&getBmi<=23.9">正常</el-tag>
+                <el-tag type="warning" v-else-if="getBmi>23.9&&getBmi<=27.9">偏胖</el-tag>
+                <el-tag type="error" v-else-if="getBmi>27.9">肥胖</el-tag>
                 <el-tag type="info" v-else>未知</el-tag>
               </el-form-item>
             </el-form>
@@ -179,6 +180,14 @@
         </div>
 
       </div>
+      <div style="flex: 3;display: flex">
+        <div id="activitiesData" style="flex: 1">
+          aa
+        </div>
+        <div style="flex: 1">
+          bb
+        </div>
+      </div>
     </div>
     <!--  弹窗-->
     <div>
@@ -210,12 +219,35 @@
                   :disabled-date="disableEndDate"
               />
             </el-form-item>
+            <el-form-item label="运动天数">
+              <span>{{ getDuration }}</span>天
+            </el-form-item>
             <el-form-item label="级别" prop="level">
               <el-radio-group v-model="newTarget.level">
                 <el-radio-button label=2>轻松</el-radio-button>
                 <el-radio-button label=1>正常</el-radio-button>
                 <el-radio-button label=0>困难</el-radio-button>
               </el-radio-group>
+            </el-form-item>
+            <el-form-item
+                style="width: 80%"
+                v-for="(detail, index) in newTarget.targetDetails"
+                :key="detail.activityId"
+                :label="'运动 ' + index"
+                :prop="'targetDetails.'+index"
+                :rules="{
+                  required: true,
+                  message: '运动不能为空',
+                  trigger: 'blur',
+                }">
+              <div style="display: flex">
+                <el-select v-model="detail.activityId" style="flex: 1;padding-right: 10px">
+                  <el-option v-for="activity in activities" :label="activity.name" :value="activity.id"/>
+                </el-select>
+                <span style="padding-right: 12px">天数</span>
+                <el-input style="flex: 1;" v-model.number="detail.duration"/>
+              </div>
+              <!--              <el-button class="mt-2" @click.prevent="removeDomain(detail)">Delete</el-button>-->
             </el-form-item>
             <el-form-item label="描述" prop="content">
               <el-input type="textarea" v-model="newTarget.content" style="width: 80%" show-word-limit maxlength="50"
@@ -227,7 +259,13 @@
               <div style="flex: 1">
                 <el-button @click="dialogVisible = false">取消</el-button>
               </div>
-              <div v-if="this.operate||this.is_update" style="width: 100px">
+              <div v-show="is_update" style="width: 100px">
+                <el-button type="danger" @click="terminate(newTarget.id)">终止</el-button>
+              </div>
+              <div v-show="operate" style="width: 100px">
+                <el-button @click="addDomain()">增加运动</el-button>
+              </div>
+              <div v-if="operate||is_update" style="width: 100px">
                 <el-button type="primary" @click="submitTarget(user.id,newTarget)" :loading="loading">提交</el-button>
               </div>
               <div v-else style="width: 100px">
@@ -256,6 +294,7 @@
                 <el-tag effect="plain" type="" v-if="scope.row.status === 1">进行中</el-tag>
                 <el-tag effect="plain" type="success" v-if="scope.row.status === 2">已完成</el-tag>
                 <el-tag effect="plain" type="danger" v-if="scope.row.status === 3">已过期</el-tag>
+                <el-tag effect="plain" type="warning" v-if="scope.row.status === 4">已终止</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="schedule" label="进度" align="center"/>
@@ -293,13 +332,14 @@
 
 <script>
 import request from "../utils/request";
-import {ElMessageBox} from 'element-plus'
+import {ElMessageBox} from 'element-plus';
 
 let n = new Date()
 let year = n.getFullYear()
 let month = n.getMonth() + 1 > 9 ? n.getMonth() + 1 : '0' + (n.getMonth() + 1)
 let day = n.getDate() > 9 ? n.getDate() : '0' + n.getDate()
 let nowDate = year + '-' + month + '-' + day
+
 
 export default {
   name: "HealthManagement",
@@ -323,7 +363,6 @@ export default {
           label: "围度"
         }
       ],
-      bmi: 0,
       targets: [{
         schedule: "",
         code: "",
@@ -334,7 +373,11 @@ export default {
         content: "",
         startTime: "",
         endTime: "",
-        level: 1
+        level: 1,
+        targetDetails: [{
+          activityId: '',
+          duration: ''
+        }]
       },
       dialogVisible: false,
       loading: false,
@@ -365,7 +408,21 @@ export default {
       },
       historyActivities: {},
       is_empty: false,
-      is_update: false
+      is_update: false,
+      activities: []
+    }
+  },
+  computed: {
+    getBmi() {
+      let bmi = (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
+      return bmi ? bmi : 0;
+
+    },
+    getDuration() {
+      const et = new Date(this.newTarget.endTime);
+      const st = new Date(this.newTarget.startTime);
+      let duration = 1 + (et - st) / (24 * 60 * 60 * 1000);
+      return duration ? duration : 0;
     }
   },
   created() {
@@ -377,7 +434,9 @@ export default {
       request.post('/target/queryTargets/' + this.user.id).then(res => {
         this.targets = res.data;
       })
-
+      request.get('/activity').then(res => {
+        this.activities = res.data
+      })
       request.get('/health/findHistoryActivities/' + this.user.id).then(res => {
         if (res.data.length === 0) {
           this.is_empty = true;
@@ -404,7 +463,6 @@ export default {
           this.latestActivityMark = res.data[0].activityMarks;
         }
         this.historyActivities = res.data;
-        this.bmi = (this.bodyInfo.weight / (this.bodyInfo.height * this.bodyInfo.height / 10000)).toFixed(1)
       });
     },
     // 查看小知识
@@ -423,16 +481,39 @@ export default {
       this.dialogVisible = true;
       request.get('/target/' + id).then(res => {
         this.newTarget = res.data;
+        for (let i = 0; i < res.data.targetDetails.length; i++) {
+          for (let j = 0; j < this.activities.length; j++) {
+            if (this.newTarget.targetDetails[i].activityId === String(this.activities[j].id)) {
+              this.newTarget.targetDetails[i].activityId = this.activities[j].name;
+              break;
+            }
+          }
+        }
       })
     },
     // 打开计划
     addTarget() {
-      if (this.targets[0].status === 0 || this.targets[0].status === 1) {
-        return this.$message.warning("当前还有未结束的任务哟");
+      if (this.targets.length !== 0) {
+        if (this.targets[0].status === 0 || this.targets[0].status === 1) {
+          return this.$message.warning("当前还有未结束的任务哟");
+        }
       }
       this.dialogVisible = true;
       this.operate = true;
       this.newTarget = {}
+    },
+    // 终止计划
+    terminate(id) {
+      request.post('/target/terminate', id).then(res => {
+        if (res.code === "0") {
+          this.$message.success("任务已终止");
+          this.dialogVisible = false;
+          this.load();
+        } else {
+          this.$message.error("终止失败");
+        }
+      })
+
     },
 
     // 添加计划
@@ -441,6 +522,14 @@ export default {
         if (v) {
           if (t.startTime >= t.endTime) {
             return this.$message.error("开始日期不能大于或等于结束日期！");
+          }
+          const et = new Date(t.endTime);
+          const st = new Date(t.startTime);
+          const duration = 1 + (et - st) / (24 * 60 * 60 * 1000);
+          console.log(t.targetDetails.duration)
+          console.log(duration)
+          if (t.targetDetails.duration > duration) {
+            return this.$message.error("运动时长不能超过计划时长")
           }
           t.uid = uid;
           request.post('/target', t).then(res => {
@@ -530,6 +619,18 @@ export default {
     },
     viewHistoricalActivity() {
       this.historyActivitiesDV = true;
+    },
+    addDomain() {
+      if (this.newTarget.targetDetails === undefined) {
+        this.newTarget.targetDetails = []
+      }
+      this.newTarget.targetDetails.push(
+          {
+            activityId: "",
+            duration: "",
+
+          }
+      )
     }
   }
 }

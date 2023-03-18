@@ -1,16 +1,9 @@
 package com.sqn.library.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sqn.library.common.Result;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.sqn.library.controller.dto.UserPasswordDTO;
 import com.sqn.library.controller.dto.UserResetPwdDTO;
-import com.sqn.library.controller.dto.UserSearchDTO;
 import com.sqn.library.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.validation.annotation.Validated;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * <p>
@@ -34,7 +27,7 @@ public interface IUserService extends IService<User> {
      *
      * @param id
      */
-    void updateRecentLoginTime(int id);
+    void updateRecentLoginTime(Long id);
 
     /**
      * 用户假删除
@@ -43,7 +36,7 @@ public interface IUserService extends IService<User> {
      */
     void isDeleteById(Long id);
 
-    Boolean setStatusOnline(Integer userId);
+    Boolean setStatusOnline(Long userId);
 
-    Boolean setStatusOffline(Integer userId);
+    Boolean setStatusOffline(Long userId);
 }

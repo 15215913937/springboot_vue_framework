@@ -45,7 +45,7 @@ public class UserLoginListeners implements HttpSessionListener, ServletContextLi
     public void sessionDestroyed(HttpSessionEvent se) {
         HttpSession session = se.getSession();
         Set<String> onlineUserSet = (Set<String>)application.getAttribute("onlineUserSet");
-        Integer userId = (Integer) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
         onlineUserSet.remove(userId);
         application.setAttribute("onlineUserSet",onlineUserSet);
 

@@ -1,18 +1,18 @@
 package com.sqn.library.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -31,10 +31,10 @@ public class Target implements Serializable {
 
     @ApiModelProperty("id")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("用户id")
-    private Integer uid;
+    private Long uid;
 
     @ApiModelProperty("目标代号")
     private String code;
@@ -67,5 +67,7 @@ public class Target implements Serializable {
     @ApiModelProperty("是否删除；0：未删除，1：已删除")
     private Boolean isDelete;
 
-
+    @TableField(exist = false)
+    @ApiModelProperty("活动列表")
+    private ArrayList<HashMap<String,String>> targetDetails;
 }

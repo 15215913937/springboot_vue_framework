@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 public class User {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")

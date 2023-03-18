@@ -271,7 +271,7 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    public Result<?> getById(@PathVariable Integer id) {
+    public Result<?> getById(@PathVariable Long id) {
         User user = iUserService.getById(id);
         return Result.success(user);
     }

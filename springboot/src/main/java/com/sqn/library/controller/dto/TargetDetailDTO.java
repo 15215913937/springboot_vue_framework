@@ -5,14 +5,15 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author sqn
  */
 @Data
-public class ActivitiesDTO {
+public class TargetDetailDTO {
     private Integer id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
-    private ArrayList<String> activityList;
+    private ArrayList<HashMap<String, String>> targetDetails;
 }

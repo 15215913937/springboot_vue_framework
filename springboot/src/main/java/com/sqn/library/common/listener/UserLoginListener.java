@@ -12,9 +12,9 @@ import java.util.List;
  * @author sqn
  */
 public class UserLoginListener implements HttpSessionBindingListener {
-    private Integer userId;
+    private Long userId;
 
-    public UserLoginListener(Integer userId){
+    public UserLoginListener(Long userId){
         this.userId=userId;
     }
 
@@ -23,7 +23,7 @@ public class UserLoginListener implements HttpSessionBindingListener {
         HttpSession session=event.getSession();
         ServletContext application=session.getServletContext();
         //从application获取当前登录用户列表
-        List<Integer> userOnlineList= (List<Integer>) application.getAttribute("userOnlineList");
+        List<Long> userOnlineList= (List<Long>) application.getAttribute("userOnlineList");
         //如果该属性不存在,则初始化
         if(userOnlineList==null){
             userOnlineList=new ArrayList<>();

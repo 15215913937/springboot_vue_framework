@@ -1,9 +1,7 @@
 package com.sqn.library.service;
 
-import com.sqn.library.entity.Target;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.sqn.library.entity.Target;
 
 /**
  * <p>
@@ -15,5 +13,13 @@ import java.util.List;
  */
 public interface ITargetService extends IService<Target> {
 
-    boolean refreshStatus(Integer uid);
+    boolean refreshStatus(Long uid);
+
+    boolean terminateTarget(Long id);
+
+    Integer add(Target target);
+
+    Target queryById(Long id);
+
+    boolean refreshAllTargetSchedule(Long uid);
 }
