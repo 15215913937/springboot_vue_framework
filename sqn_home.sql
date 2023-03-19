@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 18/03/2023 18:23:37
+ Date: 19/03/2023 17:47:51
 */
 
 SET NAMES utf8mb4;
@@ -389,12 +389,11 @@ CREATE TABLE `health`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除；0：未删除，1：已删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 130 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of health
 -- ----------------------------
-INSERT INTO `health` VALUES (131, 1, 172, 1360, 0, 0, 0, 0, '3,6,15', '2023-03-18 16:56:38', 0);
 INSERT INTO `health` VALUES (112, 1, 172, 1386, 0, 0, 0, 0, NULL, '2023-03-02 21:33:12', 0);
 INSERT INTO `health` VALUES (63, 1, 163, 1120, 700, 1780, 1550, 1880, '1,2,3,4', '2023-02-27 22:42:44', 0);
 INSERT INTO `health` VALUES (129, 62, 180, 1300, 1600, 1600, 1600, 1600, '4,23,24', '2023-03-04 22:21:27', 0);
@@ -404,13 +403,8 @@ INSERT INTO `health` VALUES (130, 1, 172, 1360, 0, 0, 0, 0, '1', '2023-03-18 15:
 INSERT INTO `health` VALUES (114, 1, 163, 1120, 700, 1780, 1550, 1880, '5,6,7', '2023-02-27 23:41:44', 0);
 INSERT INTO `health` VALUES (115, 1, 163, 1120, 700, 1780, 1550, 1880, '1,9', '2023-03-03 18:49:44', 0);
 INSERT INTO `health` VALUES (116, 42, 163, 1120, 700, 1780, 1550, 1880, '2,7', '2023-03-03 22:49:44', 0);
-INSERT INTO `health` VALUES (117, 1, 172, 1360, 0, 0, 0, 0, '2,7,15', '2023-03-03 23:54:05', 0);
-INSERT INTO `health` VALUES (134, 1, 172, 1360, 0, 0, 0, 0, '3,6,15', '2023-03-18 17:15:30', 0);
-INSERT INTO `health` VALUES (135, 1, 172, 1360, 0, 0, 0, 0, '3,6,15', '2023-03-18 17:15:35', 0);
-INSERT INTO `health` VALUES (136, 1, 172, 1360, 0, 0, 0, 0, '6,7,15', '2023-03-18 17:51:53', 0);
-INSERT INTO `health` VALUES (137, 1, 172, 1360, 0, 0, 0, 0, '6,7,15', '2023-03-18 17:51:59', 0);
-INSERT INTO `health` VALUES (138, 1, 172, 1360, 0, 0, 0, 0, '6,7,15', '2023-03-18 18:23:18', 0);
-INSERT INTO `health` VALUES (139, 1, 172, 1360, 0, 0, 0, 0, '6,7,15', '2023-03-18 18:23:20', 0);
+INSERT INTO `health` VALUES (154, 22, 165, 1000, 0, 0, 0, 0, '9,15,1', '2023-03-19 17:47:22', 0);
+INSERT INTO `health` VALUES (143, 22, 165, 1000, 0, 0, 0, 0, '1', '2023-03-18 23:43:21', 0);
 
 -- ----------------------------
 -- Table structure for menu
@@ -539,7 +533,7 @@ CREATE TABLE `target`  (
   `level` tinyint(11) NOT NULL DEFAULT 1 COMMENT '级别；0：困难，1：正常，2：轻松',
   `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除；0：未删除，1：已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of target
@@ -559,6 +553,7 @@ INSERT INTO `target` VALUES (31, 62, '测试代号3', NULL, '2023-03-17 23:35:42
 INSERT INTO `target` VALUES (32, 1, '测试1', NULL, '2023-03-18 15:57:25', '2023-03-18', '2023-03-19', 4, 0, 1, 0);
 INSERT INTO `target` VALUES (33, 1, '测试2', NULL, '2023-03-18 16:56:22', '2023-03-18', '2023-03-22', 2, 100, 1, 0);
 INSERT INTO `target` VALUES (34, 1, '测试3', NULL, '2023-03-18 17:51:33', '2023-03-18', '2023-03-21', 2, 100, 0, 0);
+INSERT INTO `target` VALUES (35, 22, '梅花Q', NULL, '2023-03-18 23:29:52', '2023-03-18', '2023-03-24', 1, 19, 0, 0);
 
 -- ----------------------------
 -- Table structure for target_detail
@@ -572,7 +567,7 @@ CREATE TABLE `target_detail`  (
   `be_prepared` int(11) NULL DEFAULT NULL COMMENT '已完成时长',
   `status` tinyint(4) NULL DEFAULT 0 COMMENT '状态：0：未完成，1：已完成',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of target_detail
@@ -587,6 +582,10 @@ INSERT INTO `target_detail` VALUES (22, 33, 3, 2, 2, 1);
 INSERT INTO `target_detail` VALUES (23, 33, 6, 3, 3, 1);
 INSERT INTO `target_detail` VALUES (24, 34, 6, 2, 2, 1);
 INSERT INTO `target_detail` VALUES (25, 34, 7, 4, 4, 1);
+INSERT INTO `target_detail` VALUES (26, 35, 1, 7, 3, 0);
+INSERT INTO `target_detail` VALUES (27, 35, 2, 2, 0, 0);
+INSERT INTO `target_detail` VALUES (28, 35, 4, 5, 0, 0);
+INSERT INTO `target_detail` VALUES (29, 35, 9, 7, 1, 0);
 
 -- ----------------------------
 -- Table structure for user
@@ -615,7 +614,7 @@ CREATE TABLE `user`  (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$9rmVXRmsRuO1FbbjqMPGl.tdIkZDvQ8FoNf5/Fat1W2NMRivX1Cn6', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-03-18 15:12:08', 0, 1);
-INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-01-14 15:55:37', 0, 0);
+INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-03-18 23:19:55', 0, 1);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 'ROLE_ADMIN', '15868180225', NULL, '2023-03-08 21:18:37', 0, 1);

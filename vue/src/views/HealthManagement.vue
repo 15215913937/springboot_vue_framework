@@ -628,7 +628,6 @@ export default {
           {
             activityId: "",
             duration: "",
-
           }
       )
     }

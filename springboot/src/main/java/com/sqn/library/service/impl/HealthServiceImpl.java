@@ -3,16 +3,17 @@ package com.sqn.library.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.entity.Activity;
 import com.sqn.library.entity.Health;
 import com.sqn.library.mapper.ActivityMapper;
 import com.sqn.library.mapper.HealthMapper;
 import com.sqn.library.service.IHealthService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,22 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 
     @Override
     public boolean add(Health health) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int date = calendar.get(Calendar.DATE);
+        List<Health> healthList = healthMapper.selectList(Wrappers.<Health>lambdaQuery().eq(Health::getUid, health.getUid()).orderByDesc(Health::getId));
+        Date createTime = healthList.get(0).getCreateTime();
+        calendar.setTime(createTime);
+        int year1 = calendar.get(Calendar.YEAR);
+        int month1 = calendar.get(Calendar.MONTH);
+        int date1 = calendar.get(Calendar.DATE);
+        if (year == year1 && month == month1 && date == date1) {
+            iHealthService.removeById(healthList.get(0));
+            iHealthService.add(health);
+            return true;
+        }
         if (health.getActivityMarks() == null) {
             iHealthService.save(health);
             return true;
