@@ -1,90 +1,73 @@
 <template>
-  <div>
-    <el-form
-        ref="formRef"
-        :model="dynamicValidateForm"
-        label-width="120px"
-        class="demo-dynamic"
-    >
-      <el-form-item
-          prop="email"
-          label="Email"
-          :rules="[
-        {
-          required: true,
-          message: 'Please input email address',
-          trigger: 'blur',
-        },
-        {
-          type: 'email',
-          message: 'Please input correct email address',
-          trigger: ['blur', 'change'],
-        },
-      ]"
-      >
-        <el-input v-model="dynamicValidateForm.email"/>
-      </el-form-item>
-      <el-form-item
-          v-for="(domain, index) in dynamicValidateForm.domains"
-          :key="domain.key"
-          :label="'Domain' + index"
-          :prop="'domains.' + index + '.value'"
-          :rules="{
-        required: true,
-        message: 'domain can not be null',
-        trigger: 'blur',
-      }"
-      >
-        <el-input v-model="domain.value"/>
-        <el-button class="mt-2" @click.prevent="removeDomain(domain)"
-        >Delete
-        </el-button
-        >
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm(formRef)">Submit</el-button>
-        <el-button @click="addDomain">New domain</el-button>
-        <el-button @click="resetForm(formRef)">Reset</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="container">
+    <h2>扫码登录Demo</h2>
+    <qrcode :value="qrcodeValue" :size="200"/>
+    <p v-if="!isLogin">请使用微信扫描二维码进行登录</p>
+    <p v-else>登录成功，欢迎您，{{ username }}！</p>
   </div>
 
 </template>
 
 
 <script>
+import Qrcode from 'qrcode.vue';
+import request from "@/utils/request";
+
 export default {
-  name: "TestPage",
+  name: 'ScanLogin',
+  components: {
+    Qrcode,
+  },
   data() {
     return {
-      dynamicValidateForm: {
-        domains: [
-          {
-            key: 1,
-            value: '',
-          },
-        ],
-        email: '',
-      }
-    }
+      qrcodeValue: '',
+      isLogin: false,
+      username: '',
+    };
+  },
+  mounted() {
+    // 生成二维码
+    this.generateQrcode();
   },
   methods: {
-    submitForm() {
-      if (!this.$refs.formEl) return
-      this.$refs.formEl.validate((valid) => {
-        if (valid) {
-          console.log('submit!')
-        } else {
-          console.log('error submit!')
-          return false
+    generateQrcode() {
+      // 向服务端请求二维码值
+      // 此处省略具体实现
+      // ...
+      // const response = 'a87fdg7fd9h03jfn';
+      const response = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=xxxxxxxxxxxxxxxxx&redirect_uri=http://example.com/wechatLogin&response_type=code&scope=snsapi_login&state=123#wechat_redirect';
+
+      this.qrcodeValue = response;
+      // 轮询检查是否已登录
+      const timer = setInterval(() => {
+        // 向服务端请求登录状态
+        // 此处省略具体实现
+        // ...
+        const isLogin = true;// 假设已登录成功
+        if (isLogin) {
+          clearInterval(timer);
+          this.isLogin = true;
+          this.username = 'Tom';// 假设获取到登录用户的用户名
         }
-      })
-    }
-  }
+      }, 1000);
+    },
+  },
+};
+</script>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
 }
 
-</script>
+h2 {
+  margin-bottom: 20px;
+}
 
-
-<style>
+p {
+  margin-top: 20px;
+}
 </style>

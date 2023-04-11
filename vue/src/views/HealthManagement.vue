@@ -195,7 +195,7 @@
         <el-dialog v-model="dialogVisible" title="我的计划" width="30%">
           <el-form :model="newTarget" label-width="120px" :rules="rules" ref="targetRef">
             <el-form-item label="计划代号" prop="code">
-              <el-input v-model="newTarget.code" style="width: 80%" show-word-limit maxlength="5" autocomplete="off"/>
+              <el-input v-model="newTarget.code" style="width: 80%" show-word-limit maxlength="6" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="计划开始日期" prop="startTime">
               <el-date-picker
@@ -397,7 +397,7 @@ export default {
       rules: {
         code: [
           {required: true, message: '计划代号不能为空', trigger: 'blur'},
-          {min: 1, max: 5, message: '长度在1~5位之间', trigger: 'blur'},
+          {min: 1, max: 6, message: '长度在1~6位之间', trigger: 'blur'},
         ],
         startTime: [
           {required: true, message: '计划开始时间不能为空', trigger: 'blur'},

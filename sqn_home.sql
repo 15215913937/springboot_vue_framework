@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 19/03/2023 17:47:51
+ Date: 11/04/2023 17:58:05
 */
 
 SET NAMES utf8mb4;
@@ -389,7 +389,7 @@ CREATE TABLE `health`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除；0：未删除，1：已删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 155 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of health
@@ -546,13 +546,6 @@ INSERT INTO `target` VALUES (5, 62, '天龙计划', '训练跑步', '2023-02-19 
 INSERT INTO `target` VALUES (6, 62, '天鹿计划', '训练跑步', '2023-02-18 23:05:27', '2023-02-18', '2023-02-23', 3, 0, 2, 0);
 INSERT INTO `target` VALUES (7, 62, '天人计划', '训练跑步', '2023-02-17 23:05:27', '2023-02-17', '2023-02-23', 3, 11, 1, 0);
 INSERT INTO `target` VALUES (14, 62, '测试代号', '测试描述', '2023-03-05 10:45:43', '2023-03-06', '2023-03-09', 4, 0, 1, 0);
-INSERT INTO `target` VALUES (28, 1, '测试计划', NULL, '2023-03-17 10:40:36', '2023-03-17', '2023-03-22', 4, 0, 0, 0);
-INSERT INTO `target` VALUES (29, 62, '测试代号1', NULL, '2023-03-17 17:29:26', '2023-03-17', '2023-03-23', 4, 0, 2, 0);
-INSERT INTO `target` VALUES (30, 62, '测试代号2', NULL, '2023-03-17 17:30:31', '2023-03-18', '2023-03-20', 4, 0, 2, 0);
-INSERT INTO `target` VALUES (31, 62, '测试代号3', NULL, '2023-03-17 23:35:42', '2023-03-17', '2023-03-20', 1, 0, 1, 0);
-INSERT INTO `target` VALUES (32, 1, '测试1', NULL, '2023-03-18 15:57:25', '2023-03-18', '2023-03-19', 4, 0, 1, 0);
-INSERT INTO `target` VALUES (33, 1, '测试2', NULL, '2023-03-18 16:56:22', '2023-03-18', '2023-03-22', 2, 100, 1, 0);
-INSERT INTO `target` VALUES (34, 1, '测试3', NULL, '2023-03-18 17:51:33', '2023-03-18', '2023-03-21', 2, 100, 0, 0);
 INSERT INTO `target` VALUES (35, 22, '梅花Q', NULL, '2023-03-18 23:29:52', '2023-03-18', '2023-03-24', 1, 19, 0, 0);
 
 -- ----------------------------
@@ -572,16 +565,6 @@ CREATE TABLE `target_detail`  (
 -- ----------------------------
 -- Records of target_detail
 -- ----------------------------
-INSERT INTO `target_detail` VALUES (20, 31, 4, 2, NULL, 0);
-INSERT INTO `target_detail` VALUES (19, 30, 6, 1, NULL, 0);
-INSERT INTO `target_detail` VALUES (18, 29, 4, 2, NULL, 0);
-INSERT INTO `target_detail` VALUES (17, 28, 5, 3, NULL, 0);
-INSERT INTO `target_detail` VALUES (16, 28, 1, 2, NULL, 0);
-INSERT INTO `target_detail` VALUES (21, 32, 1, 2, 1, 0);
-INSERT INTO `target_detail` VALUES (22, 33, 3, 2, 2, 1);
-INSERT INTO `target_detail` VALUES (23, 33, 6, 3, 3, 1);
-INSERT INTO `target_detail` VALUES (24, 34, 6, 2, 2, 1);
-INSERT INTO `target_detail` VALUES (25, 34, 7, 4, 4, 1);
 INSERT INTO `target_detail` VALUES (26, 35, 1, 7, 3, 0);
 INSERT INTO `target_detail` VALUES (27, 35, 2, 2, 0, 0);
 INSERT INTO `target_detail` VALUES (28, 35, 4, 5, 0, 0);
@@ -613,7 +596,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$9rmVXRmsRuO1FbbjqMPGl.tdIkZDvQ8FoNf5/Fat1W2NMRivX1Cn6', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-03-18 15:12:08', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$9rmVXRmsRuO1FbbjqMPGl.tdIkZDvQ8FoNf5/Fat1W2NMRivX1Cn6', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-04-09 18:03:29', 0, 1);
 INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-03-18 23:19:55', 0, 1);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL, NULL, 0, 0);
@@ -621,7 +604,7 @@ INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9
 INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER', NULL, NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (31, 'yk1', '$2a$10$s9EXA7z4XgkdUGKg7hZAL.tk5o4BSJHC8V6jUKdAyzGN4ugt9FkuW', '游客1', '2022-07-14', '女', '', '2022-07-19 01:35:13', 'ROLE_VISITOR', '15215913933', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (45, 'ts1', '$2a$10$.dIyUhwvquxSvSD/dPoeNOJ96Bhcho/g2ePSvfipdqxYUtS20e0fW', '沈小测1', NULL, NULL, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', '2022-07-26 14:41:19', 'ROLE_TESTER', '15215913934', NULL, '2023-02-23 22:19:37', 0, 1);
-INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, '男', 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 'ROLE_ADMIN', '15215913935', NULL, '2023-03-18 15:11:05', 0, 1);
+INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, '男', 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 'ROLE_ADMIN', '15215913935', NULL, '2023-03-21 22:20:29', 0, 1);
 INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 'ROLE_USER', NULL, NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (67, 'yk2', '$2a$10$Jsbvf.jyg.KB/D/aLQdFgeilDQnZ/wFBIP86wBMNaL7OVwU9NVkiu', '游客2', NULL, NULL, NULL, '2022-09-20 23:45:08', 'ROLE_VISITOR', '13454566610', NULL, NULL, 0, 0);
 
