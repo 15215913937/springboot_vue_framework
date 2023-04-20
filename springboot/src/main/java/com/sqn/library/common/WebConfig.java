@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login", "/user/sendCode", "/user/register", "/files/**", "/doc.html",
-                        "/webjars/**", "/swagger-ui/**", "/**/export", "/test/**");
+                        "/webjars/**", "/swagger-ui/**", "/**/export", "/test/**","/imserver/**");
 
     }
 

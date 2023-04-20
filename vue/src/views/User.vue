@@ -163,7 +163,7 @@ import {Search, Delete} from "@element-plus/icons-vue";
 export default {
   name: 'User',
   data() {
-    var isMobileNumber = (rule, value, callback) => {
+    let isMobileNumber = (rule, value, callback) => {
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
       const isPhone = reg.test(value);
       console.log(isPhone)
