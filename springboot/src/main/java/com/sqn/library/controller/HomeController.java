@@ -49,7 +49,7 @@ public class HomeController {
      * @return
      */
     @GetMapping("/getHomeOneInfo/{id}")
-    public Result<?> getHomeOneInfo(@PathVariable Integer id) {
+    public Result<?> getHomeOneInfo(@PathVariable Long id) {
         HashMap<String, HashMap<String, String>> homeInfo = new HashMap<>();
         //        我的账单
         HashMap<String, String> billInfo = new HashMap<>();

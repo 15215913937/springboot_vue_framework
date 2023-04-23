@@ -15,8 +15,8 @@ import java.util.List;
 public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 
     @Delete("delete from role_menu where role_id = #{roleId}")
-    int deleteByRoleId(@Param("roleId") Integer roleId);
+    int deleteByRoleId(@Param("roleId") Long roleId);
 
     @Select("select menu_id from role_menu where role_id = #{roleId}")
-    List<Integer> selectByRoleId(@Param("roleId") Integer roleId);
+    List<Long> selectByRoleId(@Param("roleId") Long roleId);
 }

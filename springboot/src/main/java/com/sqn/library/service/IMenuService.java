@@ -18,5 +18,5 @@ public interface IMenuService extends IService<Menu> {
 
     List<Menu> findAllMenus(String name);
 
-    ArrayList<Menu> findRoleMenus(Integer roleId);
+    ArrayList<Menu> findRoleMenus(Long roleId);
 }

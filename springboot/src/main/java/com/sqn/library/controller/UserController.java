@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
-import com.sqn.library.common.listener.UserLoginListener;
 import com.sqn.library.controller.dto.LoginDTO;
 import com.sqn.library.controller.dto.UserListDTO;
 import com.sqn.library.controller.dto.UserPasswordDTO;
@@ -18,7 +17,7 @@ import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.Role;
 import com.sqn.library.entity.User;
 import com.sqn.library.exception.CustomException;
-import com.sqn.library.mapper.*;
+import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IRoleService;
 import com.sqn.library.service.IUserService;
@@ -63,6 +62,7 @@ public class UserController {
     @Resource
     RedisUtils redisUtils;
 
+
     /**
      * 登录接口
      *
@@ -103,9 +103,6 @@ public class UserController {
         // 生成token
         String token = TokenUtils.getToken(user);
         user.setToken(token);
-        session.setAttribute("user", user);
-        session.setAttribute("userOnlineListener", new UserLoginListener(user.getId()));
-//        System.out.println("当前登录用户的sessionId==>" + session.getId());
         // 更新登录时间
         iUserService.updateRecentLoginTime(user.getId());
         iUserService.setStatusOnline(user.getId());

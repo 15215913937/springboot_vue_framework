@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 @Data
 public class TargetDetailDTO {
-    private Integer id;
+    private Long id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     private ArrayList<HashMap<String, String>> targetDetails;

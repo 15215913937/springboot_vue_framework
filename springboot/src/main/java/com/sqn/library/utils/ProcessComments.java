@@ -43,9 +43,9 @@ public class ProcessComments {
 
         //子评论加入到父评论的child中
         for (Comment comment : list) {
-            Integer id = comment.getParentId();
+            Long id = comment.getParentId();
             if (id != null) {
-                Comment p = map.get((long) id);
+                Comment p = map.get(id);
                 if (p.getChildList() == null) {
                     p.setChildList(new ArrayList<>());
                 }

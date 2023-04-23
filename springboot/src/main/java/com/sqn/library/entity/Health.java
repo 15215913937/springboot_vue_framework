@@ -32,10 +32,10 @@ public class Health implements Serializable {
 
     @ApiModelProperty("Id")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("用户id")
-    private Integer uid;
+    private Long uid;
 
     @ApiModelProperty("身高")
     private Integer height;

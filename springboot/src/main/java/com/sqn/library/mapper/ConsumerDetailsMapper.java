@@ -1,13 +1,10 @@
 package com.sqn.library.mapper;
 
-import com.sqn.library.entity.ConsumerDetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sqn.library.entity.ConsumerDetails;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -24,7 +21,7 @@ public interface ConsumerDetailsMapper extends BaseMapper<ConsumerDetails> {
 
     @Select("SELECT SUM(cost) FROM `consumer_details` where uid = #{id} and DATE_FORMAT(createtime,\"%Y %m\") = " +
             "date_format(curdate(),'%Y %m') GROUP BY type ORDER BY type")
-    List<String> getCurrentMonthExpense(Integer id);
+    List<String> getCurrentMonthExpense(Long id);
 
     /**
      * 上月消费
@@ -32,11 +29,11 @@ public interface ConsumerDetailsMapper extends BaseMapper<ConsumerDetails> {
      */
     @Select("SELECT SUM( cost ) FROM `consumer_details` WHERE uid = #{id} AND DATE_FORMAT( createtime, \"%Y %m\" ) = " +
             "date_format( date_sub(curdate(), interval 1 MONTH), '%Y %m' ) GROUP BY type ORDER BY type")
-    List<String> getLastMonthExpense(Integer id);
+    List<String> getLastMonthExpense(Long id);
 
     @Select("SELECT * FROM consumer_details WHERE uid = #{id} AND type = '支出' AND YEAR ( createtime )= #{year}")
-    List<ConsumerDetails> monthlyExpenditureStatistics(Integer id, String year);
+    List<ConsumerDetails> monthlyExpenditureStatistics(Long id, String year);
 
     @Select("SELECT * FROM consumer_details WHERE uid = #{id} AND type = '收入' AND YEAR ( createtime )= #{year}")
-    List<ConsumerDetails> monthlyIncomeStatistics(Integer id, String year);
+    List<ConsumerDetails> monthlyIncomeStatistics(Long id, String year);
 }

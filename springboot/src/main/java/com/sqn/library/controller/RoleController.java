@@ -1,24 +1,19 @@
 package com.sqn.library.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Constants;
+import com.sqn.library.common.Result;
+import com.sqn.library.entity.Role;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.RoleMapper;
+import com.sqn.library.service.IRoleService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sqn.library.common.Result;
-
-
-import com.sqn.library.service.IRoleService;
-import com.sqn.library.entity.Role;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -61,7 +56,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         roleService.removeById(id);
         return Result.success();
     }
@@ -78,7 +73,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(roleService.getById(id));
     }
 
@@ -93,13 +88,13 @@ public class RoleController {
      * 绑定角色和菜单的关系
      */
     @PostMapping("/roleMenu/{roleId}")
-    public Result<?> roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
+    public Result<?> roleMenu(@PathVariable Long roleId, @RequestBody List<Long> menuIds) {
         roleService.setRoleMenu(roleId, menuIds);
         return Result.success();
     }
 
     @GetMapping("/roleMenu/{roleId}")
-    public Result<?> getRoleMenu(@PathVariable Integer roleId) {
+    public Result<?> getRoleMenu(@PathVariable Long roleId) {
         return Result.success(roleService.getRoleMenu(roleId));
     }
 

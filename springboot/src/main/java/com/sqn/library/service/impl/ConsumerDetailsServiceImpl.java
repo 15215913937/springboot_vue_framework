@@ -26,7 +26,7 @@ public class ConsumerDetailsServiceImpl extends ServiceImpl<ConsumerDetailsMappe
     ConsumerDetailsMapper consumerDetailsMapper;
 
     @Override
-    public HashMap<Object, Object> statisticsByIdAndYear(Integer id, String year) {
+    public HashMap<Object, Object> statisticsByIdAndYear(Long id, String year) {
         List<ConsumerDetails> list1 = consumerDetailsMapper.monthlyExpenditureStatistics(id, year);
         List<ConsumerDetails> list2 = consumerDetailsMapper.monthlyIncomeStatistics(id, year);
         float m1 = 0, m2 = 0, m3 = 0, m4 = 0, m5 = 0, m6 = 0, m7 = 0, m8 = 0, m9 = 0, m10 = 0, m11 = 0, m12 = 0;

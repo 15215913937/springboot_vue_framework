@@ -29,10 +29,10 @@ public class ConsumerDetails implements Serializable {
 
     @ApiModelProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("用户ID")
-    private Integer uid;
+    private Long uid;
 
     @ApiModelProperty("金额")
     private Double cost;

@@ -29,7 +29,7 @@ public class Menu implements Serializable {
 
     @ApiModelProperty("id")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("菜单名称")
     private String name;

@@ -52,7 +52,7 @@ public class HealthController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         healthService.removeById(id);
         return Result.success();
     }
@@ -69,18 +69,18 @@ public class HealthController {
     }
 
     @PostMapping("/queryLatestInfo/{uid}")
-    public Result<?> queryLatestInfo(@PathVariable Integer uid) {
+    public Result<?> queryLatestInfo(@PathVariable Long uid) {
         List<Health> list = healthService.getByUid(uid);
         return Result.success(list);
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(healthService.getById(id));
     }
 
     @GetMapping("/findHistoryActivities/{uid}")
-    public Result<?> findHistoryActivities(@PathVariable Integer uid) {
+    public Result<?> findHistoryActivities(@PathVariable Long uid) {
         return Result.success(healthService.queryHistoryActivities(uid));
     }
 }

@@ -14,5 +14,5 @@ import java.util.HashMap;
  * @since 2022-08-30
  */
 public interface IConsumerDetailsService extends IService<ConsumerDetails> {
-    HashMap<Object, Object> statisticsByIdAndYear(Integer id, String year);
+    HashMap<Object, Object> statisticsByIdAndYear(Long id, String year);
 }

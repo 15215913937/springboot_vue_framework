@@ -13,7 +13,7 @@ import lombok.Data;
 @TableName("files")
 public class Files {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
     private String type;
     private Long size;

@@ -24,7 +24,7 @@ public class TestController {
     BookMapper bookMapper;
 
     @GetMapping("/{id}")
-    public Boolean get(@PathVariable Integer id) {
+    public Boolean get(@PathVariable Long id) {
         final List<Book> list = bookMapper.selectList(Wrappers.emptyWrapper());
         stringRedisTemplate.opsForValue().set("book", JSONUtil.toJsonStr(list), 10, TimeUnit.SECONDS);
         return true;

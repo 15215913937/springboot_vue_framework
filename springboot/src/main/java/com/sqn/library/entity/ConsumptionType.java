@@ -27,7 +27,7 @@ public class ConsumptionType implements Serializable {
 
     @ApiModelProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("类型名称")
     private String type;

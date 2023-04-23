@@ -14,7 +14,9 @@
               {{ user.username }}
             </span>
             <el-icon style="margin-left: 10px;font-size: 16px;cursor: pointer"
-                     @click="chatUser=user.username"><ChatDotSquare /></el-icon>
+                     @click="chatUser=user.username">
+              <ChatDotSquare/>
+            </el-icon>
             <span style="font-size: 12px;color: limegreen;margin-left: 5px" v-if="user.username ===chatUser">
               chatting...
             </span>
@@ -45,6 +47,7 @@ border-bottom: 1px solid #ccc;outline: none"></textarea>
 <script>
 import request from "@/utils/request";
 import {ChatDotSquar} from "@element-plus/icons-vue";
+
 let socket;
 
 export default {

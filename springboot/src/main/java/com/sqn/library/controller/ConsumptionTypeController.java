@@ -41,7 +41,7 @@ public class ConsumptionTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         consumptionTypeService.removeById(id);
         return Result.success();
     }
@@ -58,7 +58,7 @@ public class ConsumptionTypeController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(consumptionTypeService.getById(id));
     }
 

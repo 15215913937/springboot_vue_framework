@@ -1,11 +1,10 @@
 package com.sqn.library.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sqn.library.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sqn.library.entity.Book;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +29,9 @@ public interface IBookService extends IService<Book> {
     Page<Book> findPage(Page<Book> tPage, @Param("name") String name, @Param("author") String author, @Param(
             "category") String category);
 
-    List<Book> getByUid(Integer id);
+    List<Book> getByUid(Long id);
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-    Map<String,List<Integer>> booksPurchaseStatistics(String year, Integer id);
+    Map<String,List<Integer>> booksPurchaseStatistics(String year, Long id);
 }

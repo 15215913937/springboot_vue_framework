@@ -34,7 +34,7 @@ public class EventsServiceImpl extends ServiceImpl<EventsMapper, Events> impleme
     RedisUtils redisUtils;
 
     @Override
-    public Integer getByAuthor(Integer id) {
+    public Integer getByAuthor(Long id) {
         final LambdaQueryWrapper<Events> wrapper = Wrappers.<Events>lambdaQuery();
         wrapper.eq(Events::getAuthor, id);
         final List<Events> myEventsList = eventsMapper.selectList(wrapper);
@@ -42,7 +42,7 @@ public class EventsServiceImpl extends ServiceImpl<EventsMapper, Events> impleme
     }
 
     @Override
-    public Events queryById(Integer id) {
+    public Events queryById(Long id) {
         String key = Constants.EVENT_KEY + id;
 //        redis查询
         String eventJson = redisUtils.getRedis(key);

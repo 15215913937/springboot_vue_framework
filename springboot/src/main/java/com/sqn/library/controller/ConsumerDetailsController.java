@@ -5,21 +5,15 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Result;
+import com.sqn.library.entity.ConsumerDetails;
 import com.sqn.library.mapper.ConsumerDetailsMapper;
-import com.sqn.library.utils.ConsumeCalculate;
+import com.sqn.library.service.IConsumerDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import com.sqn.library.common.Result;
-
-
-import com.sqn.library.service.IConsumerDetailsService;
-import com.sqn.library.entity.ConsumerDetails;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -56,7 +50,7 @@ public class ConsumerDetailsController {
 
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         consumerDetailsService.removeById(id);
         return Result.success();
     }
@@ -73,7 +67,7 @@ public class ConsumerDetailsController {
     }
 
     @GetMapping("/findById")
-    public Result<?> statisticsByIdAndYear(@RequestParam Integer id, @RequestParam String year) {
+    public Result<?> statisticsByIdAndYear(@RequestParam Long id, @RequestParam String year) {
         return Result.success(consumerDetailsService.statisticsByIdAndYear(id, year));
     }
 
@@ -82,7 +76,7 @@ public class ConsumerDetailsController {
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String type,
-                              @RequestParam(defaultValue = "") Integer uid,
+                              @RequestParam(defaultValue = "") Long uid,
                               @RequestParam(defaultValue = "") String category) {
         LambdaQueryWrapper<ConsumerDetails> wrapper = Wrappers.<ConsumerDetails>lambdaQuery();
         wrapper.eq(ConsumerDetails::getUid, uid).orderByDesc(ConsumerDetails::getId);

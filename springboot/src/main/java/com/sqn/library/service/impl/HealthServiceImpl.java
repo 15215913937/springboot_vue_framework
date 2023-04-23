@@ -35,7 +35,7 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
     IHealthService iHealthService;
 
     @Override
-    public List<Health> getByUid(Integer uid) {
+    public List<Health> getByUid(Long uid) {
         LambdaQueryWrapper<Health> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Health::getUid, uid).orderByDesc(Health::getCreateTime);
         List<Health> healthList = healthMapper.selectList(wrapper);
@@ -77,7 +77,7 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
     }
 
     @Override
-    public ArrayList<Health> queryHistoryActivities(Integer uid) {
+    public ArrayList<Health> queryHistoryActivities(Long uid) {
         LambdaQueryWrapper<Health> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Health::getUid, uid).isNotNull(Health::getActivities).orderByDesc(Health::getId);
         List<Health> list = iHealthService.list(wrapper);

@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEventsService extends IService<Events> {
 
-    Integer getByAuthor(Integer id);
+    Integer getByAuthor(Long id);
 
-    Events queryById(Integer id);
+    Events queryById(Long id);
 }

@@ -14,9 +14,9 @@ import java.util.Date;
 @Data
 public class Events {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     private String title;
-    private Integer author;
+    private Long author;
     private String content;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;

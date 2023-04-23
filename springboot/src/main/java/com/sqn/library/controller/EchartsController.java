@@ -27,7 +27,7 @@ public class EchartsController {
      */
 
     @GetMapping("/booksPurchaseStatistics")
-    public Result<?> booksPurchaseStatistics(@RequestParam String year, @RequestParam Integer id) {
+    public Result<?> booksPurchaseStatistics(@RequestParam String year, @RequestParam Long id) {
         return Result.success(bookService.booksPurchaseStatistics(year, id));
     }
 }

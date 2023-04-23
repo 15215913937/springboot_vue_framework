@@ -28,7 +28,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Transactional //代码执行出错的时候能够进行事务的回滚
     @Override
-    public void setRoleMenu(Integer roleId, List<Integer> menuIds) {
+    public void setRoleMenu(Long roleId, List<Long> menuIds) {
         //第一种方法
 //        QueryWrapper<RoleMenu> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.eq("role_id",roleId);
@@ -38,7 +38,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         roleMenuMapper.deleteByRoleId(roleId); //先删除当前角色id所有的绑定关系
 
         //再把前端传过来的菜单id数组绑定到当前这个角色id上去
-        for (Integer menuId : menuIds) {
+        for (Long menuId : menuIds) {
             RoleMenu roleMenu = new RoleMenu();
             roleMenu.setRoleId(roleId);
             roleMenu.setMenuId(menuId);
@@ -47,7 +47,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public List<Integer> getRoleMenu(Integer roleId) {
+    public List<Long> getRoleMenu(Long roleId) {
         return roleMenuMapper.selectByRoleId(roleId);
     }
 }

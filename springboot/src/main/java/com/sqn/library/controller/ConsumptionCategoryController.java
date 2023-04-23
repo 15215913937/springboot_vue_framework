@@ -42,7 +42,7 @@ public class ConsumptionCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         consumptionCategoryService.removeById(id);
         return Result.success();
     }
@@ -59,7 +59,7 @@ public class ConsumptionCategoryController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(consumptionCategoryService.getById(id));
     }
 

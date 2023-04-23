@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,7 +15,7 @@ import java.util.Date;
 public class Book {
 
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     private String bookname;
     private String author;
     private String category;

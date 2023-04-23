@@ -2,12 +2,11 @@ package com.sqn.library.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.entity.Menu;
-import com.sqn.library.entity.RoleMenu;
 import com.sqn.library.mapper.MenuMapper;
 import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.service.IMenuService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,9 +52,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     }
 
     @Override
-    public ArrayList<Menu> findRoleMenus(Integer roleId) {
+    public ArrayList<Menu> findRoleMenus(Long roleId) {
         //当前角色的所有菜单id集合
-        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
+        List<Long> menuIds = roleMenuMapper.selectByRoleId(roleId);
         //查出系统所有菜单
         List<Menu> menus = iMenuService.findAllMenus("");
 

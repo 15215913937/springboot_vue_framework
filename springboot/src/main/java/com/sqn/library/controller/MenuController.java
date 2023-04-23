@@ -66,7 +66,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         menuService.removeById(id);
         return Result.success();
     }
@@ -97,7 +97,7 @@ public class MenuController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(menuService.getById(id));
     }
 

@@ -34,7 +34,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
     }
 
     @Override
-    public List<Book> getByUid(Integer id) {
+    public List<Book> getByUid(Long id) {
         final LambdaQueryWrapper<Book> wrapper = Wrappers.<Book>lambdaQuery();
         wrapper.eq(Book::getUid, id);
         return bookMapper.selectList(wrapper);
@@ -46,7 +46,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
     }
 
     @Override
-    public Map<String, List<Integer>> booksPurchaseStatistics(String year, Integer id) {
+    public Map<String, List<Integer>> booksPurchaseStatistics(String year, Long id) {
         List<Book> list1 = bookMapper.getMonthlyNumberOfSpecifiedUsersByYear(year, id);
         int[] m = new int[12];
         for (Book book : list1) {

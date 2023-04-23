@@ -62,7 +62,7 @@ public class CategoryListController {
      * @param id 消费id
      */
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         categoryListService.removeById(id);
         return Result.success();
     }

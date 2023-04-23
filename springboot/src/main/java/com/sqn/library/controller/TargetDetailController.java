@@ -36,7 +36,7 @@ public class TargetDetailController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         targetDetailService.removeById(id);
         return Result.success();
     }
@@ -53,7 +53,7 @@ public class TargetDetailController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> findOne(@PathVariable Integer id) {
+    public Result<?> findOne(@PathVariable Long id) {
         return Result.success(targetDetailService.getById(id));
     }
 

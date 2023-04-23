@@ -16,11 +16,11 @@ import java.util.List;
  */
 public interface IHealthService extends IService<Health> {
 
-    List<Health> getByUid(Integer uid);
+    List<Health> getByUid(Long uid);
 
     boolean add(Health health);
 
-    ArrayList<Health> queryHistoryActivities(Integer uid);
+    ArrayList<Health> queryHistoryActivities(Long uid);
 
     Health transformActivitiesToName(Health health);
 

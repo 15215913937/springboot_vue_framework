@@ -23,5 +23,5 @@ public interface BookMapper extends BaseMapper<Book> {
     List<Book> queryByYear(String year);
 
     @Select("SELECT * FROM book WHERE YEAR(buy_date) = #{year} and uid = #{id}")
-    List<Book> getMonthlyNumberOfSpecifiedUsersByYear(String year, Integer id);
+    List<Book> getMonthlyNumberOfSpecifiedUsersByYear(String year, Long id);
 }

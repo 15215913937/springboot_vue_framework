@@ -4,16 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -52,13 +50,13 @@ public class Comment implements Serializable {
     private Boolean isDelete;
 
     @ApiModelProperty("所属事件id")
-    private Integer eventId;
+    private Long eventId;
 
     @ApiModelProperty("父评论id")
-    private Integer parentId;
+    private Long parentId;
 
     @ApiModelProperty("根评论id")
-    private Integer rootParentId;
+    private Long rootParentId;
 
     // 评论下的子评论集
     @TableField(exist = false)

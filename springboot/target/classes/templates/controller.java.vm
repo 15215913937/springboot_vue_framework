@@ -60,7 +60,7 @@ public Result<?> save(@RequestBody ${entity} ${table.entityPath}){
         }
 
 @DeleteMapping("/{id}")
-public Result<?> delete(@PathVariable Integer id){
+public Result<?> delete(@PathVariable Long id){
     ${table.entityPath}Service.removeById(id);
         return Result.success();
         }
@@ -77,7 +77,7 @@ public Result<?> findAll(){
         }
 
 @GetMapping("/{id}")
-public Result<?> findOne(@PathVariable Integer id){
+public Result<?> findOne(@PathVariable Long id){
         return Result.success(${table.entityPath}Service.getById(id));
         }
 
