@@ -91,21 +91,19 @@ export default {
       this.$refs.pass.validate(valid => {
         if (valid) {
           this.loading = true;
-          // console.log(this.form);
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
           request.post("/user", this.form).then(res => {
-            // console.log(res);
             if (res.code === '0') {
               this.$message.success("保存成功");
-              //更新浏览器存储的用户信息
+              // 更新浏览器存储的用户信息
               sessionStorage.setItem("user", JSON.stringify(this.form));
-              //触发父级更新user方法
+              // 触发父级更新user方法
               this.$emit("refreshUser")
             } else {
               this.$message.error(res.msg)
             }
-            setTimeout(() => {
-              this.loading = false
-            }, 1000)
           })
         }
       })

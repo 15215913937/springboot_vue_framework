@@ -22,10 +22,6 @@ public class QRConfig {
 
         //设置边距，即二维码和边框的距离
         qrConfig.setMargin(2);
-        //设置前景色
-        qrConfig.setForeColor(Color.BLACK.getRGB());
-        //设置背景色
-        qrConfig.setBackColor(Color.WHITE.getRGB());
 
         return qrConfig;
     }

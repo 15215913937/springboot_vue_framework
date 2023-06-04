@@ -36,12 +36,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (StrUtil.isNotBlank(name)) {
             queryWrapper.like("name", name);
         }
-
         //查询所有数据
         List<Menu> list = list(queryWrapper);
-        //找出pid为null的一级菜单
+        // 找出pid为null的一级菜单
         List<Menu> parentNodes = list.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
-        //找出一级菜单的子菜单
+        // 找出一级菜单的子菜单
         for (Menu menu : parentNodes) {
             //筛选所有数据中pid=父级id的数据就是二级菜单
             List<Menu> childNode =
@@ -53,20 +52,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public ArrayList<Menu> findRoleMenus(Long roleId) {
-        //当前角色的所有菜单id集合
+        // 当前角色的所有菜单id集合
         List<Long> menuIds = roleMenuMapper.selectByRoleId(roleId);
-        //查出系统所有菜单
+        // 查出系统所有菜单
         List<Menu> menus = iMenuService.findAllMenus("");
 
         ArrayList<Menu> roleMenus = new ArrayList<>();
-        //筛选当前用户角色的菜单
+        // 筛选当前用户角色的菜单
         for (Menu menu : menus) {
-//            获取每个父菜单的子菜单
+        // 获取每个父菜单的子菜单
             List<Menu> children = menu.getChildren();
             if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
                 roleMenus.add(menu);
             }
-            //移除children里面不在menuIds集中的元素
+            // 移除children里面不在menuIds集中的元素
             children.removeIf(child -> !menuIds.contains(child.getId()));
         }
         return roleMenus;

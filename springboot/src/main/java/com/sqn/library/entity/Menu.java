@@ -46,7 +46,7 @@ public class Menu implements Serializable {
     @TableField(exist = false)
     private List<Menu> children;
 
-    private Integer pid;
+    private Long pid;
 
     private String pagePath;
 
