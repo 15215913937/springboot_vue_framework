@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
-import com.sqn.library.controller.dto.LoginDTO;
-import com.sqn.library.controller.dto.UserListDTO;
-import com.sqn.library.controller.dto.UserPasswordDTO;
-import com.sqn.library.controller.dto.UserResetPwdDTO;
+import com.sqn.library.controller.dto.*;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.Role;
 import com.sqn.library.entity.User;
@@ -229,7 +226,6 @@ public class UserController {
         }
         iUserService.saveOrUpdate(user);
         redisUtils.removeRedis(Constants.USER_KEY);
-//        redisUtils.flushRedis(USER_KEY);
         return Result.success();
 
     }
@@ -243,8 +239,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         iUserService.isDeleteById(id);
-//        iUserService.removeById(id);
-//        redisUtils.flushRedis(USER_KEY);
         return Result.success();
     }
 
