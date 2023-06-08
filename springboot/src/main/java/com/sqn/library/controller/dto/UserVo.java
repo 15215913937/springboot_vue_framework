@@ -1,11 +1,11 @@
-package com.sqn.library.entity;
+package com.sqn.library.controller.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sqn.library.entity.Book;
+import com.sqn.library.entity.Menu;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,14 +14,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-@TableName("user")
 @Data
-public class User {
+public class UserVo {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String username;
-    @JsonIgnore
-    private String password;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date birthday;
     private String name;
@@ -44,5 +41,4 @@ public class User {
 
     @TableField(exist = false)
     private List<Menu> menus;
-
 }

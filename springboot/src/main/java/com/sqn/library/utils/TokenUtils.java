@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -52,7 +51,7 @@ public class TokenUtils {
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String token = request.getHeader("token");
             String aud = JWT.decode(token).getAudience().get(0);
-            Integer userId = Integer.valueOf(aud);
+            Long userId = Long.valueOf(aud);
             return staticUserMapper.selectById(userId);
         } catch (Exception e) {
             log.error("解析token失败", e);

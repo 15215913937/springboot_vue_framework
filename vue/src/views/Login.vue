@@ -196,7 +196,6 @@ export default {
               this.clockStatus = false;
               clearInterval(clock);
               this.totalTime = 60;
-              console.log(this.clockStatus);
               this.sendContent = "重新发送"
             }
           }, 1000)

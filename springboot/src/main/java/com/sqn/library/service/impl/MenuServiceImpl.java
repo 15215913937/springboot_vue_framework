@@ -1,9 +1,12 @@
 package com.sqn.library.service.impl;
 
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sqn.library.common.Constants;
+import com.sqn.library.common.enums.ResultCodeEnum;
 import com.sqn.library.entity.Menu;
+import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.MenuMapper;
 import com.sqn.library.mapper.RoleMenuMapper;
 import com.sqn.library.service.IMenuService;
@@ -32,12 +35,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public List<Menu> findAllMenus(String name) {
-        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        if (StrUtil.isNotBlank(name)) {
-            queryWrapper.like("name", name);
+        LambdaQueryWrapper<Menu> wrapper = Wrappers.lambdaQuery();
+        if (name == null) {
+            log.error("角色为空");
+            throw new CustomException(Constants.CODE_DATA_ERR, ResultCodeEnum.DATA_ERROR.getMsg());
         }
-        //查询所有数据
-        List<Menu> list = list(queryWrapper);
+        wrapper.like(Menu::getName, name);
+        // 查询所有数据
+        List<Menu> list = list(wrapper);
         // 找出pid为null的一级菜单
         List<Menu> parentNodes = list.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
         // 找出一级菜单的子菜单
@@ -60,9 +65,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         ArrayList<Menu> roleMenus = new ArrayList<>();
         // 筛选当前用户角色的菜单
         for (Menu menu : menus) {
-        // 获取每个父菜单的子菜单
+            // 获取每个父菜单的子菜单
             List<Menu> children = menu.getChildren();
-            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && children.size() != 0)) {
+            if (menuIds.contains(menu.getId()) || (!menuIds.contains(menu.getId()) && !children.isEmpty())) {
                 roleMenus.add(menu);
             }
             // 移除children里面不在menuIds集中的元素

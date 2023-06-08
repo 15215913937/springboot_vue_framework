@@ -18,6 +18,9 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sqn
+ */
 @RestController
 @RequestMapping("/events")
 @Api(tags = "事件管理")
@@ -113,7 +116,7 @@ public class EventsController {
      */
     @PostMapping("/{id}")
     public Result<?> addCount(@PathVariable Long id) {
-        log.info("数量+1");
+        log.info("阅读eventId={}数量+1", id);
         eventsMapper.updateViewCount(id);
         return Result.success();
     }

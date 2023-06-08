@@ -230,7 +230,6 @@ export default {
       });
       request.get("/role").then(res => {
         this.roles = res.data;
-        // console.log(this.roles)
       })
     },
     reset() {
@@ -240,7 +239,6 @@ export default {
     },
     add() {
       this.dialogVisible = true;
-      // 清空表单域，点击取消后，下次打开就是清空内容了
       this.form = {}
     },
 
@@ -248,7 +246,6 @@ export default {
       this.$refs['pass'].validate((valid) => {
         if (valid) {
           this.loading = true
-          // if (this.form.id) {//若果id存在，更新
           request.post("/user", this.form).then(res => {
             setTimeout(() => {
               this.loading = false
@@ -266,26 +263,23 @@ export default {
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
-      // console.log(this.form)
       this.dialogVisible = true
     },
     handleDelete(row) {
-      //row,绑定当前行数据
       request.delete("/user/" + row.id).then(res => {
         if (res.code === '0') {
           this.$message.success("删除成功")
+          this.load();
         } else {
           this.$message.error(res.msg)
         }
-        this.load();//刷新表格数据
       })
     },
     handleSizeChange() {
-      //改变当前每页个数的触发
       this.load()
     },
     handleCurrentChange() {
-      //改变当前页数的触发
+      // 改变当前页数的触发
       this.load()
     },
     resetPwd(row) {
@@ -293,15 +287,14 @@ export default {
       this.pwdVis = true;
     },
     saveNewPwd() {
-      // console.log(this.form)
       request.post("/user/resetPwd", this.form).then(res => {
         if (res.code === '0') {
           this.$message.success("重置成功")
+          this.load();//刷新表格数据
+          this.pwdVis = false
         } else {
           this.$message.error(res.msg)
         }
-        this.load();//刷新表格数据
-        this.pwdVis = false
       })
     }
   }
