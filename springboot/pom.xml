@@ -129,7 +129,7 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.17.7</version>
+            <version>3.22.1</version>
         </dependency>
         <!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
         <!--        <dependency>-->

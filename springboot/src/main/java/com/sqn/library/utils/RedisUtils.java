@@ -78,7 +78,7 @@ public class RedisUtils {
 
     public List<String> lGet(String key, Integer start, Integer end) {
         List<Object> list = redisTemplate.opsForList().range(key, start, end);
-//        可以直接转换成string
+        // 可以直接转换成string
         if (StrUtil.isNotEmpty((CharSequence) list)) {
             assert list != null;
             List<String> listStrs = list.stream().map(String::valueOf).collect(Collectors.toList());

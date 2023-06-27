@@ -74,6 +74,7 @@ public class TargetController {
 
     @GetMapping("/{id}")
     public Result<?> findOne(@PathVariable Long id) {
+
         return Result.success(targetService.queryById(id));
     }
 
