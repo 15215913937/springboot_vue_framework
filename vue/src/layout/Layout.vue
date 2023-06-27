@@ -39,11 +39,11 @@
                 if (!userJson) {
                     return
                 }
-                let userId = JSON.parse(userJson).id
+                let userId = JSON.parse(userJson).id;
                 // 从后台取出更新后的用户信息
                 request.get("/user/" + userId).then(res => {
                     //重新赋值后台的最新数据
-                    this.user = res.data
+                    this.user = res.data;
                 })
             }
         }
