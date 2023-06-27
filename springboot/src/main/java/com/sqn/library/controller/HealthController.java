@@ -1,21 +1,14 @@
 package com.sqn.library.controller;
 
 import com.sqn.library.common.Constants;
-import com.sqn.library.mapper.HealthMapper;
-import org.jetbrains.annotations.NotNull;
+import com.sqn.library.common.Result;
+import com.sqn.library.entity.Health;
+import com.sqn.library.service.IHealthService;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
 import java.util.List;
-
-import com.sqn.library.common.Result;
-
-
-import com.sqn.library.service.IHealthService;
-import com.sqn.library.entity.Health;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -30,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     @Resource
-    private IHealthService healthService;
+    IHealthService healthService;
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
 
     /**

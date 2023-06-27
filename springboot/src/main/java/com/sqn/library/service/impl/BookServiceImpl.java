@@ -2,6 +2,8 @@ package com.sqn.library.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.Month;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +14,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,5 +152,43 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
         map.put("all", all);
         map.put("one", one);
         return map;
+    }
+
+    @Override
+    public void exportBooks(HttpServletResponse response, List<Book> list) throws IOException {
+        //在内存操作，写出到浏览器
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        //自定义标题别名
+        writer.addHeaderAlias("id", "ID");
+        writer.addHeaderAlias("bookname", "书名");
+        writer.addHeaderAlias("author", "作者");
+        writer.addHeaderAlias("category", "类别");
+        writer.addHeaderAlias("version", "版本");
+        writer.addHeaderAlias("publishingHouse", "出版社");
+        writer.addHeaderAlias("username", "购买者");
+        writer.addHeaderAlias("price", "价格");
+        writer.addHeaderAlias("buyDate", "购买日期");
+        writer.addHeaderAlias("comment", "备注");
+        writer.addHeaderAlias("cover", "封面");
+        // 设置只导出有别名的字段
+        writer.setOnlyAlias(true);
+
+        writer.setColumnWidth(8, 20);
+        // 设置冻结行
+        writer.setFreezePane(1);
+        // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
+        writer.write(list, true);
+        // 设置时间戳
+        SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timeStamp = timestamp.format(new Date());
+        // 设置浏览器响应格式
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        String fileName = URLEncoder.encode("所有书籍", "UTF-8") + timeStamp;
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out, true);
+        out.close();
+        writer.close();
     }
 }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sqn.library.entity.Book;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,4 +36,6 @@ public interface IBookService extends IService<Book> {
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
     Map<String,List<Integer>> booksPurchaseStatistics(String year, Long id);
+
+    void exportBooks(HttpServletResponse response,List<Book> list) throws IOException;
 }
