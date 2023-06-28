@@ -295,7 +295,7 @@ export default {
       this.dialogVisible = true;
       // 清空表单域，点击取消后，下次打开就是清空内容了
       this.form = {};
-      //缓冲效果，等待页面元素加载完成
+      // 缓冲效果，等待页面元素加载完成
       this.$nextTick(() => {
         if (!editor) {
           //关联add弹窗里面的div，new一个editor对象

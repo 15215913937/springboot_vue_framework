@@ -185,7 +185,7 @@ export default {
       this.form = {};
     },
     sendCode() {
-      request.post("/user/sendCode", this.form.phone).then(res => {
+      request.get("/user/sendCode", {params: {phone: this.form.phone}}).then(res => {
         if (res.code === "0") {
           if (this.clockStatus) return;
           let clock = setInterval(() => {

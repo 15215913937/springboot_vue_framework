@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -55,15 +56,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Boolean sendCode(String phone) {
-//        验证手机号格式是否正确
+        // 验证手机号格式是否正确
         if (!RegexUtils.isMobileExact(phone)) {
             return false;
         } else {
-//            格式正确，则生成6位随机数（即验证码）
+            // 格式正确，则生成6位随机数（即验证码）
             String code = RandomUtil.randomNumbers(Constants.LOGIN_CODE_KEY_LENGTH);
-//            保存验证码到redis
-            redisUtils.setStringToRedis(Constants.LOGIN_CODE_KEY, code, Constants.LOGIN_CODE_KEY_TTL);
-//            发送验证码
+            // 保存验证码到redis
+            redisUtils.setEx(Constants.LOGIN_CODE_KEY, code,Constants.LOGIN_CODE_KEY_TTL, TimeUnit.MINUTES);
+            // 发送验证码
             log.info("发送验证码成功，验证码是：{}", code);
         }
         return true;

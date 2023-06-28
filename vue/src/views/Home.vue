@@ -85,7 +85,7 @@
                 <el-icon>
                   <DataLine/>
                 </el-icon>
-                事件总数
+                已发布事件
               </div>
               <div class="number"><span>{{ commonInfo.eventsCount }} 件</span></div>
             </el-card>

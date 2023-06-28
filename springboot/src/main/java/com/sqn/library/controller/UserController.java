@@ -74,12 +74,16 @@ public class UserController {
             if (user == null || !SecurityUtils.matchesPassword(loginDTO.getPassword(), user.getPassword())) {
                 return Result.error(Constants.CODE_COMMON_ERR, "用户名或密码错误！");
             }
+            if (user.getIsDelete() == 1) {
+                return Result.error(Constants.CODE_COMMON_ERR, "账户已冻结，请联系管理员");
+            }
         } else if (StrUtil.isNotBlank(loginDTO.getPhone())) {
-            String cacheCode = redisUtils.getRedis(Constants.LOGIN_CODE_KEY);
+            String cacheCode = redisUtils.get(Constants.LOGIN_CODE_KEY);
             if (!loginDTO.getCode().equals(cacheCode)) {
                 return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
             }
-            redisUtils.removeRedis(Constants.LOGIN_CODE_KEY);
+
+            redisUtils.delete(Constants.LOGIN_CODE_KEY);
             User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginDTO.getPhone()));
             if (res == null) {
                 user.setRole(Constants.ROLE_VISITOR);
@@ -90,6 +94,8 @@ public class UserController {
                 userMapper.insert(user);
                 user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone,
                         loginDTO.getPhone()));
+            } else if (res.getIsDelete() == 1) {
+                return Result.error(Constants.CODE_COMMON_ERR, "账户已冻结，请联系管理员");
             } else {
                 user = res;
             }
@@ -118,7 +124,7 @@ public class UserController {
                 }));
         String key = Constants.USER_KEY + token;
 //        redisUtils.setObjectToRedis(key, user, Constants.LOGIN_INFO_TTL);
-        redisUtils.saveMapObject(key, stringObjectMap, Constants.LOGIN_INFO_TTL);
+        redisUtils.hPutAll(key, stringObjectMap);
         return Result.success(user);
     }
 
@@ -128,8 +134,8 @@ public class UserController {
      * @param phone
      * @return
      */
-    @PostMapping("/sendCode")
-    public Result<?> sendCode(@RequestBody String phone) {
+    @GetMapping("/sendCode")
+    public Result<?> sendCode(@RequestParam String phone) {
         Boolean isSend = iUserService.sendCode(phone);
         if (Boolean.FALSE.equals(isSend)) {
             return Result.error(Constants.CODE_COMMON_ERR, "手机号格式错误");
@@ -225,7 +231,7 @@ public class UserController {
             user.setName(user.getUsername());
         }
         iUserService.saveOrUpdate(user);
-        redisUtils.removeRedis(Constants.USER_KEY);
+        redisUtils.delete(Constants.USER_KEY);
         return Result.success();
 
     }

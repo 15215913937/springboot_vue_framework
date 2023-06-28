@@ -4,13 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.common.Constants;
-import com.sqn.library.common.Result;
 import com.sqn.library.entity.Events;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.EventsMapper;
 import com.sqn.library.service.IEventsService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.utils.RedisUtils;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class EventsServiceImpl extends ServiceImpl<EventsMapper, Events> impleme
     public Events queryById(Long id) {
         String key = Constants.EVENT_KEY + id;
 //        redis查询
-        String eventJson = redisUtils.getRedis(key);
+        String eventJson = redisUtils.get(key);
 //        不判断是否存在
         if (StrUtil.isNotBlank(eventJson)) {
 //            存在，直接返回
@@ -57,7 +56,7 @@ public class EventsServiceImpl extends ServiceImpl<EventsMapper, Events> impleme
         if (event == null) {
             throw new CustomException(Constants.CODE_DATA_ERR, "数据不存在");
         }
-        redisUtils.setObjectToRedis(key, event, Constants.LOGIN_INFO_TTL);
+        redisUtils.hPut(Constants.EVENT_KEY, String.valueOf(id), String.valueOf(event));
         return event;
     }
 }
