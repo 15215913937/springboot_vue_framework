@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
-import com.sqn.library.controller.dto.*;
+import com.sqn.library.controller.dto.LoginDTO;
+import com.sqn.library.controller.dto.UserListDTO;
+import com.sqn.library.controller.dto.UserPasswordDTO;
+import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.Role;
 import com.sqn.library.entity.User;
@@ -27,11 +30,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Rest模式
@@ -67,7 +70,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result<?> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
+    public Result<?> login(@RequestBody LoginDTO loginDTO) {
         User user = new User();
         if (StrUtil.isNotBlank(loginDTO.getUsername())) {
             user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, loginDTO.getUsername()));
@@ -109,10 +112,10 @@ public class UserController {
         // 更新登录时间
         iUserService.updateRecentLoginTime(user.getId());
         iUserService.setStatusOnline(user.getId());
-//      Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)
-//      功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
-//      参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
-//        setFieldValueEditor编辑键值对，使用箭头函数，例：（键，值）->值类型转字符串
+        // Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue)
+        // 功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
+        // 参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
+        // setFieldValueEditor编辑键值对，使用箭头函数，例：（键，值）->值类型转字符串
         Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(),
                 CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> {
                     if (fieldValue == null) {
@@ -122,9 +125,8 @@ public class UserController {
                     }
                     return fieldValue;
                 }));
-        String key = Constants.USER_KEY + token;
-//        redisUtils.setObjectToRedis(key, user, Constants.LOGIN_INFO_TTL);
-        redisUtils.hPutAll(key, stringObjectMap);
+        String key = Constants.USER_KEY + user.getId();
+        redisUtils.hPutAllEx(key, stringObjectMap, Constants.LOGIN_INFO_TTL, TimeUnit.HOURS);
         return Result.success(user);
     }
 
@@ -156,7 +158,7 @@ public class UserController {
         if (!SecurityUtils.matchesPassword(userPasswordDTO.getPassword(), res.getPassword())) {
             return Result.error(Constants.CODE_COMMON_ERR, "原密码错误");
         }
-        //把前端传过来的新密码加密处理
+        // 把前端传过来的新密码加密处理
         userPasswordDTO.setNewPassword(SecurityUtils.encodePassword(userPasswordDTO.getNewPassword()));
         iUserService.updatePassword(userPasswordDTO);
         return Result.success();

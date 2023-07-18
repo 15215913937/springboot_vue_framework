@@ -65,38 +65,35 @@ export const setRoutes = () => {
     }
 }
 // 提供一个重置路由的方法
-// export const resetRouter = () => {
-//     router.matcher = new VueRouter({
-//         mode: 'history',
-//         base: process.env.BASE_URL,
-//         routes
-//     })
-// }
+export const resetRouter = () => {
+    router.matcher = new VueRouter({
+        mode: 'history',
+        base: process.env.BASE_URL,
+        routes
+    })
+}
 // 重置我就再set一次路由
 setRoutes()
-//路由守卫，路由跳转前进行操作
+// 路由守卫，路由跳转前进行操作
 router.beforeEach((to, from, next) => {
-    let user = JSON.parse(sessionStorage.getItem("user")); //获取用户信息
-    // sessionStorage.setItem("currentPathName", to.name)
-    // let currentPath = JSON.parse(sessionStorage.getItem("currentPathName"));
-    // 设置当前的路由名称
-    // 未找到路由的情况
-    // if (!to.matched.length) {
-    //     const storeMenus = sessionStorage.getItem("menus")
-    //     if (storeMenus) {
-    //         next("/404")
-    //     } else {
-    //         // 跳回登录页面
-    //         next("/login")
-    //     }
-    // }
+    // 获取用户信息
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    // 设置当前的路由名称;未找到路由的情况
+    if (!to.matched.length) {
+        const storeMenus = sessionStorage.getItem("menus")
+        console.log("aa")
+        if (storeMenus) {
+            next("/404")
+        } else {
+            // 跳回登录页面
+            next("/login")
+        }
+    }
     if (!user && to.path !== '/login') {
         next('/login')
     } else {
         // 其他的情况都放行
         next()
     }
-
-
 })
 export default router

@@ -4,7 +4,6 @@ import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Health;
 import com.sqn.library.service.IHealthService;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,8 +23,6 @@ public class HealthController {
 
     @Resource
     IHealthService healthService;
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
 
 
     /**

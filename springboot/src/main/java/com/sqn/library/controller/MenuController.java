@@ -1,26 +1,20 @@
 package com.sqn.library.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Constants;
+import com.sqn.library.common.Result;
+import com.sqn.library.entity.Menu;
 import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.DictMapper;
 import com.sqn.library.mapper.MenuMapper;
-import com.sqn.library.utils.RedisUtils;
+import com.sqn.library.service.IMenuService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sqn.library.common.Result;
-
-
-import com.sqn.library.service.IMenuService;
-import com.sqn.library.entity.Menu;
-
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**
@@ -44,8 +38,7 @@ public class MenuController {
 
     @Resource
     MenuMapper menuMapper;
-    @Resource
-    RedisUtils redisUtils;
+
 
     /** 新增或者更新
      *

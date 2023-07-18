@@ -40,10 +40,11 @@ public class Constants {
     public static final String ALL_USER_KEY = "info:users:"; // 所有用户信息
     public static final String MENUS_KEY = "info:menus:";// 菜单信息
     public static final String EVENT_KEY = "info:events:";// 单个事件信息
+    public static final String BOOKS_KEY = "info:books:";// 书籍信息
     public static final String LOGIN_CODE_KEY = "login:code:"; // 验证码
     public static final Long LOGIN_CODE_KEY_TTL = 3L;// 验证码缓存有效期
     public static final Integer LOGIN_CODE_KEY_LENGTH = 6;// 验证码长度
-    public static final Long LOGIN_INFO_TTL = 30L;// 登录后相关信息缓存有效期
+    public static final Long LOGIN_INFO_TTL = 2L;// 登录后相关信息缓存有效期
     public static final Long CACHE_NULL_TTL = 5L;// 空值缓存过期时间
     public static final String LOCK_KEY = "lock:key:"; //互斥锁前缀名
     public static final String ALL_ACTIVITY_KEY = "info:activities:"; // 运动集

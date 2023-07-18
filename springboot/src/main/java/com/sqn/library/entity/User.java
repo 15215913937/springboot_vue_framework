@@ -22,7 +22,7 @@ public class User {
     private String username;
     @JsonIgnore
     private String password;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date birthday;
     private String name;
     private String sex;
