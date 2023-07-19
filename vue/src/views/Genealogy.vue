@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <G6Tree v-if="treedata.downstreamName" :treedata="treedata" @deleteBlood='deleteBlood'></G6Tree>
+  <div style="padding: 10px">
+    <div style="width: 100%;height: 90%;">
+      <G6Tree v-if="treedata.downstreamName" :treedata="treedata" @deleteBlood='deleteBlood'></G6Tree>
+    </div>
+    <div>
+    aa
+    </div>
   </div>
 </template>
 <script>
@@ -12,9 +17,7 @@ export default {
   },
   data() {
     return {
-      treedata: {
-        "a": "b"
-      },
+      treedata: {},
     };
   },
   mounted() {

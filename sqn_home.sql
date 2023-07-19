@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 24/04/2023 00:25:36
+ Date: 19/07/2023 21:44:20
 */
 
 SET NAMES utf8mb4;
@@ -154,7 +154,7 @@ CREATE TABLE `comment`  (
   `root_parent_id` bigint(11) NULL DEFAULT NULL COMMENT '根评论id（最顶级的评论）',
   `del_time` datetime(0) NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 353 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 354 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -167,6 +167,7 @@ INSERT INTO `comment` VALUES (347, '很ok', 22, '2023-02-22 21:07:12', 0, 24, 34
 INSERT INTO `comment` VALUES (350, '你可真善良', 62, '2023-02-25 18:26:51', 0, 44, 349, NULL, NULL);
 INSERT INTO `comment` VALUES (351, '真不错！', 62, '2023-02-25 18:27:19', 0, 44, NULL, NULL, NULL);
 INSERT INTO `comment` VALUES (352, '阿巴阿巴', 62, '2023-03-17 15:33:03', 0, 48, NULL, NULL, NULL);
+INSERT INTO `comment` VALUES (353, 'lala', 1, '2023-04-24 23:26:55', 1, 58, NULL, NULL, '2023-04-24 23:26:59');
 
 -- ----------------------------
 -- Table structure for consumer_details
@@ -181,7 +182,7 @@ CREATE TABLE `consumer_details`  (
   `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '消费类别',
   `createtime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 91 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '消费详情表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 92 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '消费详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of consumer_details
@@ -248,7 +249,8 @@ INSERT INTO `consumer_details` VALUES (82, 1, 36.00, '支出', '理发', '服务
 INSERT INTO `consumer_details` VALUES (83, 1, 10.00, '支出', '上班停车费', '交通', '2023-01-29 11:13:13');
 INSERT INTO `consumer_details` VALUES (87, 1, 111.00, '收入', '213', '生活缴费', '2023-01-29 17:41:51');
 INSERT INTO `consumer_details` VALUES (88, 1, 2.00, '支出', '123', '服务', '2023-01-29 17:42:16');
-INSERT INTO `consumer_details` VALUES (89, 1, 123.00, '支出', '2', '餐饮', '2023-01-30 09:01:26');
+INSERT INTO `consumer_details` VALUES (89, 1, 23.00, '支出', '2', '餐饮', '2023-06-30 09:01:26');
+INSERT INTO `consumer_details` VALUES (91, 1, 50.00, '支出', '主号花费', '生活缴费', '2023-07-18 15:24:43');
 
 -- ----------------------------
 -- Table structure for consumption_category
@@ -334,7 +336,7 @@ CREATE TABLE `events`  (
   `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 50 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '事件管理表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 60 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '事件管理表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of events
@@ -342,9 +344,9 @@ CREATE TABLE `events`  (
 INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', 42, '2022-07-29 00:19:26', 251);
 INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', 1, '2022-07-16 01:40:10', 160);
 INSERT INTO `events` VALUES (44, '老沈练书法的第一天', '<p>我家老沈第一天练字，加油！very good!<img src=\"http://localhost:9090/files/250d46c597f94157abf1c22074346fc3\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 1, '2023-02-24 21:28:32', 9);
-INSERT INTO `events` VALUES (47, '哼哼哼', '<p>今天沈奇男不让我学习，哼哼哼</p>', 42, '2023-03-08 22:10:37', 3);
-INSERT INTO `events` VALUES (48, '沈奇男必须提醒我', '<p>明天要在我的宝座上做作业，<span style=\"color: var(--w-e-textarea-color);\">沈奇男必须提醒我，这个是沈奇男的监督任务，必须完成!!!</span></p>', 42, '2023-03-08 22:11:55', 5);
-INSERT INTO `events` VALUES (57, '老沈今天吃不完银耳', '哈哈哈', 42, '2023-04-23 23:35:51', 15);
+INSERT INTO `events` VALUES (47, '哼哼哼', '<p>今天沈奇男不让我学习，哼哼哼</p>', 42, '2023-03-08 22:10:37', 4);
+INSERT INTO `events` VALUES (48, '沈奇男必须提醒我', '<p>明天要在我的宝座上做作业，<span style=\"color: var(--w-e-textarea-color);\">沈奇男必须提醒我，这个是沈奇男的监督任务，必须完成!!!</span></p>', 42, '2023-03-08 22:11:55', 7);
+INSERT INTO `events` VALUES (57, '老沈今天吃不完银耳', '哈哈哈', 42, '2023-04-23 23:35:51', 19);
 
 -- ----------------------------
 -- Table structure for files
@@ -374,6 +376,29 @@ INSERT INTO `files` VALUES (52, '哈头像.jpg', 'jpg', 32, 'http://localhost:90
 INSERT INTO `files` VALUES (53, '富士山.jpg', 'jpg', 91, 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', 'e1eabf7f2679f768743eba6669bb9d07', 0, 1);
 
 -- ----------------------------
+-- Table structure for genealogy
+-- ----------------------------
+DROP TABLE IF EXISTS `genealogy`;
+CREATE TABLE `genealogy`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '姓名',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '绑定账户',
+  `father_id` bigint(255) NULL DEFAULT NULL COMMENT '父亲',
+  `mother_id` bigint(255) NULL DEFAULT NULL COMMENT '母亲',
+  `son_id` bigint(255) NULL DEFAULT NULL COMMENT '儿子',
+  `daughter_id` bigint(255) NULL DEFAULT NULL COMMENT '女儿',
+  `wife_id` bigint(255) NULL DEFAULT NULL COMMENT '妻子',
+  `bro_sis_id` bigint(255) NULL DEFAULT NULL COMMENT '兄妹',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '家谱' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of genealogy
+-- ----------------------------
+INSERT INTO `genealogy` VALUES (1, '小沈', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-07-19 20:13:52');
+
+-- ----------------------------
 -- Table structure for health
 -- ----------------------------
 DROP TABLE IF EXISTS `health`;
@@ -391,7 +416,7 @@ CREATE TABLE `health`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除；0：未删除，1：已删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_id`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 155 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 156 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康管理\r\n除身高外，其余身材数据均被乘20' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of health
@@ -407,6 +432,7 @@ INSERT INTO `health` VALUES (115, 1, 163, 1120, 700, 1780, 1550, 1880, '1,9', '2
 INSERT INTO `health` VALUES (116, 42, 163, 1120, 700, 1780, 1550, 1880, '2,7', '2023-03-03 22:49:44', 0);
 INSERT INTO `health` VALUES (154, 22, 165, 1000, 0, 0, 0, 0, '9,15,1', '2023-03-19 17:47:22', 0);
 INSERT INTO `health` VALUES (143, 22, 165, 1000, 0, 0, 0, 0, '1', '2023-03-18 23:43:21', 0);
+INSERT INTO `health` VALUES (155, 1, 172, 1360, 0, 0, 0, 0, '', '2023-06-27 17:56:54', 0);
 
 -- ----------------------------
 -- Table structure for menu
@@ -421,7 +447,7 @@ CREATE TABLE `menu`  (
   `pid` bigint(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -441,6 +467,7 @@ INSERT INTO `menu` VALUES (23, '当前位置', '/mapPath', 'Aim', '规划路线'
 INSERT INTO `menu` VALUES (32, '健康管理', '/healthManagement', 'Clock', NULL, 5, 'HealthManagement');
 INSERT INTO `menu` VALUES (30, '我的账单', '/bill', 'Wallet', NULL, 5, 'Bill');
 INSERT INTO `menu` VALUES (33, '聊天室', '/imChat', 'ChatLineSquare', NULL, 5, 'ImChat');
+INSERT INTO `menu` VALUES (34, '家谱', '/genealogy', 'Notebook', '记录沈家人员关系', 6, 'Genealogy');
 
 -- ----------------------------
 -- Table structure for role
@@ -491,6 +518,7 @@ INSERT INTO `role_menu` VALUES (1, 23);
 INSERT INTO `role_menu` VALUES (1, 30);
 INSERT INTO `role_menu` VALUES (1, 32);
 INSERT INTO `role_menu` VALUES (1, 33);
+INSERT INTO `role_menu` VALUES (1, 34);
 INSERT INTO `role_menu` VALUES (3, 2);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
@@ -500,10 +528,8 @@ INSERT INTO `role_menu` VALUES (3, 30);
 INSERT INTO `role_menu` VALUES (3, 32);
 INSERT INTO `role_menu` VALUES (4, 2);
 INSERT INTO `role_menu` VALUES (4, 7);
-INSERT INTO `role_menu` VALUES (4, 8);
 INSERT INTO `role_menu` VALUES (4, 22);
 INSERT INTO `role_menu` VALUES (4, 23);
-INSERT INTO `role_menu` VALUES (4, 28);
 INSERT INTO `role_menu` VALUES (4, 30);
 INSERT INTO `role_menu` VALUES (5, 2);
 INSERT INTO `role_menu` VALUES (5, 5);
@@ -592,25 +618,26 @@ CREATE TABLE `user`  (
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '电话',
   `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   `recent_login` datetime(0) NULL DEFAULT NULL COMMENT '最近登录时间',
-  `is_delete` tinyint(1) NOT NULL COMMENT '删除状态：1，删除；0，未删除',
-  `status` tinyint(1) UNSIGNED ZEROFILL NOT NULL COMMENT '在线状态：1，在线；0，离线',
+  `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '删除状态：1，删除；0，未删除',
+  `status` tinyint(1) NULL DEFAULT 0 COMMENT '在线状态：1，在线；0，离线',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_userId`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 70 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$9rmVXRmsRuO1FbbjqMPGl.tdIkZDvQ8FoNf5/Fat1W2NMRivX1Cn6', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-04-23 22:22:13', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-07-19 20:12:07', 0, 1);
 INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-04-21 23:12:33', 0, 1);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL, NULL, 0, 0);
-INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 'ROLE_ADMIN', '15868180225', NULL, '2023-04-23 23:16:44', 0, 1);
+INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 'ROLE_ADMIN', '15868180225', NULL, '2023-06-29 13:31:48', 0, 1);
 INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 'ROLE_USER', NULL, NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (31, 'yk1', '$2a$10$s9EXA7z4XgkdUGKg7hZAL.tk5o4BSJHC8V6jUKdAyzGN4ugt9FkuW', '游客1', '2022-07-14', '女', '', '2022-07-19 01:35:13', 'ROLE_VISITOR', '15215913933', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (45, 'ts1', '$2a$10$.dIyUhwvquxSvSD/dPoeNOJ96Bhcho/g2ePSvfipdqxYUtS20e0fW', '沈小测1', NULL, NULL, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', '2022-07-26 14:41:19', 'ROLE_TESTER', '15215913934', NULL, '2023-04-20 23:38:28', 0, 1);
 INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, '男', 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 'ROLE_ADMIN', '15215913935', NULL, '2023-03-21 22:20:29', 0, 1);
 INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 'ROLE_USER', NULL, NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (67, 'yk2', '$2a$10$Jsbvf.jyg.KB/D/aLQdFgeilDQnZ/wFBIP86wBMNaL7OVwU9NVkiu', '游客2', NULL, NULL, NULL, '2022-09-20 23:45:08', 'ROLE_VISITOR', '13454566610', NULL, NULL, 0, 0);
+INSERT INTO `user` VALUES (69, 'yk3', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '游客_x2mmfgqk', NULL, NULL, NULL, '2023-06-28 15:52:14', 'ROLE_VISITOR', '15268180225', NULL, '2023-06-28 16:17:37', 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
