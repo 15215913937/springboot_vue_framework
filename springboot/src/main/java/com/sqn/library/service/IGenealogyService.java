@@ -1,7 +1,9 @@
 package com.sqn.library.service;
 
-import com.sqn.library.entity.Genealogy;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sqn.library.entity.Genealogy;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGenealogyService extends IService<Genealogy> {
 
+    List<Genealogy> tree();
 }

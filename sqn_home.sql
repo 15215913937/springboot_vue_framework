@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 19/07/2023 21:44:20
+ Date: 27/07/2023 15:01:09
 */
 
 SET NAMES utf8mb4;
@@ -387,16 +387,21 @@ CREATE TABLE `genealogy`  (
   `mother_id` bigint(255) NULL DEFAULT NULL COMMENT '母亲',
   `son_id` bigint(255) NULL DEFAULT NULL COMMENT '儿子',
   `daughter_id` bigint(255) NULL DEFAULT NULL COMMENT '女儿',
+  `husband_id` bigint(255) NULL DEFAULT NULL COMMENT '丈夫',
   `wife_id` bigint(255) NULL DEFAULT NULL COMMENT '妻子',
   `bro_sis_id` bigint(255) NULL DEFAULT NULL COMMENT '兄妹',
   `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `status` tinyint(255) NULL DEFAULT NULL COMMENT '状态：0：去世；1：健在',
+  `is_immediate_family` tinyint(255) NULL DEFAULT NULL COMMENT '是否是直系亲属：0：否；1：是',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '家谱' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '家谱' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of genealogy
 -- ----------------------------
-INSERT INTO `genealogy` VALUES (1, '小沈', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-07-19 20:13:52');
+INSERT INTO `genealogy` VALUES (1, '小沈', NULL, NULL, NULL, 2, 3, NULL, NULL, NULL, '2023-07-19 20:13:52', 1, NULL);
+INSERT INTO `genealogy` VALUES (2, '小奇', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2023-07-26 16:23:39', 1, NULL);
+INSERT INTO `genealogy` VALUES (3, '小亚', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2023-07-27 14:34:52', 1, NULL);
 
 -- ----------------------------
 -- Table structure for health
@@ -627,7 +632,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-07-19 20:12:07', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-07-27 14:23:46', 0, 1);
 INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-04-21 23:12:33', 0, 1);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL, NULL, 0, 0);

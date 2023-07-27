@@ -44,10 +44,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         // 查询所有数据
         List<Menu> list = list(wrapper);
         // 找出pid为null的一级菜单
-        List<Menu> parentNodes = list.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
+        List<Menu> parentNodes = list.stream()
+                .filter(menu -> menu.getPid() == null)
+                .collect(Collectors.toList());
         // 找出一级菜单的子菜单
         for (Menu menu : parentNodes) {
-            //筛选所有数据中pid=父级id的数据就是二级菜单
+            // 筛选所有数据中pid=父级id的数据就是二级菜单
             List<Menu> childNode =
                     list.stream().filter(m -> menu.getId().equals(m.getPid())).collect(Collectors.toList());
             menu.setChildren(childNode);

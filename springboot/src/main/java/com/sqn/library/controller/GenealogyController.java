@@ -1,10 +1,10 @@
 package com.sqn.library.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.Genealogy;
+import com.sqn.library.mapper.GenealogyMapper;
 import com.sqn.library.service.IGenealogyService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +25,9 @@ public class GenealogyController {
 
     @Resource
     private IGenealogyService genealogyService;
+
+    @Resource
+    GenealogyMapper genealogyMapper;
 
     /**
      * 新增或者更新
@@ -52,6 +55,11 @@ public class GenealogyController {
         return Result.success(genealogyService.list());
     }
 
+    @GetMapping("/findParents")
+    public Result<?> tree() {
+        return Result.success(genealogyService.tree());
+    }
+
     @GetMapping("/{id}")
     public Result<?> findOne(@PathVariable Long id) {
         return Result.success(genealogyService.getById(id));
@@ -59,9 +67,10 @@ public class GenealogyController {
 
     @GetMapping("/page")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<Genealogy> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(genealogyService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam Integer status,
+                              @RequestParam(defaultValue = "") String name
+    ) {
+        return Result.success(genealogyMapper.findPage(new Page<>(pageNum, pageSize), name, status));
     }
 }

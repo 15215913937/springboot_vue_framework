@@ -1,7 +1,9 @@
 package com.sqn.library.mapper;
 
-import com.sqn.library.entity.Genealogy;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.entity.Genealogy;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author shenqn
  * @since 2023-07-19
  */
+@Mapper
 public interface GenealogyMapper extends BaseMapper<Genealogy> {
 
+    Page<Genealogy> findPage(Page<Genealogy> genealogyPage, String name, Integer status);
 }
