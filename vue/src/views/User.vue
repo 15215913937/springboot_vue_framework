@@ -83,7 +83,7 @@
           @current-change="handleCurrentChange"
       />
 
-      <el-dialog title="拥有图书列表" v-model="bookVis" width="60%">
+      <el-dialog :title="title" v-model="bookVis" width="60%">
         <el-table :data="bookList" stripe border>
           <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
           <el-table-column prop="bookname" label="名称" align="center"/>
@@ -174,6 +174,7 @@ export default {
       }
     };
     return {
+      title: '',
       loading: true,
       form: {},
       dialogVisible: false,
@@ -185,6 +186,7 @@ export default {
       total: '',
       tableData: [],
       bookList: [],
+      bookListLen: 0,
       roles: [],
       pwdVis: false,
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
@@ -212,6 +214,7 @@ export default {
   methods: {
     showBooks(books) {
       this.bookList = books;
+      this.title = "图书(" + books.length + ")"
       this.bookVis = true
     },
     load() {
