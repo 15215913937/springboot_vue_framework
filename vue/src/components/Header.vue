@@ -4,8 +4,8 @@
     <div style="width: 180px;text-align: center" @click="$router.push('/')">
       <span class="titleName">SQN系统管理</span>
     </div>
-    <div>
-
+    <div style="height: 20px;font-family: 幼圆;font-size: x-large">
+      {{newTime}}
     </div>
     <div style="display: flex;">
       <div style="width: 50px;padding: 10px">
@@ -30,17 +30,35 @@
 <script>
 import {ArrowDown} from '@element-plus/icons-vue'
 
+const days = ['天', '一', '二', '三', '四', '五', '六']; // 星期数组
+let icnow = new Date();      // 初始化时间
+let interval;                // 定义全局定时器，用于清除定时器
+
 export default {
   name: "Header",
   props: ['user'],
   data() {
     return {
-      avatar: "",
+      avatar: '',
+      year: icnow.getFullYear(),
+      month: icnow.getMonth() + 1,
+      date: icnow.getDate(),
+      day: days[icnow.getDay() - 1],
+      time: icnow.toTimeString().substring(0, 8)
     }
   },
   created() {
     let str = sessionStorage.getItem("user") || {};
     this.form = JSON.parse(str);
+
+    interval = setInterval(() => {
+      let icnow = new Date();
+      this.year = icnow.getFullYear();
+      this.month = icnow.getMonth() + 1;
+      this.date = icnow.getDate();
+      this.day = days[icnow.getDay()];
+      this.time = icnow.toTimeString().substring(0, 8);
+    }, 1000)
   },
   setup() {
     return {
@@ -54,6 +72,15 @@ export default {
       // resetRouter()  //重置路由
     }
   },
+  computed: {
+    // 当前时间
+    newTime: function () {
+      return this.year + '年' + this.month + '月' + this.date + '日 星期' + this.day + ' ' + this.time;
+    }
+  },
+  beforeDestroy() {
+    clearInterval(interval);
+  }
 }
 </script>
 <style scoped>

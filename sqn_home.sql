@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 27/07/2023 15:01:09
+ Date: 18/10/2023 17:34:38
 */
 
 SET NAMES utf8mb4;
@@ -323,6 +323,7 @@ INSERT INTO `dict` VALUES ('discount', 'Discount', 'icon');
 INSERT INTO `dict` VALUES ('wallet', 'Wallet', 'icon');
 INSERT INTO `dict` VALUES ('clock ', 'Clock', 'icon');
 INSERT INTO `dict` VALUES ('chat', 'ChatLineSquare', 'icon');
+INSERT INTO `dict` VALUES ('dataLine', 'DataLine', 'icon');
 
 -- ----------------------------
 -- Table structure for events
@@ -367,13 +368,13 @@ CREATE TABLE `files`  (
 -- ----------------------------
 -- Records of files
 -- ----------------------------
-INSERT INTO `files` VALUES (47, '哈头像.jpg', 'jpg', 7, 'http://localhost:9090/files/test/b25f4a7e765d4375aa9bde534e01e4c3.jpg', 'd0034dd1f891ee8446debade2142390c', 0, 1);
-INSERT INTO `files` VALUES (48, '小沈.jpg', 'jpg', 434, 'http://localhost:9090/files/test/d3ddc566bbd3429293f35e77b382dae1.jpg', '6011acb83994d9c62f4a4a2ef29180be', 0, 1);
-INSERT INTO `files` VALUES (49, '老沈.jpg', 'jpg', 34, 'http://localhost:9090/files/test/a73326ce64064c7f858881855638ee25.jpg', 'e3f851531cb8c035015dd190b2895f71', 0, 1);
+INSERT INTO `files` VALUES (47, '哈头像.jpg', 'jpg', 7, 'http://localhost:9090/files/test/b25f4a7e765d4375aa9bde534e01e4c3.jpg', 'd0034dd1f891ee8446debade2142390c', 1, 1);
+INSERT INTO `files` VALUES (48, '小沈.jpg', 'jpg', 434, 'http://localhost:9090/files/test/d3ddc566bbd3429293f35e77b382dae1.jpg', '6011acb83994d9c62f4a4a2ef29180be', 1, 1);
+INSERT INTO `files` VALUES (49, '老沈.jpg', 'jpg', 34, 'http://localhost:9090/files/test/a73326ce64064c7f858881855638ee25.jpg', 'e3f851531cb8c035015dd190b2895f71', 1, 1);
 INSERT INTO `files` VALUES (50, 'default.jpg', 'jpg', 13, 'http://localhost:9090/files/test/53f46cdcd3ce4132b46ba2bb4d3563c7.jpg', '834c7fa1fa9c8b62610250717e7b25c8', 1, 1);
-INSERT INTO `files` VALUES (51, '背景1.jfif', 'jfif', 2778, 'http://localhost:9090/files/test/5222f97fc3f44ce093920a5a0bb3c753.jfif', 'df5f1222c820547de66bb8038efb3873', 0, 1);
-INSERT INTO `files` VALUES (52, '哈头像.jpg', 'jpg', 32, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', 'aec84b4f31e1f72fde9d35695e02d5b4', 0, 1);
-INSERT INTO `files` VALUES (53, '富士山.jpg', 'jpg', 91, 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', 'e1eabf7f2679f768743eba6669bb9d07', 0, 1);
+INSERT INTO `files` VALUES (51, '背景1.jfif', 'jfif', 2778, 'http://localhost:9090/files/test/5222f97fc3f44ce093920a5a0bb3c753.jfif', 'df5f1222c820547de66bb8038efb3873', 1, 1);
+INSERT INTO `files` VALUES (52, '哈头像.jpg', 'jpg', 32, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', 'aec84b4f31e1f72fde9d35695e02d5b4', 1, 1);
+INSERT INTO `files` VALUES (53, '富士山.jpg', 'jpg', 91, 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', 'e1eabf7f2679f768743eba6669bb9d07', 1, 1);
 
 -- ----------------------------
 -- Table structure for genealogy
@@ -394,7 +395,7 @@ CREATE TABLE `genealogy`  (
   `status` tinyint(255) NULL DEFAULT NULL COMMENT '状态：0：去世；1：健在',
   `is_immediate_family` tinyint(255) NULL DEFAULT NULL COMMENT '是否是直系亲属：0：否；1：是',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '家谱' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '家谱' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of genealogy
@@ -452,7 +453,7 @@ CREATE TABLE `menu`  (
   `pid` bigint(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -473,6 +474,7 @@ INSERT INTO `menu` VALUES (32, '健康管理', '/healthManagement', 'Clock', NUL
 INSERT INTO `menu` VALUES (30, '我的账单', '/bill', 'Wallet', NULL, 5, 'Bill');
 INSERT INTO `menu` VALUES (33, '聊天室', '/imChat', 'ChatLineSquare', NULL, 5, 'ImChat');
 INSERT INTO `menu` VALUES (34, '家谱', '/genealogy', 'Notebook', '记录沈家人员关系', 6, 'Genealogy');
+INSERT INTO `menu` VALUES (35, '股市风云', '/stock', 'DataLine', NULL, NULL, 'Stock');
 
 -- ----------------------------
 -- Table structure for role
@@ -524,13 +526,24 @@ INSERT INTO `role_menu` VALUES (1, 30);
 INSERT INTO `role_menu` VALUES (1, 32);
 INSERT INTO `role_menu` VALUES (1, 33);
 INSERT INTO `role_menu` VALUES (1, 34);
+INSERT INTO `role_menu` VALUES (1, 35);
 INSERT INTO `role_menu` VALUES (3, 2);
+INSERT INTO `role_menu` VALUES (3, 5);
+INSERT INTO `role_menu` VALUES (3, 6);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
+INSERT INTO `role_menu` VALUES (3, 9);
+INSERT INTO `role_menu` VALUES (3, 10);
+INSERT INTO `role_menu` VALUES (3, 11);
+INSERT INTO `role_menu` VALUES (3, 12);
+INSERT INTO `role_menu` VALUES (3, 14);
 INSERT INTO `role_menu` VALUES (3, 22);
 INSERT INTO `role_menu` VALUES (3, 23);
 INSERT INTO `role_menu` VALUES (3, 30);
 INSERT INTO `role_menu` VALUES (3, 32);
+INSERT INTO `role_menu` VALUES (3, 33);
+INSERT INTO `role_menu` VALUES (3, 34);
+INSERT INTO `role_menu` VALUES (3, 35);
 INSERT INTO `role_menu` VALUES (4, 2);
 INSERT INTO `role_menu` VALUES (4, 7);
 INSERT INTO `role_menu` VALUES (4, 22);
@@ -632,7 +645,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-07-27 14:23:46', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 'ROLE_ADMIN', '15215913937', NULL, '2023-10-18 13:46:46', 0, 1);
 INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 'ROLE_USER', '13819545627', NULL, '2023-04-21 23:12:33', 0, 1);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 'ROLE_USER', '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 'ROLE_USER', '13454588810', NULL, NULL, 0, 0);
