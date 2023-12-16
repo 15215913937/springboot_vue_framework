@@ -282,4 +282,12 @@ public class UserController {
         return Result.success(userAll);
     }
 
+    @GetMapping("/logout/{id}")
+    public Result<?> logout(@PathVariable Long id) {
+        User user = userMapper.selectById(id);
+        user.setStatus(0);
+        userMapper.updateById(user);
+        return Result.success();
+    }
+
 }

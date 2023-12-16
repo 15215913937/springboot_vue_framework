@@ -5,7 +5,7 @@
       <span class="titleName">SQN系统管理</span>
     </div>
     <div style="height: 20px;font-family: 幼圆;font-size: x-large">
-      {{newTime}}
+      {{ newTime }}
     </div>
     <div style="display: flex;">
       <div style="width: 50px;padding: 10px">
@@ -29,6 +29,7 @@
 
 <script>
 import {ArrowDown} from '@element-plus/icons-vue'
+import request from "@/utils/request";
 
 const days = ['天', '一', '二', '三', '四', '五', '六']; // 星期数组
 let icnow = new Date();      // 初始化时间
@@ -44,7 +45,8 @@ export default {
       month: icnow.getMonth() + 1,
       date: icnow.getDate(),
       day: days[icnow.getDay() - 1],
-      time: icnow.toTimeString().substring(0, 8)
+      time: icnow.toTimeString().substring(0, 8),
+      user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {}
     }
   },
   created() {
@@ -67,8 +69,10 @@ export default {
   },
   methods: {
     logout() {
-      sessionStorage.clear()
-      this.$router.push('/login');
+      request.get('/user/logout/' + this.user.id).then(() => {
+        sessionStorage.clear()
+        this.$router.push('/login');
+      })
       // resetRouter()  //重置路由
     }
   },

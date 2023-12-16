@@ -28,7 +28,7 @@
                 </el-form-item>
                 <el-form-item>
                   <div style="display: flex">
-                    <el-input :prefix-icon="Key" v-model="form.validCode" style="width: 50%"
+                    <el-input :prefix-icon="Key" v-model="form.validCode" @keyup.enter="login" style="width: 50%"
                               placeholder="请输入验证码"/>
                     <div style="background-color: #FFFFFF;border-radius: 4px;margin-left: 10px">
                       <ValidCode @input="createValidCode"/>
@@ -50,7 +50,7 @@
                   </el-button>
                 </el-form-item>
                 <el-form-item prop="code">
-                  <el-input :prefix-icon="Key" placeholder="请输入验证码" v-model="form.code"/>
+                  <el-input :prefix-icon="Key" @keyup.enter="login" placeholder="请输入验证码" v-model="form.code"/>
                 </el-form-item>
               </el-form>
             </div>

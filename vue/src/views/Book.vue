@@ -291,7 +291,6 @@
                         category: this.category
                     }
                 }).then(res => {
-                    // console.log(res);
                     this.tableData = res.data.records;
                     this.total = res.data.total;
                 });
