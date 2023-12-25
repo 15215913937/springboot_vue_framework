@@ -38,6 +38,17 @@ public class RenheCollectController {
         return Result.success();
     }
 
+    @GetMapping("/hotmap")
+    @CrossOrigin(origins = "https://mettressapi.cnzxa.cn/api/work/heatmap")
+    public Result<?> hotmap(@RequestParam Long id, @RequestParam String bedId, @RequestParam(defaultValue = "1") String clearFlag, @RequestParam String pressures) {
+        String savePath = "C:/Users/sqn/Desktop/test/";
+        String hotmapBase64 = renheCollectService.getHotmapBase64(bedId, clearFlag, pressures);
+//        String res = renheCollectService.getHotMap(id, hotmapBase64, savePath);
+        return Result.success(hotmapBase64);
+
+
+    }
+
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Long id) {
         renheCollectService.removeById(id);
@@ -52,13 +63,13 @@ public class RenheCollectController {
 
     @GetMapping()
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(defaultValue = "20") Integer pageSize,
                               @RequestParam(defaultValue = "") String code,
                               @RequestParam(defaultValue = "") String bedId,
                               @RequestParam(defaultValue = "") String mat,
                               @RequestParam(required = false) Long batch,
                               @RequestParam(required = false) Float coefficient) {
-        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize),code, bedId, mat, batch, coefficient);
+        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize), code, bedId, mat, batch, coefficient);
         return Result.success(userPage);
     }
 

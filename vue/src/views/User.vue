@@ -1,6 +1,5 @@
 <template>
   <div style="padding: 10px">
-    <!--    功能区-->
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add">
         <el-icon>
@@ -9,7 +8,6 @@
         &nbsp新增
       </el-button>
     </div>
-    <!--    搜索区-->
     <div style="margin: 10px 0;display: block;clear: both">
       <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
@@ -290,7 +288,7 @@ export default {
       request.post("/user/resetPwd", this.form).then(res => {
         if (res.code === '0') {
           this.$message.success("重置成功")
-          this.load();//刷新表格数据
+          this.load();
           this.pwdVis = false
         } else {
           this.$message.error(res.msg)

@@ -43,9 +43,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * @author sqn
+ */
 @Configuration
 public class CorsConfig {
-    //    //当前跨域请求最大有效时长。这里默认1天
+    //当前跨域请求最大有效时长。这里默认1天
     private static final long MAX_AGE = 24 * 60 * 60;
 
     private CorsConfiguration buildConfig() {
@@ -53,7 +56,7 @@ public class CorsConfig {
         corsConfiguration.addAllowedOrigin("*"); // 1允许任何域名使用
         corsConfiguration.addAllowedHeader("*"); // 2允许任何头
         corsConfiguration.addAllowedMethod("*"); // 3允许任何方法（post、get等）
-        // corsConfiguration.setAllowCredentials(true); // 允许cookies跨域
+//        corsConfiguration.setAllowCredentials(true); // 允许cookies跨域
         corsConfiguration.setMaxAge(MAX_AGE);
         return corsConfiguration;
     }
