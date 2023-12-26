@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px">
+  <div class="main-header">
     <div style="width: 100%;height: 90%;">
       <G6Tree v-if="treedata.downstreamName" :treedata="treedata" @deleteBlood='deleteBlood'></G6Tree>
     </div>

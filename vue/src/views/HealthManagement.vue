@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 20px;">
+  <div class="main-header">
     <div style="display: flex;flex-direction: column;height: 100%">
       <!--计划列表-->
       <div style="display:flex;height: 200px;border: #ffd700 solid;padding: 10px;text-align: center">

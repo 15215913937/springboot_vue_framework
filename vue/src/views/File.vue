@@ -1,5 +1,5 @@
 <template>
-    <div style="padding: 10px">
+    <div class="main-header">
         <div style="margin: 10px 0">
             <el-upload :action="'http://'+serverIp+':'+serverPort+'/files/testUpload'" :show-file-list="false"
                        :on-success="handleFileUploadSuccess" style="display: inline">

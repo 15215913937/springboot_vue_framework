@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px">
+  <div class="main-header">
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add">
         <el-icon>

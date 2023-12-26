@@ -3,10 +3,14 @@ package com.sqn.library.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
+import com.sqn.library.controller.dto.RenheCollectDTO;
+import com.sqn.library.controller.dto.RenheGetPressureDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
+import com.sqn.library.utils.ApiRequestUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,6 +32,8 @@ public class RenheCollectController {
     private IRenheCollectService renheCollectService;
     @Resource
     RenheCollectMapper renheCollectMapper;
+    @Resource
+    ApiRequestUtil apiRequestUtil;
 
     /**
      * 新增或者更新
@@ -40,13 +46,30 @@ public class RenheCollectController {
 
     @GetMapping("/hotmap")
     @CrossOrigin(origins = "https://mettressapi.cnzxa.cn/api/work/heatmap")
-    public Result<?> hotmap(@RequestParam Long id, @RequestParam String bedId, @RequestParam(defaultValue = "1") String clearFlag, @RequestParam String pressures) {
-        String savePath = "C:/Users/sqn/Desktop/test/";
+    public Result<?> hotmap(@RequestParam String bedId, @RequestParam(defaultValue = "1") String clearFlag, @RequestParam String pressures) {
         String hotmapBase64 = renheCollectService.getHotmapBase64(bedId, clearFlag, pressures);
-//        String res = renheCollectService.getHotMap(id, hotmapBase64, savePath);
         return Result.success(hotmapBase64);
+    }
 
+    /***
+     * 垫子压力数据监测并保存
+     * @param renheCollectDTO
+     * @return
+     */
+    @PostMapping("/dataCollect")
+    Result<?> dataCollect(@RequestBody RenheCollectDTO renheCollectDTO) {
+        if (renheCollectDTO.getCode().isEmpty() || renheCollectDTO.getBedId().isEmpty()) {
+            return Result.error(Constants.CODE_COMMON_ERR, "必填项必须设置");
+        }
+        RenheGetPressureDTO pressureDTO = renheCollectService.dataAnalysis(renheCollectDTO.getBedId());
+        RenheCollect renheCollect = new RenheCollect();
+        renheCollect.setBatch(renheCollectDTO.getBatch());
+        renheCollect.setBedId(renheCollectDTO.getBedId());
+        renheCollect.setMat(renheCollectDTO.getMat());
+        renheCollect.setCoefficient(renheCollectDTO.getCoefficient());
+        renheCollectService.save(renheCollect);
 
+        return Result.success();
     }
 
     @DeleteMapping("/{id}")

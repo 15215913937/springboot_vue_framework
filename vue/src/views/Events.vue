@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px">
+  <div class="main-header">
     <!--    功能区-->
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add" v-if="user.role ==='ROLE_ADMIN'|| user.role ==='ROLE_USER'">
@@ -318,7 +318,6 @@ export default {
           }, 1000)
 
           this.form.content = editor.txt.html(); //获取编辑器里面的值。然后赋予到实体form对象当中
-          // console.log(typeof this.form.content)
           if (this.form.content === "") {
             this.$message.error("正文不能为空")
             return false;

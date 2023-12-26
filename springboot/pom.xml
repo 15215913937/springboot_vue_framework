@@ -131,6 +131,19 @@
             <artifactId>redisson</artifactId>
             <version>3.22.1</version>
         </dependency>
+        <!-- 在Spring Boot中将字符串转换为JSON格式数据仍然可以通过使用@ResponseBody注解来实现。你可以使用ObjectMapper类将字符串解析为Java对象，并且自动转换为JSON格式数据。-->
+        <!-- Jackson Core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.12.5</version>
+        </dependency>
+        <!-- Jackson DataBind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.5</version>
+        </dependency>
         <!--        自定义starter 建简易ip访问监控 属性tools.ip.(log-cycle,cycle-reset,model)-->
         <!--        <dependency>-->
         <!--            <groupId>com.sqn</groupId>-->

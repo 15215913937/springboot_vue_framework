@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px">
+  <div class="main-header">
     <!--    功能区-->
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add">
@@ -102,9 +102,6 @@
           v-model:currentPage="currentPage"
           v-model:page-size="pageSize"
           :page-sizes="[10, 20, 50]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           @size-change="handleSizeChange"

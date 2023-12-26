@@ -1,11 +1,17 @@
 package com.sqn.library.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sqn.library.controller.dto.RenheGetPressureDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
+import com.sqn.library.utils.ApiRequestUtil;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,6 +28,9 @@ import java.util.Base64;
  */
 @Service
 public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, RenheCollect> implements IRenheCollectService {
+
+    @Resource
+    ApiRequestUtil apiRequestUtil;
 
     @Override
     public String getHotmapBase64(String bedId, String clearFlag, String pressures) {
@@ -96,5 +105,44 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             log.error(String.valueOf(e));
             return String.valueOf(e);
         }
+    }
+
+    @Override
+    public RenheGetPressureDTO dataAnalysis(String bedId) {
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM0Nzk2ODAwLCJpYXQiOjE3MDMyMTA0NTQsInVzZXJuYW1lIjoiYWRtaW4ifQ.mz9uWgOl-8zuuuj_2c3rWd7LCHYIBciHyEpebPZbuaY";
+        String apiUrlWithParams = "https://bedapi.test.cnzxa.cn/api/pro/bed?bedId=" + bedId;
+        String jsonToStr = apiRequestUtil.sendGetRequest(apiUrlWithParams, token);
+        ObjectMapper objectMapper = new ObjectMapper();
+        RenheGetPressureDTO renheGetPressureDTO = new RenheGetPressureDTO();
+
+        try {
+            JsonNode jsonNode = objectMapper.readTree(jsonToStr);
+
+            // 获取根节点的子对象
+            JsonNode dataNode = jsonNode.get("data");
+            if (dataNode != null) {
+                // 获取data节点的子对象
+                JsonNode online = dataNode.get("online");
+                if ("false".equals(online.asText())) {
+                    renheGetPressureDTO.setCode(0);
+                    renheGetPressureDTO.setData("");
+                    renheGetPressureDTO.setMsg("床垫离线");
+                } else {
+                    JsonNode pressureListNode = dataNode.get("pressureList");
+                    String str =pressureListNode.toString();
+                    // 将JSON字符串转换为数组
+                    renheGetPressureDTO.setCode(1);
+                    renheGetPressureDTO.setData((String) str.subSequence(1,str.length()-1));
+                    renheGetPressureDTO.setMsg("成功");
+                }
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            renheGetPressureDTO.setCode(1);
+            renheGetPressureDTO.setData("");
+            renheGetPressureDTO.setMsg("报错啦" + e);
+        }
+        return renheGetPressureDTO;
     }
 }
