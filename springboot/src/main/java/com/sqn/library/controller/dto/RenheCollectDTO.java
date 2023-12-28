@@ -2,6 +2,8 @@ package com.sqn.library.controller.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author sqn
  */
@@ -16,5 +18,11 @@ public class RenheCollectDTO {
     private String batch;
 
     private Float coefficient;
+
+    private Long firstPressure;
+
+    private Long finalPressure;
+
+    private List<String> pressure;
 
 }

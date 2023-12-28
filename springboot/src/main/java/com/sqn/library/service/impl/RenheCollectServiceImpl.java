@@ -1,22 +1,22 @@
 package com.sqn.library.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sqn.library.controller.dto.RenheGetPressureDTO;
+import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
-import com.sqn.library.utils.ApiRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * <p>
@@ -26,22 +26,23 @@ import java.util.Base64;
  * @author shenqn
  * @since 2023-12-16
  */
+@Slf4j
 @Service
 public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, RenheCollect> implements IRenheCollectService {
 
-    @Resource
-    ApiRequestUtil apiRequestUtil;
-
     @Override
-    public String getHotmapBase64(String bedId, String clearFlag, String pressures) {
+    public String getHotmapBase64(String pressures, String bedId) {
         try {
             pressures = URLDecoder.decode(pressures, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        String responseStr = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAINAMgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAQG/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AkoDZpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//2Q==";
+
         String heatmapApi = "https://mettressapi.cnzxa.cn/api/work/heatmap";
 
-        String apiUrlWithParams = heatmapApi + "?bedId=" + bedId + "&clearFlag=" + clearFlag + "&pressures=" + pressures;
+        String apiUrlWithParams = heatmapApi + "?bedId=" + bedId + "&clearFlag=1&pressures=" + pressures;
+//        log.info("url ===> " + apiUrlWithParams);
         try {
             // 创建URL对象
             URL url = new URL(apiUrlWithParams);
@@ -65,27 +66,18 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             // 关闭连接和输入流
             in.close();
             conn.disconnect();
-            String responseStr = response.toString();
-            log.debug(responseStr);
-            return responseStr.substring(20, responseStr.length() - 13);
+            String initResponseStr = response.toString();
+            responseStr = initResponseStr.substring(20, initResponseStr.length() - 13);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(String.valueOf(e));
-            return "-1";
         }
+        return responseStr;
     }
 
-    @Override
-    public String getHotMap(Long id, String base64, String savePath) {
+    public void getHotMap(String base64, String savePath) {
+        String newSavePath = savePath + "/hotImg.jpg";
         try {
-            if ("-1".equals(base64)) {
-                return "数据错误";
-            }
-            String newSavePath = savePath + id + "_hotImg.jpg";
-            final File file = new File(newSavePath);
-            if (file.exists()) {
-                return newSavePath;
-            }
             // 解码base64字符串为二进制数据
             byte[] imageBytes = Base64.getDecoder().decode(base64);
 
@@ -97,52 +89,153 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
 
             // 关闭输出流
             outputStream.close();
-            log.debug("The heatmap was saved successfully!");
-            return newSavePath;
-
         } catch (IOException e) {
             e.printStackTrace();
-            log.error(String.valueOf(e));
-            return String.valueOf(e);
+            log.error("热力图生成失败：" + e);
         }
     }
 
     @Override
-    public RenheGetPressureDTO dataAnalysis(String bedId) {
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM0Nzk2ODAwLCJpYXQiOjE3MDMyMTA0NTQsInVzZXJuYW1lIjoiYWRtaW4ifQ.mz9uWgOl-8zuuuj_2c3rWd7LCHYIBciHyEpebPZbuaY";
-        String apiUrlWithParams = "https://bedapi.test.cnzxa.cn/api/pro/bed?bedId=" + bedId;
-        String jsonToStr = apiRequestUtil.sendGetRequest(apiUrlWithParams, token);
-        ObjectMapper objectMapper = new ObjectMapper();
-        RenheGetPressureDTO renheGetPressureDTO = new RenheGetPressureDTO();
+    public Integer export_PressureAndHot_Img(List<RenheScreenCapDTO> renheScreenCapDTOList, String savPath) {
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(jsonToStr);
+        // 成功生成图片的数量
+        int successCount = 0;
+        for (RenheScreenCapDTO renheScreenCapDTO : renheScreenCapDTOList) {
+            // 保存文件路径
+            String parentFolder = String.format("%s/test/第%s批/%s", savPath, renheScreenCapDTO.getBatch(), renheScreenCapDTO.getCode());
+            String s = checkOrCreateDirectory(parentFolder);
+            String base64 = getHotmapBase64(renheScreenCapDTO.getPressure(), renheScreenCapDTO.getBedId());
+            // 生成热力图
+            getHotMap(base64, s);
 
-            // 获取根节点的子对象
-            JsonNode dataNode = jsonNode.get("data");
-            if (dataNode != null) {
-                // 获取data节点的子对象
-                JsonNode online = dataNode.get("online");
-                if ("false".equals(online.asText())) {
-                    renheGetPressureDTO.setCode(0);
-                    renheGetPressureDTO.setData("");
-                    renheGetPressureDTO.setMsg("床垫离线");
-                } else {
-                    JsonNode pressureListNode = dataNode.get("pressureList");
-                    String str =pressureListNode.toString();
-                    // 将JSON字符串转换为数组
-                    renheGetPressureDTO.setCode(1);
-                    renheGetPressureDTO.setData((String) str.subSequence(1,str.length()-1));
-                    renheGetPressureDTO.setMsg("成功");
+            // 生成压力图
+            successCount = getPressureImg(renheScreenCapDTO.getPressure(), s, successCount);
+        }
+        return successCount;
+    }
+
+    private Integer getPressureImg(String pressure, String parentFilePath, Integer successCount) {
+        // 压力图像设置
+        int rows = 21; // 行数
+        int cols = 8; // 列数
+        int cellWidth = 40; // 格子宽度
+        int cellHeight = 30; // 格子高度
+        int imageWidth = cellWidth * cols; // 图像宽度
+        int imageHeight = cellHeight * rows; // 图像高度
+        // 解析参数
+        String[] values = pressure.split(",");
+        // 创建 BufferedImage 对象
+        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        // 获取 Graphics2D 对象
+        Graphics2D g2d = image.createGraphics();
+        // 填充底色
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, imageWidth, imageHeight);
+
+        // 绘制格子
+        int index = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (index < values.length) {
+                    String value = values[index];
+
+                    // 获取格子位置和绘制数值的中心坐标
+                    int x = j * cellWidth;
+                    int y = i * cellHeight;
+                    int centerX = x + (cellWidth >> 1); // 右移1位等同于除以2
+                    int centerY = y + (cellHeight >> 1);
+
+                    // 绘制格子背景
+                    Color color = getColorFromValue(value); // 获取颜色
+                    g2d.setColor(color);
+                    g2d.fillRect(x, y, cellWidth, cellHeight);
+
+                    // 绘制格子边框
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawRect(x, y, cellWidth, cellHeight);
+
+                    // 绘制数值
+                    Font font = new Font("Arial", Font.PLAIN, 16);
+                    FontMetrics fm = g2d.getFontMetrics(font);
+                    int stringWidth = fm.stringWidth(value); // 获取数值的宽度
+                    int stringHeight = fm.getHeight(); // 获取数值的高度
+                    int textX = centerX - (stringWidth / 2); // 计算数值的X坐标
+                    int textY = centerY + (stringHeight / 2); // 计算数值的Y坐标
+
+                    g2d.setColor(Color.BLACK); // 设置字体颜色为黑色
+                    g2d.setFont(font);
+                    g2d.drawString(value, textX, textY);
+
+                    index++;
                 }
             }
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            renheGetPressureDTO.setCode(1);
-            renheGetPressureDTO.setData("");
-            renheGetPressureDTO.setMsg("报错啦" + e);
         }
-        return renheGetPressureDTO;
+        // 释放资源
+        g2d.dispose();
+
+        // 输出图像
+        File outputFile = new File(parentFilePath + "/pressureImg.png");
+        try {
+            ImageIO.write(image, "png", outputFile);
+            successCount++;
+            log.info("文件保存路径：" + parentFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("图片输出错误：" + e);
+        }
+        return successCount;
+    }
+
+    private Color getColorFromValue(String value) {
+        int intValue = Integer.parseInt(value);
+
+        // 根据数值范围设置对应的颜色
+        if (intValue >= 0 && intValue <= 9) {
+            return Color.decode("#E3E3E3"); // 红色
+        } else if (intValue >= 10 && intValue <= 20) {
+            return Color.decode("#CCCCCC"); // 绿色
+        } else if (intValue >= 21 && intValue <= 30) {
+            return Color.decode("#E5C4C4"); // 蓝色
+        } else if (intValue >= 31 && intValue <= 50) {
+            return Color.decode("#FFAFAF"); // 蓝色
+        } else if (intValue >= 51 && intValue <= 100) {
+            return Color.decode("#FF5C5C"); // 蓝色
+        } else if (intValue >= 101 && intValue <= 150) {
+            return Color.decode("#E60E0E"); // 蓝色
+        } else {
+            return Color.decode("#A60000"); // 灰色
+        }
+    }
+
+    /***
+     * 路径检查
+     * @param directoryPath
+     * @return
+     */
+    public String checkOrCreateDirectory(String directoryPath) {
+        String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
+        File directory = new File(directoryPath);
+
+        // 判断文件夹是否存在
+        if (directory.exists()) {
+            if (directory.isDirectory()) {
+                // 文件夹已存在，返回路径
+                return directory.getAbsolutePath();
+            } else {
+                // 路径存在但不是一个文件夹，输出错误信息
+                log.error(directoryPath + " 不是一个文件夹路径，路径已替换至桌面");
+                return desktopPath;
+            }
+        } else {
+            // 文件夹不存在，尝试创建
+            if (directory.mkdirs()) {
+                // 创建成功，返回路径
+                return directory.getAbsolutePath();
+            } else {
+                // 创建失败，输出错误信息
+                log.error("无法创建文件夹：" + directoryPath + "，路径已替换至桌面");
+                return desktopPath;
+            }
+        }
     }
 }

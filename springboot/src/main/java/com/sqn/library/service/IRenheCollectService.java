@@ -1,8 +1,10 @@
 package com.sqn.library.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sqn.library.controller.dto.RenheGetPressureDTO;
+import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,10 +16,7 @@ import com.sqn.library.entity.RenheCollect;
  */
 public interface IRenheCollectService extends IService<RenheCollect> {
 
-    String getHotmapBase64(String bedId, String clearFlag, String pressures);
+    String getHotmapBase64(String pressures,String bedId);
 
-    String getHotMap(Long id, String base64, String savePath);
-
-    RenheGetPressureDTO dataAnalysis(String bedId);
-
+    Integer export_PressureAndHot_Img(List<RenheScreenCapDTO> renheScreenCapDTOList, String savePath);
 }

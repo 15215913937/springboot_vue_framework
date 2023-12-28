@@ -2,18 +2,20 @@ package com.sqn.library.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.controller.dto.RenheCollectDTO;
-import com.sqn.library.controller.dto.RenheGetPressureDTO;
+import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
-import com.sqn.library.utils.ApiRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ import java.util.List;
  * @author shenqn
  * @since 2023-12-16
  */
+@Slf4j
 @RestController
 @RequestMapping("/renhe-collect")
 public class RenheCollectController {
@@ -32,44 +35,70 @@ public class RenheCollectController {
     private IRenheCollectService renheCollectService;
     @Resource
     RenheCollectMapper renheCollectMapper;
-    @Resource
-    ApiRequestUtil apiRequestUtil;
 
-    /**
-     * 新增或者更新
-     */
-    @PostMapping
-    public Result<?> save(@RequestBody RenheCollect renheCollect) {
-        renheCollectService.saveOrUpdate(renheCollect);
-        return Result.success();
+    @PostMapping("/exportPressureAndHotImg")
+    public Result<?> exportPressureAndHotImg(@RequestBody List<RenheScreenCapDTO> renheScreenCapDTOList) {
+        String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
+        Integer i = renheCollectService.export_PressureAndHot_Img(renheScreenCapDTOList, desktopPath);
+        if (i == renheScreenCapDTOList.size()) {
+            return Result.success("图片生成成功！");
+        } else {
+            return Result.error(Constants.CODE_DATA_ERR, "仅生成" + i + "份图片，可尝试重新导出");
+        }
     }
 
     @GetMapping("/hotmap")
     @CrossOrigin(origins = "https://mettressapi.cnzxa.cn/api/work/heatmap")
-    public Result<?> hotmap(@RequestParam String bedId, @RequestParam(defaultValue = "1") String clearFlag, @RequestParam String pressures) {
-        String hotmapBase64 = renheCollectService.getHotmapBase64(bedId, clearFlag, pressures);
+    public Result<?> hotmap(@RequestParam String pressure, @RequestParam String bedId) {
+        String hotmapBase64 = renheCollectService.getHotmapBase64(pressure, bedId);
         return Result.success(hotmapBase64);
     }
 
     /***
-     * 垫子压力数据监测并保存
+     * 垫子压力数据首次保存
      * @param renheCollectDTO
-     * @return
+     * @return`
      */
-    @PostMapping("/dataCollect")
-    Result<?> dataCollect(@RequestBody RenheCollectDTO renheCollectDTO) {
-        if (renheCollectDTO.getCode().isEmpty() || renheCollectDTO.getBedId().isEmpty()) {
-            return Result.error(Constants.CODE_COMMON_ERR, "必填项必须设置");
-        }
-        RenheGetPressureDTO pressureDTO = renheCollectService.dataAnalysis(renheCollectDTO.getBedId());
-        RenheCollect renheCollect = new RenheCollect();
+    @PostMapping("/saveFirstPressure")
+    Result<?> saveFirstPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
+        List<String> pressure = renheCollectDTO.getPressure();
+        String strPressure = String.join(",", pressure);
+        final RenheCollect renheCollect = new RenheCollect();
+        renheCollect.setCode(renheCollectDTO.getCode());
         renheCollect.setBatch(renheCollectDTO.getBatch());
         renheCollect.setBedId(renheCollectDTO.getBedId());
         renheCollect.setMat(renheCollectDTO.getMat());
+        renheCollect.setFirstPressure(renheCollectDTO.getFirstPressure());
         renheCollect.setCoefficient(renheCollectDTO.getCoefficient());
-        renheCollectService.save(renheCollect);
-
+        renheCollect.setPressure(strPressure);
+        renheCollectMapper.insert(renheCollect);
         return Result.success();
+    }
+
+    /***
+     * 垫子压力数据最终保存
+     * @param renheCollectDTO
+     * @return
+     */
+    @PostMapping("/saveFinalPressure")
+    Result<?> saveFinalPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
+        RenheCollect renhe = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getCode, renheCollectDTO.getCode()));
+        if (renhe != null) {
+            if (renhe.getFinalPressure() == null) {
+                List<String> pressure = renheCollectDTO.getPressure();
+                String strPressure = String.join(",", pressure);
+                renhe.setFinalPressure(renheCollectDTO.getFinalPressure());
+                renhe.setPressure(strPressure);
+                renheCollectMapper.updateById(renhe);
+                return Result.success("最终数据存储成功");
+            } else {
+                return Result.error(Constants.CODE_DATA_ERR, "数据重复存储");
+            }
+        } else {
+            return Result.error(Constants.CODE_DATA_ERR, "硬件码不存在");
+        }
+
+
     }
 
     @DeleteMapping("/{id}")

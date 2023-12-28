@@ -1,6 +1,14 @@
 <template>
   <div class="main-header">
-    <el-button class="mb-10" type="primary" @click="startCollect">开始采集</el-button>
+    <div class="mb-10">
+      <el-button type="primary" @click="startCollect">开始采集</el-button>
+      <el-button type="success" @click="exportImg">
+        <el-icon>
+          <Upload/>
+        </el-icon>
+        &nbsp导出
+      </el-button>
+    </div>
     <div class="container">
       <el-input v-model="search.code" placeholder="请输入传感垫key" style="width: 15%" class="mr-10" :prefix-icon="Search"
                 clearable/>
@@ -25,8 +33,9 @@
         border
         stripe
         style="width: 100%"
-        highlight-current-row>
-
+        highlight-current-row
+        @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="40px" align="center"/>
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="code" label="传感垫key" align="center">
         <template #default="scope">
@@ -101,7 +110,7 @@
               <div class="content">
                 <div v-for="item in latestStatus" :key="item.id" class="status-item">
                   <p class="status">状态: {{ item.status }}</p>
-                  <p class="status">当前{{ this.CollectBaseData.bedId }}-{{ this.CollectBaseData.code }}压力总和:
+                  <p class="status">当前{{ item.bedId }}-{{ item.code }}压力总和:
                     {{ item.pressure }}</p>
                   <p class="time">时间: {{ item.time }}</p>
                 </div>
@@ -135,7 +144,7 @@
             </div>
           </div>
           <div style="display: flex;flex-direction:column;align-items: center">
-            <img v-if="base64Data" :src="base64Data" alt="Image">
+            <img v-if="base64Data" :src="base64Data" alt="Image" @load="imageLoaded = true">
           </div>
         </div>
         <div style="margin-top:20px;display: flex; align-items: center; justify-content: center;">
@@ -198,8 +207,9 @@ export default {
         batch: '',
         coefficient: '1',
         code: '',
-        firstPressure: '',
-        finalPressure: ''
+        firstPressure: null,
+        finalPressure: null,
+        pressure: []
       },
       threshold: 500,
       confirmTime: '24',
@@ -216,7 +226,9 @@ export default {
       statusList: [],
       intervalId: null,
       isMonitoring: false,
-      isPaused: false
+      isPaused: false,
+      is_err: 0,
+      ids: []
     }
   },
   created() {
@@ -235,6 +247,12 @@ export default {
     }
   },
   methods: {
+    playSound(text) {
+      const synthesis = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text); // 使用参数a作为语音内容
+
+      synthesis.speak(utterance);
+    },
     copyData(dataToCopy) {
       navigator.clipboard.writeText(dataToCopy)
           .then(() => {
@@ -304,21 +322,18 @@ export default {
       for (let i = 0; i < values.length; i += 8) {
         this.pressure2.push(values.slice(i, i + 8));
       }
-
+      request.get('/renhe-collect/hotmap', {
+            params: {
+              pressure: row.pressure,
+              bedId: row.bedId
+            }
+          }
+      ).then(res => {
+        this.base64Data = 'data:image/jpeg;base64,' + res.data;
+      })
       this.title = row.code;
       this.createTime = '';
       this.createTime = row.createTime;
-      request.get('/renhe-collect/hotmap', {
-        params: {
-          id: row.id,
-          bedId: row.bedId,
-          pressures: row.pressure
-        }
-      }).then(res => {
-        if (res.code === '0') {
-          this.base64Data = 'data:image/jpeg;base64,' + res.data;
-        }
-      });
       this.codeDataDialogVisible = true;
     },
 
@@ -331,21 +346,25 @@ export default {
     startMonitoring() {
       this.$refs.data.validate((valid) => {
         if (valid) {
-          console.log(this.CollectBaseData)
-          this.isMonitoring = true;
-          this.timeout = 6;
-          this.intervalId = setInterval(() => {
-            if (!this.isPaused) {
-              if (this.count === 2) {
-                this.count = 0;
-                this.stopMonitoring();
-              } else {
-                this.updateStatus();
-              }
-            }
-          }, this.timeout * 1000)
+          this.isMonitoring = true
+          this.setupInterval()
         }
       });
+    },
+    setupInterval() {
+      clearInterval(this.intervalId); // 清除之前的计时器
+      this.intervalId = setInterval(() => {
+        if (!this.isPaused) {
+          if (this.count === 2 || this.is_err === 1) {
+            this.count = 0;
+            this.stopMonitoring();
+            this.playSound(this.CollectBaseData.code + '数据采集结束');
+            this.CollectBaseData.code = '';
+          } else {
+            this.updateStatus();
+          }
+        }
+      }, this.timeout * 1000);
     },
     pauseMonitoring() {
       this.isPaused = true;
@@ -355,6 +374,8 @@ export default {
     },
     stopMonitoring() {
       this.isMonitoring = false;
+      this.is_err = 0
+      this.timeout = 6
       clearInterval(this.intervalId);
 
     },
@@ -365,46 +386,91 @@ export default {
         },
         headers: {
           'Content-Type': 'application/json',
-          'Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MTQyNDAwLCJpYXQiOjE3MDM1NzM2NTcsInVzZXJuYW1lIjoiYWRtaW4ifQ.yRWoi9tAeq_psXt1rS4NH00wYfSAj90f96y7XAPBrSs'
+          'Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MjI4ODAwLCJpYXQiOjE3MDM2NDIzODksInVzZXJuYW1lIjoiYWRtaW4ifQ.y-QS527gOeg4p4kUVKbsx58Acg-l28uiUA_u1GJynqI'
         }
       };
       axios.get('https://bedapi.test.cnzxa.cn/api/pro/bed', config)
-          .then(res => {
+          .then(async res => {
             const data = res.data.data;
             const pressure = data.pressureList;
+            const finalPressure = [...res.data.data.pressureList]
             const sortedData = pressure.sort((a, b) => b - a)
             const sum = sortedData.slice(0, 45).reduce((a, b) => a + b, 0);
             const currentTime = new Date().toLocaleTimeString();
-            let status;
+            let status
+            let bedId
+            let code
+            bedId = this.CollectBaseData.bedId
+            code = this.CollectBaseData.code
             if (data.online === "false") {
               status = "床垫离线"
             } else {
-              if (sum <= this.threshold) {
+              if (sum < this.threshold) {
                 status = "等待中..."
               } else {
                 if (this.count === 0) {
-                  status = '保存首次数据'
-                  this.timeout = Number(this.confirmTime)
+                  this.CollectBaseData.firstPressure = sum;
+                  await request.post('/renhe-collect/saveFirstPressure', this.CollectBaseData).then(res => {
+                    console.log(res.code)
+                    if (res.code === '0') {
+                      status = '保存首次数据'
+                      this.timeout = Number(this.confirmTime)
+                      this.setupInterval(); // 更新计时器时间间隔
+                    } else {
+                      status = '首次存储异常'
+                      this.is_err = 1
+                    }
+                  })
                 } else {
-                  status = "保存最终数据"
+                  this.CollectBaseData.finalPressure = sum;
+                  this.CollectBaseData.pressure = finalPressure
+                  await request.post('/renhe-collect/saveFinalPressure', this.CollectBaseData).then(res => {
+                    console.log(res.code)
+                    if (res.code === '0') {
+                      status = '保存最终数据'
+                    } else {
+                      status = '最终存储异常'
+                      this.is_err = 1
+                    }
+                  })
                 }
                 this.count++
               }
             }
-            this.statusList.unshift({
+
+            await this.statusList.unshift({
               id: Date.now(),
               pressure: sum,
               status: status,
-              time: currentTime
+              time: currentTime,
+              bedId: bedId,
+              code: code
             });
+
           })
           .catch(error => {
             console.error('Error:', error);
+            this.is_err = 1
           });
-
-
       if (this.statusList.length > 10) {
         this.statusList.pop();
+      }
+    },
+    handleSelectionChange(val) {
+      this.ids = val.map(v => ({bedId: v.bedId, code: v.code, pressure: v.pressure, batch: v.batch}))
+    },
+    exportImg() {
+      if (this.ids.length === 0) {
+        this.$message.info("请选择至少一条记录")
+      } else {
+        console.log(this.ids)
+        request.post('/renhe-collect/exportPressureAndHotImg', this.ids).then(res => {
+          if (res.code === '0') {
+            this.$message.success('导出成功')
+          } else {
+            this.$message.error("导出失败，请重试！")
+          }
+        })
       }
     }
   },
