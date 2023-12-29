@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="add">
+      <el-button type="primary" @click="add" v-if="user.role===1||user.role===3">
         <el-icon>
           <CirclePlus/>
         </el-icon>
@@ -9,9 +9,7 @@
       </el-button>
     </div>
     <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-input v-model="role" placeholder="请输入角色" style="width: 20%" class="mr-10" :prefix-icon="Search"
+      <el-input v-model="search.name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
@@ -27,17 +25,16 @@
       <el-table-column prop="username" label="用户名" align="center"/>
       <el-table-column prop="role" label="角色" width="100px" align="center">
         <template #default="scope">
-          <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
-          <el-tag type="warning" v-if="scope.row.role === 'ROLE_USER'">普通用户</el-tag>
-          <el-tag type="success" v-if="scope.row.role === 'ROLE_VISITOR'">游客</el-tag>
-          <el-tag type="error" v-if="scope.row.role === 'ROLE_TESTER'">测试用户</el-tag>
+          <el-tag type="primary" v-if="scope.row.role === 1">管理员</el-tag>
+          <el-tag type="warning" v-else-if="scope.row.role === 3">普通用户</el-tag>
+          <el-tag type="success" v-else-if="scope.row.role === 4">游客</el-tag>
+          <el-tag type="error" v-else>定制用户</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="姓名" align="center"/>
       <el-table-column prop="phone" label="电话" align="center"/>
       <el-table-column prop="birthday" label="出生日期" align="center"/>
       <el-table-column prop="sex" label="性别" width="70px" align="center"/>
-      <el-table-column prop="createTime" label="创建时间" width="180" align="center"/>
       <el-table-column prop="recentLogin" label="最近登录时间" width="180" align="center"/>
       <el-table-column prop="status" label="状态" width="70px" align="center">
         <template #default="scope">
@@ -50,9 +47,9 @@
           <!--                  后端也要有个bookList属性-->
           <el-button plain type="success" @click="showBooks(scope.row.bookList)">查看图书列表
           </el-button>
-          <el-button plain type="primary" @click="handleEdit(scope.row)" v-if="user.role==='ROLE_ADMIN'">编辑
+          <el-button plain type="primary" @click="handleEdit(scope.row)" v-if="user.role===1">编辑
           </el-button>
-          <el-button plain type="primary" @click="resetPwd(scope.row)" v-if="user.role==='ROLE_ADMIN'">重置密码
+          <el-button plain type="primary" @click="resetPwd(scope.row)" v-if="user.role===1">重置密码
           </el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
@@ -69,11 +66,11 @@
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination
-          v-model:currentPage="currentPage"
-          v-model:page-size="pageSize"
+          v-model:currentPage="search.currentPage"
+          v-model:page-size="search.pageSize"
           :page-sizes="[10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
+          :total="search.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
       />
@@ -171,14 +168,19 @@ export default {
     return {
       title: '',
       loading: true,
-      form: {},
+      form: {
+        name: '',
+        flag: null
+      },
+      search: {
+        name: '',
+        role: '',
+        currentPage: 1,
+        pageSize: 10,
+        total: '',
+      },
       dialogVisible: false,
       bookVis: false,
-      name: '',
-      role: '',
-      currentPage: 1,
-      pageSize: 10,
-      total: '',
       tableData: [],
       bookList: [],
       bookListLen: 0,
@@ -216,28 +218,29 @@ export default {
       this.loading = true;
       request.get("/user", {
         params: {
-          pageNum: this.currentPage,
-          pageSize: this.pageSize,
-          name: this.name,
-          role: this.role,
+          pageNum: this.search.currentPage,
+          pageSize: this.search.pageSize,
+          name: this.search.name,
+          role: this.search.role,
         }
       }).then(res => {
         this.loading = false;
         this.tableData = res.data.records;
-        this.total = res.data.total;
+        this.search.total = res.data.total;
       });
-      request.get("/role").then(res => {
-        this.roles = res.data;
-      })
+
     },
     reset() {
-      this.name = '';
-      this.role = '';
+      this.search.name = '';
+      this.search.role = '';
       this.load();
     },
     add() {
       this.dialogVisible = true;
       this.form = {}
+      request.get("/role").then(res => {
+        this.roles = res.data;
+      })
     },
 
     save() {
@@ -277,7 +280,6 @@ export default {
       this.load()
     },
     handleCurrentChange() {
-      // 改变当前页数的触发
       this.load()
     },
     resetPwd(row) {

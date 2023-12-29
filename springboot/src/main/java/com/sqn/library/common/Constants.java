@@ -55,7 +55,4 @@ public class Constants {
      */
 
     public static final String ROLE_ADMIN = "ROLE_ADMIN"; // 管理员
-    public static final String ROLE_USER = "ROLE_USER"; // 普通用户
-    public static final String ROLE_VISITOR = "ROLE_VISITOR"; // 游客
-    public static final String ROLE_TESTER = "ROLE_TESTER"; // 测试员
 }

@@ -658,10 +658,12 @@ export default {
 
 .demo-form-inline {
   display: flex;
+  align-items: center;
 }
 
 .bodySingle {
   margin: 0 10px;
+  align-items: center;
 }
 
 </style>

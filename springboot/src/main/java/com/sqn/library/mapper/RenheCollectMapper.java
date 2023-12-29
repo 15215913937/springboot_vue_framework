@@ -15,5 +15,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RenheCollectMapper extends BaseMapper<RenheCollect> {
 
-    Page<RenheCollect> findPage(Page<RenheCollect> page, @Param("code") String code, @Param("bedId") String bedId, @Param("mat") String mat, @Param("batch") Long batch, @Param("coefficient") Float coefficient);
+    Page<RenheCollect> findPage(Page<RenheCollect> page, @Param("code") String code, @Param("bedId") String bedId, @Param("mat") String mat, @Param("batch") Long batch, @Param("coefficient") Float coefficient,@Param("status") String status);
 }

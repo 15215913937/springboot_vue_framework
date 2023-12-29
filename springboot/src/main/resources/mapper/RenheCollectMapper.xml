@@ -20,6 +20,9 @@
             <if test="coefficient!=null and coefficient !=''">
                 and coefficient = #{coefficient}
             </if>
+            <if test="status!=null and status !=''">
+                and status = #{status}
+            </if>
         </where>
         order by create_time desc
     </select>

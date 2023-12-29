@@ -16,7 +16,6 @@ import com.sqn.library.controller.dto.UserResetPwdDTO;
 import com.sqn.library.entity.Menu;
 import com.sqn.library.entity.Role;
 import com.sqn.library.entity.User;
-import com.sqn.library.exception.CustomException;
 import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IMenuService;
 import com.sqn.library.service.IRoleService;
@@ -80,7 +79,7 @@ public class UserController {
             if (user.getIsDelete() == 1) {
                 return Result.error(Constants.CODE_COMMON_ERR, "账户已冻结，请联系管理员");
             }
-        } else if (StrUtil.isNotBlank(loginDTO.getPhone())) {
+        } else if (loginDTO.getPhone() != null) {
             String cacheCode = redisUtils.get(Constants.LOGIN_CODE_KEY);
             if (!loginDTO.getCode().equals(cacheCode)) {
                 return Result.error(Constants.CODE_COMMON_ERR, "验证码错误");
@@ -89,7 +88,7 @@ public class UserController {
             redisUtils.delete(Constants.LOGIN_CODE_KEY);
             User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, loginDTO.getPhone()));
             if (res == null) {
-                user.setRole(Constants.ROLE_VISITOR);
+                user.setRole(3L);
                 user.setUsername(Constants.PREFIX_USERNAME + RandomUtil.randomString(8));
                 user.setPassword(SecurityUtils.encodePassword(Constants.DEFAULT_PASSWORD));
                 user.setName(Constants.PREFIX_NAME + RandomUtil.randomString(8));
@@ -103,7 +102,7 @@ public class UserController {
                 user = res;
             }
         }
-        Role one = iRoleService.getOne(Wrappers.<Role>lambdaQuery().eq(Role::getFlag, user.getRole()));
+        Role one = iRoleService.getOne(Wrappers.<Role>lambdaQuery().eq(Role::getId, user.getRole()));
         ArrayList<Menu> roleMenus = iMenuService.findRoleMenus(one.getId());
         user.setMenus(roleMenus);
         // 生成token
@@ -196,7 +195,7 @@ public class UserController {
             if (res != null) {
                 return Result.error(Constants.CODE_COMMON_ERR, "用户名已存在");
             }
-            user.setRole(Constants.ROLE_VISITOR);
+            user.setRole(3L);
             user.setName(user.getUsername());
             user.setPassword(SecurityUtils.encodePassword(user.getPassword()));
             userMapper.insert(user);
@@ -216,21 +215,28 @@ public class UserController {
      */
     @PostMapping
     public Result<?> save(@Valid @RequestBody User user) {
-        User one = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
-        if ((one != null && user.getId() == null) || (one != null && !one.getId().equals(user.getId()))) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "该用户已存在");
-        }
-        if (StrUtil.isBlank(user.getUsername())) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "用户名未填写");
-        }
-        if (user.getPassword() == null) {
-            user.setPassword(SecurityUtils.encodePassword("123456"));
-        }
-        if (user.getRole() == null) {
-            user.setRole(Constants.ROLE_VISITOR);
-        }
-        if (user.getName() == null) {
-            user.setName(user.getUsername());
+        User usernameUser = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+        User phoneUser = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getPhone, user.getPhone()));
+        if (user.getId() == null) {
+            if (usernameUser != null) {
+                return Result.error(Constants.CODE_COMMON_ERR, "用户名已被使用");
+            }
+            if (phoneUser != null) {
+                return Result.error(Constants.CODE_COMMON_ERR, "手机号已被使用");
+            }
+            if (user.getPassword() == null) {
+                user.setPassword(SecurityUtils.encodePassword("123456"));
+            }
+            if (user.getRole() == null) {
+                user.setRole(3L);
+            }
+            if (user.getName() == null) {
+                user.setName(user.getUsername());
+            }
+        } else if (usernameUser != null && !usernameUser.getId().equals(user.getId())) {
+            return Result.error(Constants.CODE_COMMON_ERR, "用户名已被使用");
+        } else if (phoneUser != null && !phoneUser.getId().equals(user.getId())) {
+            return Result.error(Constants.CODE_COMMON_ERR, "手机号已被使用");
         }
         iUserService.saveOrUpdate(user);
         redisUtils.delete(Constants.USER_KEY);
@@ -238,7 +244,8 @@ public class UserController {
 
     }
 
-    /**
+
+    /***
      * 用户删除
      *
      * @param id
@@ -263,7 +270,7 @@ public class UserController {
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String name,
-                              @RequestParam(defaultValue = "") String role) {
+                              @RequestParam(defaultValue = "") Long role) {
         Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), name, role);
         return Result.success(userPage);
     }

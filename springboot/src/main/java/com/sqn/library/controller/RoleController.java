@@ -33,14 +33,15 @@ public class RoleController {
     @Resource
     RoleMapper roleMapper;
 
-    /** 新增或者更新
+    /**
+     * 新增或者更新
      *
      * @param role
      * @return
      */
     @PostMapping
     public Result<?> save(@RequestBody Role role) {
-        if (StrUtil.isBlank(role.getRole()) || StrUtil.isBlank(role.getFlag())) {
+        if (StrUtil.isBlank(role.getRole()) || role.getFlag() != null) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "必填项不能为空！");
         }
         Role res =

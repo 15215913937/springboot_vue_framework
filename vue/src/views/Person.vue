@@ -22,7 +22,7 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item label="出生日期">
+        <el-form-item label="出生日期" prop="birthday">
           <el-date-picker
               v-model="form.birthday"
               type="date"
@@ -32,14 +32,14 @@
               value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="性别">
+        <el-form-item label="性别" prop="sex">
           <el-input v-model="form.sex" disabled></el-input>
         </el-form-item>
-        <el-form-item label="角色">
-          <el-tag type="primary" v-if="form.role === 'ROLE_ADMIN'">管理员</el-tag>
-          <el-tag type="warning" v-if="form.role === 'ROLE_USER'">普通用户</el-tag>
-          <el-tag type="success" v-if="form.role === 'ROLE_VISITOR'">游客</el-tag>
-          <el-tag type="error" v-if="form.role === 'ROLE_TESTER'">测试用户</el-tag>
+        <el-form-item label="角色" prop="role">
+          <el-tag type="primary" v-if="form.role === 1">管理员</el-tag>
+          <el-tag type="warning" v-else-if="form.role === 3">普通用户</el-tag>
+          <el-tag type="success" v-else-if="form.role === 4">游客</el-tag>
+          <el-tag type="error" v-else>定制用户</el-tag>
         </el-form-item>
         <div style="text-align: center">
           <el-button type="primary" @click="update" :loading="loading">保存</el-button>
@@ -99,6 +99,7 @@ export default {
               this.$message.success("保存成功");
               // 更新浏览器存储的用户信息
               sessionStorage.setItem("user", JSON.stringify(this.form));
+              console.log(this.form)
               // 触发父级更新user方法
               this.$emit("refreshUser")
             } else {

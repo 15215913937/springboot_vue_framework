@@ -24,7 +24,7 @@ public class UserVo {
     private String name;
     private String sex;
     private String avatar;
-    private String role;
+    private Long role;
     private String openId;
     private Date createTime;
     private Timestamp recentLogin;

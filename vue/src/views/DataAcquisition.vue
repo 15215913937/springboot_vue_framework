@@ -6,25 +6,34 @@
         <el-icon>
           <Upload/>
         </el-icon>
-        &nbsp导出
+        &nbsp导出图像
       </el-button>
     </div>
     <div class="container">
-      <el-input v-model="search.code" placeholder="请输入传感垫key" style="width: 15%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-input v-model="search.bedId" placeholder="请输入采集床垫ID" style="width: 15%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-select v-model="search.mat" style="width: 15%" class="mr-10" placeholder="选择舒适层" clearable>
-        <el-option v-for="mat in mats" :key="mat.value" :label="mat.label" :value="mat.value"></el-option>
-      </el-select>
-      <el-input v-model="search.batch" placeholder="选择批次" style="width: 15%" :prefix-icon="Search" class="mr-10"
-                clearable/>
-      <el-select v-model="search.coefficient" style="width: 15%" class="mr-10" placeholder="选择系数" clearable>
-        <el-option v-for="coefficient in coefficients" :key="coefficient.value" :label="coefficient.label"
-                   :value="coefficient.value"></el-option>
-      </el-select>
-      <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-      <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+      <div style="display: flex;align-content: flex-start">
+        <el-input v-model="search.code" placeholder="传感垫key" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-input v-model="search.bedId" placeholder="采集床垫ID" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-select v-model="search.mat" class="mr-10" placeholder="选择舒适层" clearable>
+          <el-option v-for="mat in mats" :key="mat.value" :label="mat.label" :value="mat.value"></el-option>
+        </el-select>
+        <el-select v-model="search.status" class="mr-10" placeholder="是否合格" clearable>
+          <el-option v-for="s in status" :key="s.value" :label="s.label" :value="s.value"></el-option>
+        </el-select>
+        <el-input v-model="search.batch" placeholder="选择批次" :prefix-icon="Search" class="mr-10"
+                  clearable/>
+        <el-select v-model="search.coefficient" class="mr-10" placeholder="选择系数" clearable>
+          <el-option v-for="coefficient in coefficients" :key="coefficient.value" :label="coefficient.label"
+                     :value="coefficient.value"></el-option>
+        </el-select>
+      </div>
+
+      <div style="display: flex;align-content: flex-end">
+        <el-button class="mb-10" type="primary" @click="load">查询</el-button>
+        <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+      </div>
+
 
     </div>
 
@@ -40,31 +49,39 @@
       <el-table-column prop="code" label="传感垫key" align="center">
         <template #default="scope">
           <span>
-            <el-button type="text" @click="showDialog(scope.row)">{{ scope.row.code }}</el-button>
+            <el-button style="font-size: large" type="text" @click="showDialog(scope.row)">{{
+                scope.row.code
+              }}</el-button>
           </span>
         </template>
       </el-table-column>
       <el-table-column prop="bedId" label="采集床垫" align="center"/>
-      <el-table-column prop="mat" label="舒适层" align="center"/>
-      <el-table-column prop="batch" label="批次" align="center"/>
+      <el-table-column prop="mat" label="舒适层" align="center" width="70px"/>
+      <el-table-column prop="batch" label="批次" align="center" width="70px"/>
+      <el-table-column prop="coefficient" label="系数" align="center" width="70px"/>
       <el-table-column prop="firstPressure" label="首次压力和" align="center"/>
       <el-table-column prop="finalPressure" label="最终压力和" align="center"/>
-      <el-table-column prop="coefficient" label="系数" align="center"/>
-
+      <el-table-column prop="status" label="状态" align="center">
+        <template #default="scope">
+          <el-button v-if="scope.row.status === 0" type="info" @click="toCheck(scope.row.id)">待审核</el-button>
+          <el-tag effect="dark" type="success" v-else-if="scope.row.status===1">合格</el-tag>
+          <el-tag effect="dark" type="danger" v-else>不合格</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remarks" label="备注" align="center"/>
       <el-pagination small layout="prev, pager, next" :total="50"/>
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination
-          v-model:current-page="page.currentPage"
-          v-model:pageSize="page.pageSize"
+          v-model:current-page="search.pageNum"
+          v-model:pageSize="search.pageSize"
           :page-sizes="[20, 50, 100]"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
+          :total="search.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
       />
       <el-dialog v-model="startDialogVisible" append-to-body>
-
         <div style="display: flex; flex-direction: column; justify-content: space-between;">
           <div class="header">
             <el-form :model="CollectBaseData" :rules="rules" ref="data" label-width="120px">
@@ -89,7 +106,7 @@
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="阈值" prop="threshold">
-                  <el-input v-model="threshold"/>
+                  <el-input-number v-model="threshold" :step="50" min="0"/>
                 </el-form-item>
                 <el-form-item label="确认时间" prop="confirmTime">
                   <el-radio-group v-model="confirmTime">
@@ -118,10 +135,11 @@
             </div>
           </div>
           <div class="footer-btn">
-            <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn">开始监测</button>
+            <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn" @keyup.enter=startMonitoring>开始监测
+            </button>
             <button @click="pauseMonitoring" v-else-if="!isPaused" class="pause-btn">暂停</button>
             <button @click="resumeMonitoring" v-else class="resume-btn">继续</button>
-            <button @click="stopMonitoring" class="stop-btn">终止</button>
+            <button @click="stopMonitoring('已终止')" class="stop-btn">终止</button>
           </div>
 
         </div>
@@ -154,7 +172,38 @@
           <span>&nbsp&nbsp采集时间：{{ createTime }}</span>
         </div>
       </el-dialog>
+      <el-dialog
+          title="审核"
+          v-model="checkDialogVisible"
+          append-to-body
+          width="400px"
+      >
+        <div style="display: flex;flex-direction: column;">
+          <div style="height: 30px;display: flex;align-items: center;justify-content: center;margin-bottom:20px">
+            <el-radio-group v-model="checkOperation.status">
+              <div style="width: 400px;display: flex;justify-content: space-between;padding:0 20px">
+                <el-radio style="width: 45%" label="1" size="large" border>合格</el-radio>
+                <el-radio style="width: 45%" label="2" size="large" border>不合格</el-radio>
+              </div>
+            </el-radio-group>
+          </div>
+          <div style="flex: 1;display: flex;align-items: center;justify-content: center;">
+            <el-input
+                type="textarea"
+                :rows="4"
+                placeholder="请输入备注"
+                maxlength="100"
+                show-word-limit
+                v-model="checkOperation.remarks"
+            ></el-input>
+          </div>
+          <div style="height: 30px;display: flex;justify-content: flex-end;margin-top:20px">
+            <el-button type="primary" @click="saveSelect">确认</el-button>
+          </div>
+        </div>
+      </el-dialog>
     </div>
+
   </div>
 </template>
 
@@ -172,7 +221,11 @@ export default {
         bedId: '',
         mat: '',
         batch: '',
-        coefficient: ''
+        coefficient: '',
+        status: '',
+        pageNum: 1,
+        pageSize: 20,
+        total: '',
       },
       mats: [ // 可选项数组
         {value: 'pro', label: 'pro'},
@@ -184,11 +237,11 @@ export default {
         {value: '1', label: '1倍'}
       ],
       tableData: [],
-      page: {
-        currentPage: 1,
-        pageSize: 20,
-        total: '',
-      },
+      status: [
+        {value: '0', label: '待审核'},
+        {value: '1', label: '合格'},
+        {value: '2', label: '不合格'}
+      ],
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       codeDataDialogVisible: false,
       startDialogVisible: false,
@@ -211,7 +264,7 @@ export default {
         finalPressure: null,
         pressure: []
       },
-      threshold: 500,
+      threshold: 600,
       confirmTime: '24',
       timeout: 6,
       count: 0,
@@ -228,7 +281,14 @@ export default {
       isMonitoring: false,
       isPaused: false,
       is_err: 0,
-      ids: []
+      ids: [],
+      checkDialogVisible: false,
+      checkOperation: {
+        id: null,
+        status: '',
+        remarks: ''
+      },
+      info: ''
     }
   },
   created() {
@@ -247,6 +307,37 @@ export default {
     }
   },
   methods: {
+    toCheck(id) {
+      this.checkDialogVisible = true
+      this.checkOperation.id = id;
+    },
+    saveSelect() {
+      if (this.checkOperation.status === '') {
+        this.$message.error("请选择审核结果")
+        return
+      }
+      request.post("/renhe-collect/check", this.checkOperation).then(res => {
+        console.log(this.checkOperation)
+        console.log(res)
+        if (res.code === '0') {
+          this.load()
+          this.$message.success("审批成功")
+          this.checkDialogVisible = false;
+          this.checkOperation = {
+            id: null,
+            status: '',
+            remarks: ''
+          }
+        } else {
+          this.$message.error("审批失败")
+          this.checkOperation = {
+            id: null,
+            status: '',
+            remarks: ''
+          }
+        }
+      })
+    },
     playSound(text) {
       const synthesis = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(text); // 使用参数a作为语音内容
@@ -257,11 +348,9 @@ export default {
       navigator.clipboard.writeText(dataToCopy)
           .then(() => {
             this.$message.success("已成功复制数据");
-            // 在这里可以添加任何你希望的成功复制的处理逻辑
           })
           .catch((error) => {
             this.$message.error("复制数据失败:", error)
-            // 在这里可以添加任何你希望的复制失败的处理逻辑
           });
     },
     getCellBackgroundColor(cell) {
@@ -284,25 +373,31 @@ export default {
     load() {
       request.get("/renhe-collect", {
         params: {
-          pageNum: this.page.currentPage,
-          pageSize: this.page.pageSize,
           code: this.search.code,
           bedId: this.search.bedId,
           mat: this.search.mat,
           batch: this.search.batch,
-          coefficient: this.search.coefficient
+          coefficient: this.search.coefficient,
+          status: this.search.status,
+          pageNum: this.search.pageNum,
+          pageSize: this.search.pageSize,
         }
       }).then(res => {
         this.tableData = res.data.records;
-        this.page.total = res.data.total;
+        this.search.total = res.data.total;
       });
     },
     reset() {
-      this.search.code = '';
-      this.search.bedId = '';
-      this.search.mat = '';
-      this.search.batch = '';
-      this.search.coefficient = '';
+      this.search = {
+        code: '',
+        bedId: '',
+        mat: '',
+        batch: '',
+        coefficient: '',
+        status: '',
+        pageNum: 1,
+        pageSize: 20
+      };
       this.load();
     },
     startCollect() {
@@ -332,7 +427,6 @@ export default {
         this.base64Data = 'data:image/jpeg;base64,' + res.data;
       })
       this.title = row.code;
-      this.createTime = '';
       this.createTime = row.createTime;
       this.codeDataDialogVisible = true;
     },
@@ -354,15 +448,12 @@ export default {
     setupInterval() {
       clearInterval(this.intervalId); // 清除之前的计时器
       this.intervalId = setInterval(() => {
-        if (!this.isPaused) {
-          if (this.count === 2 || this.is_err === 1) {
-            this.count = 0;
-            this.stopMonitoring();
-            this.playSound(this.CollectBaseData.code + '数据采集结束');
-            this.CollectBaseData.code = '';
-          } else {
-            this.updateStatus();
-          }
+        if (this.count === 2) {
+          this.stopMonitoring('采集结束');
+        } else if (this.is_err === 1) {
+          this.stopMonitoring('采集异常');
+        } else {
+          this.updateStatus();
         }
       }, this.timeout * 1000);
     },
@@ -372,88 +463,92 @@ export default {
     resumeMonitoring() {
       this.isPaused = false;
     },
-    stopMonitoring() {
+    stopMonitoring(sound) {
+      clearInterval(this.intervalId);
+      this.playSound(this.CollectBaseData.code + sound);
       this.isMonitoring = false;
       this.is_err = 0
       this.timeout = 6
-      clearInterval(this.intervalId);
+      this.count = 0
+      this.CollectBaseData.code = '';
+
 
     },
-    updateStatus() {
-      const config = {
-        params: {
-          "bedId": this.CollectBaseData.bedId
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          'Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MjI4ODAwLCJpYXQiOjE3MDM2NDIzODksInVzZXJuYW1lIjoiYWRtaW4ifQ.y-QS527gOeg4p4kUVKbsx58Acg-l28uiUA_u1GJynqI'
-        }
-      };
-      axios.get('https://bedapi.test.cnzxa.cn/api/pro/bed', config)
-          .then(async res => {
-            const data = res.data.data;
-            const pressure = data.pressureList;
-            const finalPressure = [...res.data.data.pressureList]
-            const sortedData = pressure.sort((a, b) => b - a)
-            const sum = sortedData.slice(0, 45).reduce((a, b) => a + b, 0);
-            const currentTime = new Date().toLocaleTimeString();
-            let status
-            let bedId
-            let code
-            bedId = this.CollectBaseData.bedId
-            code = this.CollectBaseData.code
-            if (data.online === "false") {
-              status = "床垫离线"
-            } else {
-              if (sum < this.threshold) {
-                status = "等待中..."
+    async updateStatus() {
+      try {
+        const config = {
+          params: {
+            bedId: this.CollectBaseData.bedId,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            Token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MjI4ODAwLCJpYXQiOjE3MDM2NDIzODksInVzZXJuYW1lIjoiYWRtaW4ifQ.y-QS527gOeg4p4kUVKbsx58Acg-l28uiUA_u1GJynqI',
+          },
+        };
+
+        const res = await axios.get('https://bedapi.test.cnzxa.cn/api/pro/bed', config);
+        const data = res.data.data;
+        const pressure = data.pressureList;
+        const finalPressure = [...res.data.data.pressureList];
+        const sortedData = pressure.sort((a, b) => b - a);
+        const sum = sortedData.slice(0, 45).reduce((a, b) => a + b, 0);
+        const currentTime = new Date().toLocaleTimeString();
+
+        let status;
+        let bedId;
+        let code;
+        bedId = this.CollectBaseData.bedId;
+        code = this.CollectBaseData.code;
+
+        if (data.online === 'false') {
+          status = '床垫离线';
+          this.is_err = 1;
+        } else {
+          if (sum < this.threshold) {
+            status = '等待中...';
+          } else {
+            if (this.count === 0) {
+              this.CollectBaseData.firstPressure = sum;
+              const res = await request.post('/renhe-collect/saveFirstPressure', this.CollectBaseData);
+              if (res.code === '0') {
+                status = '保存首次数据';
+                this.timeout = Number(this.confirmTime);
+                this.count++;
               } else {
-                if (this.count === 0) {
-                  this.CollectBaseData.firstPressure = sum;
-                  await request.post('/renhe-collect/saveFirstPressure', this.CollectBaseData).then(res => {
-                    console.log(res.code)
-                    if (res.code === '0') {
-                      status = '保存首次数据'
-                      this.timeout = Number(this.confirmTime)
-                      this.setupInterval(); // 更新计时器时间间隔
-                    } else {
-                      status = '首次存储异常'
-                      this.is_err = 1
-                    }
-                  })
-                } else {
-                  this.CollectBaseData.finalPressure = sum;
-                  this.CollectBaseData.pressure = finalPressure
-                  await request.post('/renhe-collect/saveFinalPressure', this.CollectBaseData).then(res => {
-                    console.log(res.code)
-                    if (res.code === '0') {
-                      status = '保存最终数据'
-                    } else {
-                      status = '最终存储异常'
-                      this.is_err = 1
-                    }
-                  })
-                }
-                this.count++
+                status = '首次存储异常';
+                this.is_err = 1;
+              }
+              this.setupInterval();
+            } else {
+              this.CollectBaseData.finalPressure = sum;
+              this.CollectBaseData.pressure = finalPressure;
+              const res = await request.post('/renhe-collect/saveFinalPressure', this.CollectBaseData);
+              if (res.code === '0') {
+                status = '保存最终数据';
+                this.count = 2;
+              } else {
+                status = '最终存储异常';
+                this.is_err = 1;
               }
             }
+          }
+        }
 
-            await this.statusList.unshift({
-              id: Date.now(),
-              pressure: sum,
-              status: status,
-              time: currentTime,
-              bedId: bedId,
-              code: code
-            });
-
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            this.is_err = 1
-          });
-      if (this.statusList.length > 10) {
-        this.statusList.pop();
+        this.statusList.unshift({
+          id: Date.now(),
+          pressure: sum,
+          status,
+          time: currentTime,
+          bedId,
+          code,
+        });
+        // 展示最新10条记录
+        // if (this.statusList.length > 10) {
+        //   this.statusList.pop();
+        // }
+      } catch (error) {
+        console.error('Error:', error);
+        this.is_err = 1;
       }
     },
     handleSelectionChange(val) {
@@ -466,7 +561,7 @@ export default {
         console.log(this.ids)
         request.post('/renhe-collect/exportPressureAndHotImg', this.ids).then(res => {
           if (res.code === '0') {
-            this.$message.success('导出成功')
+            this.$message.success('导出成功,文件已保存到 ' + res.data)
           } else {
             this.$message.error("导出失败，请重试！")
           }
@@ -489,7 +584,6 @@ export default {
 }
 
 .container > * {
-  margin-right: 10px;
   margin-bottom: 10px;
   align-self: flex-start;
 }
@@ -563,9 +657,8 @@ export default {
 }
 
 button {
-  width: 100px;
+  width: 80px;
   padding: 8px 12px;
-  margin-right: 10px;
   font-size: 14px;
   border: none;
   border-radius: 4px;
@@ -575,8 +668,8 @@ button {
 
 .footer-btn {
   display: flex;
-  justify-content: flex-end;
-  margin: 0 10px;
+  justify-content: space-between;
+  margin: 0 20px;
 }
 
 .start-btn {

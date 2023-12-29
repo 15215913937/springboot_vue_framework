@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 public class UserSearchDTO {
     private String name;
-    private String role;
+    private Long role;
 }

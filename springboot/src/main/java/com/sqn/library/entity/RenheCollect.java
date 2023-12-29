@@ -57,5 +57,11 @@ public class RenheCollect implements Serializable {
     @ApiModelProperty("系数：1；1.5")
     private Float coefficient;
 
+    @ApiModelProperty("状态；默认未审核过0，合格1，不合格2")
+    private Integer status;
+
+    @ApiModelProperty("备注")
+    private String remarks;
+
 
 }

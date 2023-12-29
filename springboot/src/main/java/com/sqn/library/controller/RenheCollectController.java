@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
+import com.sqn.library.controller.dto.RenheCheckDTO;
 import com.sqn.library.controller.dto.RenheCollectDTO;
 import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
@@ -39,9 +40,10 @@ public class RenheCollectController {
     @PostMapping("/exportPressureAndHotImg")
     public Result<?> exportPressureAndHotImg(@RequestBody List<RenheScreenCapDTO> renheScreenCapDTOList) {
         String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
-        Integer i = renheCollectService.export_PressureAndHot_Img(renheScreenCapDTOList, desktopPath);
+        String expectSaveFilePath = desktopPath + "\\PressureAndHotImg";
+        Integer i = renheCollectService.export_PressureAndHot_Img(renheScreenCapDTOList, expectSaveFilePath);
         if (i == renheScreenCapDTOList.size()) {
-            return Result.success("图片生成成功！");
+            return Result.success(expectSaveFilePath);
         } else {
             return Result.error(Constants.CODE_DATA_ERR, "仅生成" + i + "份图片，可尝试重新导出");
         }
@@ -82,7 +84,11 @@ public class RenheCollectController {
      */
     @PostMapping("/saveFinalPressure")
     Result<?> saveFinalPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
-        RenheCollect renhe = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getCode, renheCollectDTO.getCode()));
+        final List<RenheCollect> renheCollects = renheCollectMapper.selectList(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getCode, renheCollectDTO.getCode()).eq(RenheCollect::getBatch, renheCollectDTO.getBatch()).eq(RenheCollect::getMat, renheCollectDTO.getMat()).orderByDesc(RenheCollect::getCreateTime));
+        RenheCollect renhe = renheCollects.get(0);
+        if (renheCollects.size() > 1) {
+            renhe.setCode(renhe.getCode() + '_' + renheCollects.size() + 1);
+        }
         if (renhe != null) {
             if (renhe.getFinalPressure() == null) {
                 List<String> pressure = renheCollectDTO.getPressure();
@@ -119,9 +125,10 @@ public class RenheCollectController {
                               @RequestParam(defaultValue = "") String code,
                               @RequestParam(defaultValue = "") String bedId,
                               @RequestParam(defaultValue = "") String mat,
+                              @RequestParam(defaultValue = "") String status,
                               @RequestParam(required = false) Long batch,
                               @RequestParam(required = false) Float coefficient) {
-        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize), code, bedId, mat, batch, coefficient);
+        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize), code, bedId, mat, batch, coefficient, status);
         return Result.success(userPage);
     }
 
@@ -142,5 +149,19 @@ public class RenheCollectController {
         QueryWrapper<RenheCollect> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("id");
         return Result.success(renheCollectService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+
+    @PostMapping("/check")
+    public Result<?> check(@RequestBody RenheCheckDTO renheCheckDTO) {
+        final RenheCollect one = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getId, renheCheckDTO.getId()));
+        if (one == null) {
+            return Result.error(Constants.CODE_DATA_ERR, "数据不存在");
+        } else {
+            one.setStatus(renheCheckDTO.getStatus());
+            one.setRemarks(renheCheckDTO.getRemarks());
+            renheCollectMapper.updateById(one);
+            return Result.success("状态更新成功");
+        }
     }
 }

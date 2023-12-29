@@ -42,7 +42,6 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
         String heatmapApi = "https://mettressapi.cnzxa.cn/api/work/heatmap";
 
         String apiUrlWithParams = heatmapApi + "?bedId=" + bedId + "&clearFlag=1&pressures=" + pressures;
-//        log.info("url ===> " + apiUrlWithParams);
         try {
             // 创建URL对象
             URL url = new URL(apiUrlWithParams);
@@ -53,7 +52,7 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             // 设置请求方法为GET
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyVHlwZUlkIjoiMSIsIm91dEZsYWciOiIwIiwibW9iaWxlIjoiMTUyMTU5MTM5MzciLCJ0ZXN0ZXJGbGFnIjoiMSIsImRvUmVhbFdvcmsiOiIwIiwiaWQiOiIyNCIsImV4cCI6MTcwMzc3OTIwMCwidXNlcm5hbWUiOiLmsojlpYfnlLcifQ.2hSKJiT4T_ih_uN5OKROzzq0PmwV5GkLOFLaXbaMh_k");
+            conn.setRequestProperty("Token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyVHlwZUlkIjoiMSIsIm91dEZsYWciOiIwIiwibW9iaWxlIjoiMTUyMTU5MTM5MzciLCJ0ZXN0ZXJGbGFnIjoiMSIsImRvUmVhbFdvcmsiOiIwIiwiaWQiOiIyNCIsImV4cCI6MTcwNDQ3MDQwMCwidXNlcm5hbWUiOiLmsojlpYfnlLcifQ.N7EocnSj-OWLY25L4yGLH_zX_GTmXddbX7R77RsOxPU");
             // 获取响应内容
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
@@ -102,7 +101,7 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
         int successCount = 0;
         for (RenheScreenCapDTO renheScreenCapDTO : renheScreenCapDTOList) {
             // 保存文件路径
-            String parentFolder = String.format("%s/test/第%s批/%s", savPath, renheScreenCapDTO.getBatch(), renheScreenCapDTO.getCode());
+            String parentFolder = String.format("%s/第%s批/%s", savPath, renheScreenCapDTO.getBatch(), renheScreenCapDTO.getCode());
             String s = checkOrCreateDirectory(parentFolder);
             String base64 = getHotmapBase64(renheScreenCapDTO.getPressure(), renheScreenCapDTO.getBedId());
             // 生成热力图

@@ -4,8 +4,15 @@
     <select id="findPage" resultMap="userMap">
         SELECT *
         from `user`
-        where name like concat('%', #{name}, '%') and role like concat('%',#{role},'%') and is_delete = 0
-        order by role
+        <where>
+            <if test="name!=null and name !=''">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="role!=null and role!=''">
+                and role =#{role}
+            </if>
+            and is_delete = 0
+        </where>
     </select>
     <resultMap id="userMap" type="com.sqn.library.entity.User">
         <result property="id" column="id"/>
@@ -22,7 +29,7 @@
     </resultMap>
 
     <select id="findBook" resultType="com.sqn.library.entity.Book">
-        SELECT id, bookname,author ,price ,buy_date
+        SELECT id, bookname, author, price, buy_date
         from book
         where uid = #{id}
     </select>
