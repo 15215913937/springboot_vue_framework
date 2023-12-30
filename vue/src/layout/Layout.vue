@@ -1,23 +1,17 @@
 <template>
   <div>
-    <!--    头部-->
+    <div style="position: fixed; top: 0; width: 100%;z-index: 9999;left: 0">
       <Header :user="user"/>
-
-    <!--    主体-->
-    <div style="display: flex">
-      <!--      侧边栏-->
-<!--      <div style="width:180px;position:fixed;left:0;top: 50px">-->
-        <Aside/>
-
-        <router-view style="flex: 1" @refreshUser="refreshUser"/>
-
-      <!--      内容区域-->
-      <!--          当前页面的子路由会在router-view中展示-->
-
+    </div>
+    <div style="position: fixed;left: 0;top: 50px;width: 180px;z-index: 9999">
+      <Aside/>
+    </div>
+    <div style="margin: 50px 0 0 180px">
+      <router-view @refreshUser="refreshUser"/>
     </div>
   </div>
-</template>
 
+</template>
 <script>
 import Header from "@/components/Header";
 import Aside from "@/components/Aside";
@@ -56,5 +50,18 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  height: 50px;
+  background-color: #ccc;
+}
 
+.sidebar {
+  height: calc(100vh - 50px);
+  background-color: #ddd;
+}
+
+.content {
+  height: 1000px;
+  background-color: #eee;
+}
 </style>

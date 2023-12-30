@@ -58,6 +58,21 @@
     <div style="margin: 10px 0">
       <el-dialog v-model="dialogVisible" title="菜单信息" width="30%">
         <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
+          <el-form-item label="上级菜单" prop="icon">
+            <el-select v-model="form.pid" clearable placeholder="上级选择" style="width: 80%">
+              <el-option
+                  v-for="item in pids"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+              >
+                <el-icon>
+                  <component :is="item.id"></component>
+                </el-icon>
+                <span>{{ item.name }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="菜单名称" prop="name">
             <el-input v-model="form.name" show-word-limit maxlength="20" style="width: 80%"/>
           </el-form-item>
@@ -114,6 +129,7 @@ export default {
       dialogVisible: false,
       tableData: [],
       options: [],
+      pids: [],
       rules: {
         name: [
           {required: true, message: '菜单名称不能为空', trigger: 'blur'},
@@ -149,12 +165,15 @@ export default {
     },
     add() {
       this.dialogVisible = true;
-      this.form = {}  // 清空表单域，点击取消后，下次打开就是清空内容了
+      this.form = {}
+      this.pids=[]
+      // 请求图标的数据
       request.get("/menu/icons").then(res => {
-        // console.log(res.data)
         this.options = res.data;
       })
-
+      for (const re of this.tableData) {
+        this.pids.push({"id": re.id, "name": re.name})
+      }
     },
     save() {
       this.$refs.pass.validate((valid) => {
@@ -164,10 +183,9 @@ export default {
             this.loading = false
           }, 1000);
           request.post("/menu", this.form).then(res => {
-            // console.log(res);
             if (res.code === '0') {
               this.$message.success("修改成功");
-              this.load();//刷新表格数据
+              this.load();
               this.dialogVisible = false
             } else {
               this.$message.error(res.msg)
@@ -177,13 +195,18 @@ export default {
       })
     },
     handleEdit(row) {
+      this.pids=[]
+      console.log(row)
       this.form = JSON.parse(JSON.stringify(row));
       this.dialogVisible = true;
-
-      // 请求图标的数据
       request.get("/menu/icons").then(res => {
         this.options = res.data;
       })
+      for (const re of this.tableData) {
+        if (re.id !== row.id) {
+          this.pids.push({"id": re.id, "name": re.name})
+        }
+      }
     },
     handleDelete(row) {
       this.id = row.id;

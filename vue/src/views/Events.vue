@@ -2,7 +2,7 @@
   <div class="main-header">
     <!--    功能区-->
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="add" v-if="user.role ==='ROLE_ADMIN'|| user.role ==='ROLE_USER'">
+      <el-button type="primary" @click="add" v-if="user.role ===1|| user.role ===3">
         <el-icon>
           <CirclePlus/>
         </el-icon>
@@ -35,7 +35,7 @@
       <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
         <template #reference>
           <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px"
-                     v-if="user.role ==='ROLE_ADMIN'">
+                     v-if="user.role ===1">
             <el-icon>
               <Delete/>
             </el-icon>
@@ -61,10 +61,10 @@
         <template #default="scope">
           <el-button plain type="success" @click="details(scope.row)">查看</el-button>
           <el-button plain type="primary" @click="handleEdit(scope.row)"
-                     v-if="scope.row.author===this.user.name">编辑
+                     v-if="scope.row.author===this.user.id">编辑
           </el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)"
-                         v-if="user.role ==='ROLE_ADMIN'|| user.role ==='ROLE_USER'">
+                         v-if="user.role ===1|| user.id===scope.row.author">
             <template #reference>
               <el-button type="danger">
                 <el-icon>
@@ -82,9 +82,6 @@
           v-model:currentPage="currentPage"
           v-model:page-size="pageSize"
           :page-sizes="[10, 20, 50]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           @size-change="handleSizeChange"
@@ -96,7 +93,7 @@
             <el-input v-model="form.title" style="width: 50%" maxlength="30" show-word-limit/>
           </el-form-item>
           <!--                    正文-->
-          <div id="div1"/>
+          <div id="div1"></div>
         </el-form>
         <template #footer>
                     <span class="dialog-footer">
@@ -260,6 +257,7 @@ export default {
       })
     },
     details(row) {
+      console.log(row)
       this.comment.content = '';
       request.post("/events/" + row.id);
       setTimeout(() => {
@@ -307,7 +305,6 @@ export default {
         }
         editor.txt.html("")
       })
-
     },
     save() {
       this.$refs.pass.validate((valid) => {
@@ -350,20 +347,15 @@ export default {
       })
     },
     handleDelete(row) {
-      if (row.author === this.user.id || this.user.role === "ROLE_ADMIN") {
-        this.id = row.id;
-        request.delete("/events/" + this.id).then(res => {
-          if (res.code === '0') {
-            this.$message.success("删除成功")
-          } else {
-            this.$message.error(res.msg)
-          }
-          this.load();
-        })
-      } else {
-        this.$message.error("不是你创建的不能删哦")
-      }
-
+      this.id = row.id;
+      request.delete("/events/" + this.id).then(res => {
+        if (res.code === '0') {
+          this.$message.success("删除成功")
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.load();
+      })
     },
     handleSizeChange() {
       // 改变当前每页个数的触发

@@ -2,7 +2,7 @@
   <div class="main-header">
     <div class="mb-10">
       <el-button type="primary" @click="startCollect">开始采集</el-button>
-      <el-button type="success" @click="exportImg">
+      <el-button type="warning" @click="exportImg">
         <el-icon>
           <Upload/>
         </el-icon>

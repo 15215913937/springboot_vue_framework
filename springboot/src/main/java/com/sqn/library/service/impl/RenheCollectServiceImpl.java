@@ -1,13 +1,16 @@
 package com.sqn.library.service.impl;
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
+import com.sqn.library.utils.GetApiTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,6 +33,9 @@ import java.util.List;
 @Service
 public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, RenheCollect> implements IRenheCollectService {
 
+    @Resource
+    GetApiTokenUtil apiTokenUtil;
+
     @Override
     public String getHotmapBase64(String pressures, String bedId) {
         try {
@@ -37,6 +43,8 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        String TOKEN = apiTokenUtil.getMettressToken();
         String responseStr = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAINAMgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAQG/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AkoDZpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//2Q==";
 
         String heatmapApi = "https://mettressapi.cnzxa.cn/api/work/heatmap";
@@ -52,7 +60,7 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             // 设置请求方法为GET
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyVHlwZUlkIjoiMSIsIm91dEZsYWciOiIwIiwibW9iaWxlIjoiMTUyMTU5MTM5MzciLCJ0ZXN0ZXJGbGFnIjoiMSIsImRvUmVhbFdvcmsiOiIwIiwiaWQiOiIyNCIsImV4cCI6MTcwNDQ3MDQwMCwidXNlcm5hbWUiOiLmsojlpYfnlLcifQ.N7EocnSj-OWLY25L4yGLH_zX_GTmXddbX7R77RsOxPU");
+            conn.setRequestProperty("Token", TOKEN);
             // 获取响应内容
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
@@ -66,7 +74,8 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             in.close();
             conn.disconnect();
             String initResponseStr = response.toString();
-            responseStr = initResponseStr.substring(20, initResponseStr.length() - 13);
+            JSONObject json = new JSONObject(initResponseStr);
+            responseStr = (String) json.get("data");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(String.valueOf(e));

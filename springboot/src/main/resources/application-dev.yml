@@ -1,7 +1,7 @@
 #开发环境
 server:
   port: 9090
-  ip: http://localhost
+  ip: http://127.0.0.1
 spring:
   config:
     activate:
@@ -9,11 +9,11 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+      url: jdbc:mysql://127.0.0.1:3306/sqn_home?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
       username: root
       password: root
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
 
 files:

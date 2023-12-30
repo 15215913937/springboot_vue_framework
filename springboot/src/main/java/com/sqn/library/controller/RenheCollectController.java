@@ -2,6 +2,7 @@ package com.sqn.library.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Constants;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -132,7 +135,6 @@ public class RenheCollectController {
         return Result.success(userPage);
     }
 
-
     @GetMapping("/all")
     public Result<?> findAll() {
         return Result.success(renheCollectService.list());
@@ -151,10 +153,9 @@ public class RenheCollectController {
         return Result.success(renheCollectService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-
     @PostMapping("/check")
     public Result<?> check(@RequestBody RenheCheckDTO renheCheckDTO) {
-        final RenheCollect one = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getId, renheCheckDTO.getId()));
+        RenheCollect one = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getId, renheCheckDTO.getId()));
         if (one == null) {
             return Result.error(Constants.CODE_DATA_ERR, "数据不存在");
         } else {
@@ -163,5 +164,36 @@ public class RenheCollectController {
             renheCollectMapper.updateById(one);
             return Result.success("状态更新成功");
         }
+    }
+
+    @GetMapping("/countBy")
+    public Result<?> countBy(@RequestParam(defaultValue = "") String mat,
+                             @RequestParam(defaultValue = "") String batch,
+                             @RequestParam(required = false) String statusStr) {
+        HashMap<String, Object> map = new HashMap<>();
+        List<String> codeList = new ArrayList<>();
+        List<RenheCollect> renheCollects;
+
+        Integer status = null;
+        if(StringUtils.isNotEmpty(statusStr)) {
+            status = Integer.parseInt(statusStr);
+        }
+        if (status != null) {
+            renheCollects = renheCollectMapper.selectList(Wrappers.<RenheCollect>lambdaQuery()
+                    .eq(StringUtils.isNotEmpty(mat), RenheCollect::getMat, mat)
+                    .eq(StringUtils.isNotEmpty(batch), RenheCollect::getBatch, batch)
+                    .eq(RenheCollect::getStatus, status));
+        } else {
+            renheCollects = renheCollectMapper.selectList(Wrappers.<RenheCollect>lambdaQuery()
+                    .eq(StringUtils.isNotEmpty(mat), RenheCollect::getMat, mat)
+                    .eq(StringUtils.isNotEmpty(batch), RenheCollect::getBatch, batch));
+        }
+
+        for (RenheCollect renheCollect : renheCollects) {
+            codeList.add(renheCollect.getCode());
+        }
+        map.put("codeList", codeList);
+        map.put("total", codeList.size());
+        return Result.success(map);
     }
 }

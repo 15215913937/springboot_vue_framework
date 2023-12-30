@@ -1,22 +1,12 @@
 <template>
-  <div class="form-container">
-    <div class="form-field">
-      <el-radio-group v-model="selectedOption">
-        <el-radio label="合格">合格</el-radio>
-        <el-radio label="不合格">不合格</el-radio>
-      </el-radio-group>
-    </div>
-    <div class="form-field" v-if="selectedOption === '不合格' || selectedOption === '合格'">
-      <label class="form-label">备注</label>
-      <el-input
-          type="textarea"
-          :rows="4"
-          placeholder="请输入备注"
-          v-model="comment"
-      ></el-input>
-    </div>
-    <div class="form-actions">
-      <el-button type="primary" @click="submitForm">确认</el-button>
+  <div>
+    <button @click="openPreview">预览图片</button>
+    <div v-if="showPreview">
+      <div class="overlay"></div>
+      <div class="preview-modal">
+        <img :src="imageUrl" alt="预览图片" />
+        <button @click="closePreview">关闭</button>
+      </div>
     </div>
   </div>
 </template>
@@ -25,40 +15,48 @@
 export default {
   data() {
     return {
-      selectedOption: '合格',
-      comment: '',
+      showPreview: false,
+      imageUrl: "http://localhost:9090/files/test/535af625316748d5b24bcd9a4b90482a.jpg"
     };
   },
   methods: {
-    submitForm() {
-      // 在这里处理提交表单的逻辑
-      console.log(this.selectedOption);
-      console.log(this.comment);
+    openPreview() {
+      this.showPreview = true;
     },
-  },
+    closePreview() {
+      this.showPreview = false;
+    }
+  }
 };
 </script>
 
-<style scoped>
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 20px;
+<style>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
 }
 
-.form-field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.preview-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  z-index: 10000;
 }
 
-.form-label {
-  width: 80px;
+.preview-modal img {
+  max-width: 100%;
+  max-height: 80vh;
 }
 
-.form-actions {
-  text-align: center;
+.preview-modal button {
+  margin-top: 10px;
 }
 </style>

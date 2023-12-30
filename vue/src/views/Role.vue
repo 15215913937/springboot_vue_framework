@@ -19,7 +19,6 @@
       <!--            sortable:排序操作-->
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
       <el-table-column prop="role" label="角色" align="center"/>
-      <el-table-column prop="flag" label="唯一标识" align="center"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column fixed="right" label="操作" width="300px" align="center">
         <template #default="scope">
@@ -65,8 +64,8 @@
           <el-form-item label="角色" prop="role">
             <el-input v-model="roles.role" show-word-limit maxlength="20" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="唯一标识" prop="flag">
-            <el-input v-model="roles.flag" show-word-limit maxlength="20" style="width: 80%"/>
+          <el-form-item label="级别" prop="flag">
+            <el-input-number v-model="roles.flag" style="width: 80%" min="1" max="4" :step="1"/>
           </el-form-item>
           <el-form-item label="描述">
             <el-input type="textarea" show-word-limit maxlength="100" v-model="roles.description" style="width: 80%"/>
@@ -115,9 +114,8 @@ export default {
           {min: 2, max: 20, message: '长度在2~20位之间', trigger: 'blur'},
         ],
         flag: [
-          {required: true, message: '角色标志不能为空', trigger: 'blur'},
-          {min: 3, max: 20, message: '长度在3~20位之间', trigger: 'blur'},
-        ],
+          {required: true, message: '级别不能为空', trigger: 'blur'},
+        ]
       }
     }
   },
@@ -144,7 +142,6 @@ export default {
     },
     add() {
       this.dialogVisible = true;
-      // 清空表单域，点击取消后，下次打开就是清空内容了
       this.roles = {}
     },
     save() {
@@ -156,10 +153,9 @@ export default {
             this.loading = false
           }, 1000)
           request.post("/role", this.roles).then(res => {
-            // console.log(res);
             if (res.code === '0') {
               this.$message.success("修改成功")
-              this.load();//刷新表格数据
+              this.load();
               this.dialogVisible = false
             } else {
               this.$message.error(res.msg)

@@ -2,7 +2,7 @@
     <div class="main-header">
         <!--    功能区-->
         <div style="margin: 10px 0">
-            <el-button type="primary" @click="add" v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+            <el-button type="primary" @click="add" v-if="user.role===1 || user.role===3">
                 <el-icon>
                     <CirclePlus/>
                 </el-icon>
@@ -36,7 +36,7 @@
             <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
                 <template #reference>
                     <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px"
-                               v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+                               v-if="user.role===1 || user.role===3">
                         <el-icon>
                             <Delete/>
                         </el-icon>
@@ -82,12 +82,12 @@
             <el-table-column fixed="right" label="操作" width="150px" align="center">
                 <template #default="scope">
                     <el-button plain type="primary" @click="handleEdit(scope.row)"
-                               v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+                               v-if="user.role===1 || user.role===3">
                         编辑
                     </el-button>
                     <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
                         <template #reference>
-                            <el-button type="danger" v-if="user.role==='ROLE_ADMIN' || user.role==='ROLE_USER'">
+                            <el-button type="danger" v-if="user.role===1 || user.role===3">
                                 <el-icon>
                                     <Delete/>
                                 </el-icon>

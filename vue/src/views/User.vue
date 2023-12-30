@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="add" v-if="user.role===1||user.role===3">
+      <el-button type="primary" @click="add" v-if="user.role===1">
         <el-icon>
           <CirclePlus/>
         </el-icon>
@@ -23,10 +23,10 @@
         style="width: 100%">
       <el-table-column fixed="left" prop="id" label="ID" sortable="" align="center" width="50px"/>
       <el-table-column prop="username" label="用户名" align="center"/>
-      <el-table-column prop="role" label="角色" width="100px" align="center">
+      <el-table-column prop="role" label="角色" width="100px" align="center" sortable="">
         <template #default="scope">
           <el-tag type="primary" v-if="scope.row.role === 1">管理员</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.role === 3">普通用户</el-tag>
+          <el-tag type="warning" v-else-if="scope.row.role === 3">普通成员</el-tag>
           <el-tag type="success" v-else-if="scope.row.role === 4">游客</el-tag>
           <el-tag type="error" v-else>定制用户</el-tag>
         </template>
@@ -53,7 +53,7 @@
           </el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
-              <el-button type="danger" v-if="user.role==='ROLE_ADMIN'">
+              <el-button type="danger" v-if="user.role===1">
                 <el-icon>
                   <Delete/>
                 </el-icon>
@@ -100,7 +100,7 @@
         </template>
       </el-dialog>
 
-      <el-dialog v-model="dialogVisible" title="家庭成员信息" width="30%">
+      <el-dialog v-model="dialogVisible" title="成员信息" width="30%">
         <el-form :model="form" label-width="120px" :rules="rules" ref="pass">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="form.username" style="width: 80%" show-word-limit maxlength="20" autocomplete="off"/>
@@ -109,9 +109,9 @@
             <el-select v-model="form.role" clearable placeholder="请选择角色" style="width: 80%">
               <el-option
                   v-for="item in roles"
-                  :key="item.role"
+                  :key="item.id"
                   :label="item.role"
-                  :value="item.flag"
+                  :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -168,10 +168,7 @@ export default {
     return {
       title: '',
       loading: true,
-      form: {
-        name: '',
-        flag: null
-      },
+      form: {},
       search: {
         name: '',
         role: '',
@@ -184,7 +181,7 @@ export default {
       tableData: [],
       bookList: [],
       bookListLen: 0,
-      roles: [],
+      roles: {},
       pwdVis: false,
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       rules: {
@@ -228,7 +225,10 @@ export default {
         this.tableData = res.data.records;
         this.search.total = res.data.total;
       });
-
+      request.get("/role").then(res => {
+        this.roles = res.data;
+        console.log(this.roles)
+      })
     },
     reset() {
       this.search.name = '';
@@ -238,9 +238,6 @@ export default {
     add() {
       this.dialogVisible = true;
       this.form = {}
-      request.get("/role").then(res => {
-        this.roles = res.data;
-      })
     },
 
     save() {
@@ -263,7 +260,9 @@ export default {
       })
     },
     handleEdit(row) {
+
       this.form = JSON.parse(JSON.stringify(row));
+      console.log(this.form)
       this.dialogVisible = true
     },
     handleDelete(row) {
