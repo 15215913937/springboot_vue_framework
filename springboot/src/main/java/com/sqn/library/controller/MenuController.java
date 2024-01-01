@@ -1,6 +1,5 @@
 package com.sqn.library.controller;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sqn.library.common.Constants;
@@ -49,14 +48,17 @@ public class MenuController {
     @PostMapping
     public Result<?> save(@RequestBody Menu menu) {
         Menu res = menuMapper.selectOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getName, menu.getName()));
-        if ((res != null && menu.getId() == null) || (res != null && !res.getId().equals(menu.getId()))) {
+
+        if (res != null && (menu.getId() == null || !res.getId().equals(menu.getId()))) {
             throw new CustomException(Constants.CODE_COMMON_ERR, "该菜单名称已存在");
         }
-        if ((menu.getPid() != null) && (CharSequenceUtil.isBlank(menu.getPath()) && CharSequenceUtil.isBlank(menu.getPagePath()))) {
-            throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
 
+        if (menu.getPid() != null && (menu.getPath() == null || menu.getPath().isEmpty()) && (menu.getPagePath() == null || menu.getPagePath().isEmpty())) {
+            throw new CustomException(Constants.CODE_COMMON_ERR, "页面路径未填写");
         }
+
         menuService.saveOrUpdate(menu);
+
         return Result.success();
     }
 

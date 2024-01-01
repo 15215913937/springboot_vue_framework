@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 29/12/2023 18:11:53
+ Date: 01/01/2024 18:21:44
 */
 
 SET NAMES utf8mb4;
@@ -154,7 +154,7 @@ CREATE TABLE `comment`  (
   `root_parent_id` bigint(11) NULL DEFAULT NULL COMMENT '根评论id（最顶级的评论）',
   `del_time` datetime(0) NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 354 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 356 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -168,6 +168,8 @@ INSERT INTO `comment` VALUES (350, '你可真善良', 62, '2023-02-25 18:26:51',
 INSERT INTO `comment` VALUES (351, '真不错！', 62, '2023-02-25 18:27:19', 0, 44, NULL, NULL, NULL);
 INSERT INTO `comment` VALUES (352, '阿巴阿巴', 62, '2023-03-17 15:33:03', 0, 48, NULL, NULL, NULL);
 INSERT INTO `comment` VALUES (353, 'lala', 1, '2023-04-24 23:26:55', 1, 58, NULL, NULL, '2023-04-24 23:26:59');
+INSERT INTO `comment` VALUES (354, '你要认真反思这种事情，做事要三思后行', 22, '2023-12-30 14:37:48', 0, 60, NULL, NULL, NULL);
+INSERT INTO `comment` VALUES (355, '收到！', 1, '2023-12-30 14:38:36', 0, 60, 354, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for consumer_details
@@ -325,6 +327,7 @@ INSERT INTO `dict` VALUES ('clock ', 'Clock', 'icon');
 INSERT INTO `dict` VALUES ('chat', 'ChatLineSquare', 'icon');
 INSERT INTO `dict` VALUES ('dataLine', 'DataLine', 'icon');
 INSERT INTO `dict` VALUES ('stopwatch', 'Stopwatch', 'icon');
+INSERT INTO `dict` VALUES ('checked', 'Checked', 'icon');
 
 -- ----------------------------
 -- Table structure for events
@@ -338,17 +341,18 @@ CREATE TABLE `events`  (
   `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `view_count` bigint(255) NULL DEFAULT 0 COMMENT '查看次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 60 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '事件管理表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '事件管理表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of events
 -- ----------------------------
-INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', 42, '2022-07-29 00:19:26', 252);
+INSERT INTO `events` VALUES (28, '我是大漂酿', '<p>我是大漂酿<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">👻</span></p>', 42, '2022-07-29 00:19:26', 253);
 INSERT INTO `events` VALUES (24, '老沈爱我的表现1', '<p>老沈昨天掐了我三下，说是爱我的表现<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😤</span></p>', 1, '2022-07-16 01:40:10', 161);
-INSERT INTO `events` VALUES (44, '老沈练书法的第一天', '<p>我家老沈第一天练字，加油！very good!<img src=\"http://localhost:9090/files/250d46c597f94157abf1c22074346fc3\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 1, '2023-02-24 21:28:32', 10);
-INSERT INTO `events` VALUES (47, '哼哼哼', '<p>今天沈奇男不让我学习，哼哼哼</p>', 42, '2023-03-08 22:10:37', 5);
-INSERT INTO `events` VALUES (48, '沈奇男必须提醒我', '<p>明天要在我的宝座上做作业，<span style=\"color: var(--w-e-textarea-color);\">沈奇男必须提醒我，这个是沈奇男的监督任务，必须完成!!!</span></p>', 42, '2023-03-08 22:11:55', 8);
-INSERT INTO `events` VALUES (57, '老沈今天吃不完银耳', '哈哈哈', 42, '2023-04-23 23:35:51', 20);
+INSERT INTO `events` VALUES (44, '老沈练书法的第一天', '<p>我家老沈第一天练字，加油！very good!<img src=\"http://localhost:9090/files/250d46c597f94157abf1c22074346fc3\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 1, '2023-02-24 21:28:32', 11);
+INSERT INTO `events` VALUES (47, '哼哼哼', '<p>今天沈奇男不让我学习，哼哼哼</p>', 42, '2023-03-08 22:10:37', 6);
+INSERT INTO `events` VALUES (48, '沈奇男必须提醒我', '<p>明天要在我的宝座上做作业，<span style=\"color: var(--w-e-textarea-color);\">沈奇男必须提醒我，这个是沈奇男的监督任务，必须完成!!!</span></p>', 42, '2023-03-08 22:11:55', 9);
+INSERT INTO `events` VALUES (57, '老沈今天吃不完银耳', '哈哈哈', 42, '2023-04-23 23:35:51', 21);
+INSERT INTO `events` VALUES (60, '小沈做错事了', '<p>昨天晚上不小心烧掉了老沈的证件照，犯了大错，老沈很难受，我也很难受，对不起啦，老沈，我错了<span style=\"color: var(--w-e-textarea-color); font-size: var(--el-dialog-content-font-size);\">😭</span></p>', 1, '2023-12-30 14:01:50', 4);
 
 -- ----------------------------
 -- Table structure for files
@@ -364,7 +368,7 @@ CREATE TABLE `files`  (
   `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除（假删除）：‘0’表示未删除',
   `enable` tinyint(1) NULL DEFAULT 1 COMMENT '是否禁用：‘1’表示可用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件管理表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 56 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件管理表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
@@ -377,6 +381,7 @@ INSERT INTO `files` VALUES (51, '背景1.jfif', 'jfif', 2778, 'http://localhost:
 INSERT INTO `files` VALUES (52, '哈头像.jpg', 'jpg', 32, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', 'aec84b4f31e1f72fde9d35695e02d5b4', 1, 1);
 INSERT INTO `files` VALUES (53, '富士山.jpg', 'jpg', 91, 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', 'e1eabf7f2679f768743eba6669bb9d07', 1, 1);
 INSERT INTO `files` VALUES (54, 'location.jpg', 'jpg', 50, 'http://localhost:9090/files/test/535af625316748d5b24bcd9a4b90482a.jpg', '8b47951fa0ed1d3708186bc35d0b7f48', 0, 1);
+INSERT INTO `files` VALUES (55, '嗯？.jpg', 'jpg', 30, 'http://localhost:9090/files/test/afd19fa619034e1e80e26d466b8540af.jpg', 'dccc1a1e710d338ac67b64768b5b8921', 0, 1);
 
 -- ----------------------------
 -- Table structure for genealogy
@@ -455,7 +460,7 @@ CREATE TABLE `menu`  (
   `pid` bigint(11) NULL DEFAULT NULL COMMENT '父级id',
   `page_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '页面路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -477,7 +482,10 @@ INSERT INTO `menu` VALUES (30, '我的账单', '/bill', 'Wallet', NULL, 5, 'Bill
 INSERT INTO `menu` VALUES (33, '聊天室', '/imChat', 'ChatLineSquare', NULL, 5, 'ImChat');
 INSERT INTO `menu` VALUES (34, '家谱', '/genealogy', 'Notebook', '记录沈家人员关系', 6, 'Genealogy');
 INSERT INTO `menu` VALUES (35, '股市风云', '/stock', 'DataLine', NULL, NULL, 'Stock');
-INSERT INTO `menu` VALUES (36, '数据采集', '/dataacquisition', 'Stopwatch', NULL, 5, 'DataAcquisition');
+INSERT INTO `menu` VALUES (36, '压力传感器检测', '/dataacquisition', 'Stopwatch', NULL, 37, 'DataAcquisition');
+INSERT INTO `menu` VALUES (37, '工作业务', NULL, 'Coffee', NULL, NULL, NULL);
+INSERT INTO `menu` VALUES (39, '睡姿识别检测', '/sleepReg', 'Checked', '睡姿识别检测', 37, 'SleepReg');
+INSERT INTO `menu` VALUES (42, '测试人员管理', '/testMemberManage', 'UserFilled', NULL, 37, 'TestMemberManage');
 
 -- ----------------------------
 -- Table structure for renhe_collect
@@ -662,7 +670,7 @@ CREATE TABLE `role`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   `flag` int(50) NULL DEFAULT NULL COMMENT '唯一标识',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
@@ -705,22 +713,21 @@ INSERT INTO `role_menu` VALUES (1, 33);
 INSERT INTO `role_menu` VALUES (1, 34);
 INSERT INTO `role_menu` VALUES (1, 35);
 INSERT INTO `role_menu` VALUES (1, 36);
+INSERT INTO `role_menu` VALUES (1, 37);
+INSERT INTO `role_menu` VALUES (1, 39);
+INSERT INTO `role_menu` VALUES (1, 42);
 INSERT INTO `role_menu` VALUES (3, 2);
 INSERT INTO `role_menu` VALUES (3, 5);
-INSERT INTO `role_menu` VALUES (3, 6);
 INSERT INTO `role_menu` VALUES (3, 7);
 INSERT INTO `role_menu` VALUES (3, 8);
 INSERT INTO `role_menu` VALUES (3, 9);
 INSERT INTO `role_menu` VALUES (3, 10);
-INSERT INTO `role_menu` VALUES (3, 11);
-INSERT INTO `role_menu` VALUES (3, 12);
 INSERT INTO `role_menu` VALUES (3, 14);
 INSERT INTO `role_menu` VALUES (3, 22);
 INSERT INTO `role_menu` VALUES (3, 23);
 INSERT INTO `role_menu` VALUES (3, 30);
 INSERT INTO `role_menu` VALUES (3, 32);
 INSERT INTO `role_menu` VALUES (3, 33);
-INSERT INTO `role_menu` VALUES (3, 34);
 INSERT INTO `role_menu` VALUES (3, 35);
 INSERT INTO `role_menu` VALUES (3, 36);
 INSERT INTO `role_menu` VALUES (4, 2);
@@ -744,8 +751,36 @@ INSERT INTO `role_menu` VALUES (5, 30);
 INSERT INTO `role_menu` VALUES (5, 32);
 INSERT INTO `role_menu` VALUES (5, 33);
 INSERT INTO `role_menu` VALUES (13, 2);
-INSERT INTO `role_menu` VALUES (13, 14);
 INSERT INTO `role_menu` VALUES (13, 36);
+INSERT INTO `role_menu` VALUES (13, 37);
+INSERT INTO `role_menu` VALUES (13, 39);
+INSERT INTO `role_menu` VALUES (13, 42);
+
+-- ----------------------------
+-- Table structure for sleep_position_collect
+-- ----------------------------
+DROP TABLE IF EXISTS `sleep_position_collect`;
+CREATE TABLE `sleep_position_collect`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_info_id` bigint(11) NULL DEFAULT NULL COMMENT 'userInfo的id',
+  `bed_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '床垫id',
+  `mat` tinyint(1) NULL DEFAULT NULL COMMENT '舒适层:1stand 2plus 3pro',
+  `is_automode` tinyint(1) NULL DEFAULT NULL COMMENT '是否启用自动模式0关1开',
+  `is_fine_adjustment` tinyint(1) NULL DEFAULT NULL COMMENT '是否启用微调0关1开',
+  `project` tinyint(1) NULL DEFAULT NULL COMMENT '测试项目：1、正中识别2、1/3身体在传感器外',
+  `period` int(5) NULL DEFAULT NULL COMMENT '检测周期，单位秒',
+  `recognition` tinyint(1) NULL DEFAULT NULL COMMENT '识别姿势：0无人1仰卧2侧卧3坐姿',
+  `actual_sleep_position` tinyint(1) NULL DEFAULT NULL COMMENT '实际睡姿',
+  `is_reg` tinyint(1) NULL DEFAULT NULL COMMENT '识别是否成功：0失败1成功',
+  `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `sleepUserId_userInfoId`(`user_info_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sleep_position_collect
+-- ----------------------------
+INSERT INTO `sleep_position_collect` VALUES (1, 3, '2033', 1, 0, 1, 1, 30, 1, 1, 1, '2023-12-30 22:45:10');
 
 -- ----------------------------
 -- Table structure for target
@@ -777,7 +812,7 @@ INSERT INTO `target` VALUES (5, 62, '天龙计划', '训练跑步', '2023-02-19 
 INSERT INTO `target` VALUES (6, 62, '天鹿计划', '训练跑步', '2023-02-18 23:05:27', '2023-02-18', '2023-02-23', 3, 0, 2, 0);
 INSERT INTO `target` VALUES (7, 62, '天人计划', '训练跑步', '2023-02-17 23:05:27', '2023-02-17', '2023-02-23', 3, 11, 1, 0);
 INSERT INTO `target` VALUES (14, 62, '测试代号', '测试描述', '2023-03-05 10:45:43', '2023-03-06', '2023-03-09', 4, 0, 1, 0);
-INSERT INTO `target` VALUES (35, 22, '梅花Q', NULL, '2023-03-18 23:29:52', '2023-03-18', '2023-03-24', 1, 19, 0, 0);
+INSERT INTO `target` VALUES (35, 22, '梅花Q', NULL, '2023-03-18 23:29:52', '2023-03-18', '2023-03-24', 3, 19, 0, 0);
 
 -- ----------------------------
 -- Table structure for target_detail
@@ -822,22 +857,41 @@ CREATE TABLE `user`  (
   `status` tinyint(1) NULL DEFAULT 0 COMMENT '在线状态：1，在线；0，离线',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniq_userId`(`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 71 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 72 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 1, '15215913937', NULL, '2023-12-29 16:35:26', 0, 1);
-INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 3, '13819545627', NULL, '2023-04-21 23:12:33', 0, 1);
-INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 3, '18888790728', NULL, '2023-03-02 22:51:28', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 1, '15215913937', NULL, '2024-01-01 03:20:05', 0, 1);
+INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 3, '13819545627', NULL, '2023-12-30 14:28:41', 0, 0);
+INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 3, '18888790728', NULL, '2023-12-30 14:26:49', 0, 0);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 3, '13454588810', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (42, 'sqy', '$2a$10$DK3So8no8V4mNTdqmZqLm.dzvqPOMUCGk9EXmJ8YXxu8njGwEFVNO', '沈奇亚', '1997-03-07', '女', 'http://localhost:9090/files/test/ebd6733138664ee79f15e6cd499fcdd0.jpg', '2022-07-24 23:34:26', 1, '15868180225', NULL, '2023-12-16 10:57:13', 0, 1);
-INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 3, NULL, NULL, NULL, 0, 0);
+INSERT INTO `user` VALUES (26, 'bzy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '边震宇', '2008-08-30', '男', NULL, NULL, 3, '18258021073', NULL, '2023-12-30 15:08:19', 0, 1);
 INSERT INTO `user` VALUES (31, 'yk1', '$2a$10$s9EXA7z4XgkdUGKg7hZAL.tk5o4BSJHC8V6jUKdAyzGN4ugt9FkuW', '游客1', '2022-07-14', '女', '', '2022-07-19 01:35:13', 4, '15215913933', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (45, 'ts1', '$2a$10$.dIyUhwvquxSvSD/dPoeNOJ96Bhcho/g2ePSvfipdqxYUtS20e0fW', '沈小测1', NULL, NULL, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', '2022-07-26 14:41:19', 5, '15215913934', NULL, '2023-04-20 23:38:28', 0, 1);
-INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, '男', 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 1, '15215913935', NULL, '2023-03-21 22:20:29', 0, 1);
-INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 3, NULL, NULL, NULL, 0, 0);
+INSERT INTO `user` VALUES (62, 'admin', '$2a$10$s9OiSHAn331k5LuiUbbIWeyXZPVVjjQEJqv6tRXRrbHDhzev9rkAm', '系统管理员', NULL, '男', 'http://localhost:9090/files/test/6b269c174b3f46f0ae817f3cd2da9250.jpg', '2022-08-22 22:42:11', 1, '', NULL, '2023-03-21 22:20:29', 0, 1);
+INSERT INTO `user` VALUES (55, 'sre', '$2a$10$mVzSSS5OZOXUsbM1iJBlV.HmklaulG6yqEECCuZVC.u1ZRQ3PP/Mi', '沈蓉儿', '2000-11-19', '女', NULL, '2022-07-29 21:45:27', 3, '15158280805', NULL, NULL, 0, 0);
+INSERT INTO `user` VALUES (71, 'ts2', '$2a$10$hVBesnZYIvV0U/2KvTFGle6CO4Te3oBtLtAx0OTpV6vffwWJcg2o2', '测试2', '2023-12-29', '男', NULL, '2023-12-29 23:50:18', 5, '15868180222', NULL, NULL, 0, 0);
 INSERT INTO `user` VALUES (69, 'yk3', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '游客_x2mmfgqk', NULL, NULL, NULL, '2023-06-28 15:52:14', 4, '15268180225', NULL, '2023-06-28 16:17:37', 1, 1);
-INSERT INTO `user` VALUES (70, 'zxa', '$2a$10$jIECoQ4pz8B37/1imJeXqulZehx1CPPEB5dMyntgv4xBVqVDcazzC', '小安', NULL, NULL, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', '2023-12-29 13:49:43', 13, '15215913938', NULL, '2023-12-29 16:11:45', 0, 0);
+INSERT INTO `user` VALUES (70, 'zxa', '$2a$10$CVSd4FtsaV0M1yaZQNV1je3BuHeHx49t0sjn/tnVwQk7vz4WbpGF2', '小安', NULL, NULL, 'http://localhost:9090/files/test/cdd762c6722a4daf81ea03e9a88c143a.jpg', '2023-12-29 13:49:43', 13, '15215913938', NULL, '2023-12-30 23:22:58', 0, 0);
+
+-- ----------------------------
+-- Table structure for user_info
+-- ----------------------------
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '测试人员姓名',
+  `weight` decimal(5, 1) NULL DEFAULT NULL COMMENT '体重',
+  `height` decimal(5, 1) NULL DEFAULT NULL COMMENT '身高',
+  `sex` tinyint(1) NULL DEFAULT NULL COMMENT '性别：1男2女',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_info
+-- ----------------------------
+INSERT INTO `user_info` VALUES (3, '沈奇男', 135.0, 173.0, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

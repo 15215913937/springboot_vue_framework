@@ -50,18 +50,4 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  height: 50px;
-  background-color: #ccc;
-}
-
-.sidebar {
-  height: calc(100vh - 50px);
-  background-color: #ddd;
-}
-
-.content {
-  height: 1000px;
-  background-color: #eee;
-}
 </style>

@@ -335,7 +335,7 @@ export default {
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row));
       this.dialogVisible = true
-
+      // this.form = row
       this.$nextTick(() => {
         if (!editor) {
           editor = new E('#div1');

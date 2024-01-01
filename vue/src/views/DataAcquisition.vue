@@ -1,7 +1,12 @@
 <template>
   <div class="main-header">
     <div class="mb-10">
-      <el-button type="primary" @click="startCollect">开始采集</el-button>
+      <el-button type="primary" @click="startCollect">
+        <el-icon>
+          <VideoPlay/>
+        </el-icon>
+        &nbsp开始采集
+      </el-button>
       <el-button type="warning" @click="exportImg">
         <el-icon>
           <Upload/>
@@ -227,12 +232,12 @@ export default {
         pageSize: 20,
         total: '',
       },
-      mats: [ // 可选项数组
+      mats: [
         {value: 'pro', label: 'pro'},
         {value: 'plus', label: 'plus'},
         {value: 'stand', label: 'stand'}
       ],
-      coefficients: [ // 可选项数组
+      coefficients: [
         {value: '1.5', label: '1.5倍'},
         {value: '1', label: '1倍'}
       ],
@@ -567,7 +572,7 @@ export default {
           }
         })
       }
-    }
+    },
   },
   beforeDestroy() {
     clearInterval(this.intervalId);
@@ -657,7 +662,6 @@ export default {
 }
 
 button {
-  width: 80px;
   padding: 8px 12px;
   font-size: 14px;
   border: none;
