@@ -1,10 +1,10 @@
 package com.sqn.library.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.SleepPositionCollect;
+import com.sqn.library.mapper.SleepPositionCollectMapper;
 import com.sqn.library.service.ISleepPositionCollectService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +25,9 @@ public class SleepPositionCollectController {
 
     @Resource
     private ISleepPositionCollectService sleepPositionCollectService;
+
+    @Resource
+    SleepPositionCollectMapper sleepPositionCollectMapper;
 
     /**
      * 新增或者更新
@@ -57,11 +60,15 @@ public class SleepPositionCollectController {
         return Result.success(sleepPositionCollectService.getById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/findPage")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<SleepPositionCollect> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(sleepPositionCollectService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(required = false) Long userInfoId,
+                              @RequestParam(required = false) Byte project,
+                              @RequestParam(required = false) Byte mat,
+                              @RequestParam(required = false) Byte actualSleepPosition,
+                              @RequestParam(required = false) Byte isReg
+    ) {
+        return Result.success(sleepPositionCollectMapper.findPage(new Page<>(pageNum, pageSize), userInfoId, mat, project, actualSleepPosition, isReg));
     }
 }

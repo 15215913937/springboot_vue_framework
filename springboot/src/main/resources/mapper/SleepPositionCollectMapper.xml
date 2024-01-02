@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sqn.library.mapper.SleepPositionCollectMapper">
-
+    <select id="findPage" resultType="com.sqn.library.entity.SleepPositionCollect">
+        SELECT sleep_position_collect.*, user_info.name
+        from `sleep_position_collect`
+        left join user_info
+        on sleep_position_collect.user_info_id = user_info.id
+        <where>
+            <if test="userInfoId!=null and userInfoId !=''">
+                user_info_id =#{userInfoId}
+            </if>
+            <if test="mat!=null and mat !=''">
+                mat =#{mat}
+            </if>
+            <if test="project!=null and project !=''">
+                project =#{project}
+            </if>
+            <if test="actualSleepPosition!=null and actualSleepPosition !=''">
+                actual_sleep_position =#{actualSleepPosition}
+            </if>
+            <if test="isReg!=null and isReg !=''">
+                is_reg =#{isReg}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

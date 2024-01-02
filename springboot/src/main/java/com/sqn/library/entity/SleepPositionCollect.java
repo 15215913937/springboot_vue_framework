@@ -1,6 +1,7 @@
 package com.sqn.library.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,6 +33,9 @@ public class SleepPositionCollect implements Serializable {
     @ApiModelProperty("user_info的id值")
     private Long userInfoId;
 
+    @TableField(exist = false)
+    private String name;
+
     @ApiModelProperty("床垫id")
     private String bedId;
 
@@ -62,6 +66,5 @@ public class SleepPositionCollect implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty("创建时间")
     private Date createTime;
-
 
 }

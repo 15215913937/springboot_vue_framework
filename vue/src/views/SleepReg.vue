@@ -1,12 +1,6 @@
 <template>
   <div class="main-header">
     <div class="mb-10">
-      <el-button type="primary" @click="addTester">
-        <el-icon>
-          <Plus/>
-        </el-icon>
-        &nbsp新增测试者
-      </el-button>
       <el-button type="primary" @click="startCollect">
         <el-icon>
           <VideoPlay/>
@@ -22,10 +16,9 @@
     </div>
     <div class="container">
       <div style="display: flex">
-        <el-input v-model="search.name" placeholder="测试者" class="mr-10" :prefix-icon="Search"
-                  clearable/>
-        <el-input v-model="search.bedId" placeholder="床垫ID" class="mr-10" :prefix-icon="Search"
-                  clearable/>
+        <el-select v-model="search.userInfoId" class="mr-10" placeholder="测试者" clearable>
+          <el-option v-for="name in names" :key="name.id" :label="name.name" :value="name.id"></el-option>
+        </el-select>
         <el-select v-model="search.mat" class="mr-10" placeholder="舒适层" clearable>
           <el-option v-for="mat in mats" :key="mat.value" :label="mat.label" :value="mat.value"></el-option>
         </el-select>
@@ -53,17 +46,57 @@
           highlight-current-row
           @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40px" align="center"/>
-        <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
-        <el-table-column prop="name" label="测试者" align="center" width="80px"/>
-        <el-table-column prop="bedId" label="采集床垫" align="center" width="90px"/>
-        <el-table-column prop="mat" label="舒适层" align="center" width="70px"/>
-        <el-table-column prop="project" label="测试项目" align="center"/>
-        <el-table-column prop="isAutomode" label="自动模式" align="center"/>
-        <el-table-column prop="period" label="间隔" align="center"/>
-        <el-table-column prop="isFineAdjustment" label="微调" align="center" width="70px"/>
-        <el-table-column prop="actualSleepPosition" label="实际睡姿" align="center"/>
-        <el-table-column prop="recognition" label="识别睡姿" align="center"/>
-        <el-table-column prop="isReg" label="结果" align="center" width="70px"/>
+        <el-table-column prop="id" label="ID" align="center" width="50px"/>
+        <el-table-column prop="name" label="测试者" align="center" width="80px">
+        </el-table-column>
+        <el-table-column prop="mat" label="舒适层" align="center" width="80px">
+          <template #default="scope">
+            <el-tag effect="plain" v-if="scope.row.mat===1">stand</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.mat===2">plus</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.mat===3">pro</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="project" label="测试项目" align="center">
+          <template #default="scope">
+            <el-tag effect="plain" v-if="scope.row.project===1">正中识别</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.project===2">1/3身体在传感器外</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isAutomode" label="自动模式" align="center" width="85px">
+          <template #default="scope">
+            <el-tag effect="plain" type="success" v-if="scope.row.isAutomode">开启</el-tag>
+            <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isFineAdjustment" label="微调" align="center" width="70px">
+          <template #default="scope">
+            <el-tag effect="plain" type="success" v-if="scope.row.isFineAdjustment">开启</el-tag>
+            <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="period" label="间隔" align="center" width="70px"/>
+        <el-table-column prop="actualSleepPosition" label="实际睡姿" align="center">
+          <template #default="scope">
+            <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===1">仰卧</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2">侧卧</el-tag>
+            <el-tag effect="plain" v-else>坐姿</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="recognition" label="识别睡姿" align="center">
+          <template #default="scope">
+            <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===1">仰卧</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2">侧卧</el-tag>
+            <el-tag effect="plain" v-else>坐姿</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isReg" label="结果" align="center">
+          <template #default="scope">
+            <el-tag effect="dark" type="success" v-if="scope.row.isReg===0">识别成功</el-tag>
+            <el-tag effect="dark" type="danger" v-else>未识别</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间" align="center"/>
 
         <el-pagination small layout="prev, pager, next" :total="50"/>
@@ -93,19 +126,12 @@ export default {
   name: "DataAcquisition",
   data() {
     return {
-      userInfo: {
-        name: '',
-        height: null,
-        weight: null,
-        sex: ''
-      },
       search: {
-        name: '',
-        bedId: '',
-        mat: '',
-        actualSleepPosition: '',
-        project: '',
-        isReg: '',
+        userInfoId: null,
+        mat: null,
+        actualSleepPosition: null,
+        project: null,
+        isReg: null,
         pageNum: 1,
         pageSize: 20,
         total: '',
@@ -129,6 +155,7 @@ export default {
         {value: 0, label: '未识别'},
         {value: 1, label: '识别成功'}
       ],
+      names: [],
       tableData: [],
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       codeDataDialogVisible: false,
@@ -157,9 +184,6 @@ export default {
       timeout: 6,
       count: 0,
       rules: {
-        bedId: [
-          {required: true, message: '床垫id不能为空', trigger: 'blur'}
-        ],
         code: [
           {required: true, message: '传感垫key不能为空', trigger: 'blur'}
         ]
@@ -174,6 +198,10 @@ export default {
   },
   created() {
     this.load();
+    request.get('/user-info/all').then(res => {
+      console.log(res.data);
+      this.names = res.data
+    })
   },
   setup() {
     return {
@@ -188,12 +216,22 @@ export default {
     }
   },
   methods: {
-    addTester() {
-      request.post("user-info", this.userInfo).then(res => {
-        if(res.code==='0'){
-          this.$message.success("保存成功")
+    load() {
+      console.log(this.search)
+      request.get("/sleep-position-collect/findPage", {
+        params: {
+          userInfoId: this.search.userInfoId,
+          mat: this.search.mat,
+          actualSleepPosition: this.search.actualSleepPosition,
+          project: this.search.project,
+          isReg: this.search.isReg,
+          pageNum: this.search.pageNum,
+          pageSize: this.search.pageSize
         }
-      })
+      }).then(res => {
+        this.tableData = res.data.records;
+        this.search.total = res.data.total;
+      });
     },
     playSound(text) {
       const synthesis = window.speechSynthesis;
@@ -227,28 +265,9 @@ export default {
         return '#A60000';
       }
     },
-    load() {
-      console.log(this.search)
-      // request.get("/renhe-collect", {
-      //   params: {
-      //     code: this.search.code,
-      //     bedId: this.search.bedId,
-      //     mat: this.search.mat,
-      //     batch: this.search.batch,
-      //     coefficient: this.search.coefficient,
-      //     status: this.search.status,
-      //     pageNum: this.search.pageNum,
-      //     pageSize: this.search.pageSize,
-      //   }
-      // }).then(res => {
-      //   this.tableData = res.data.records;
-      //   this.search.total = res.data.total;
-      // });
-    },
     reset() {
       this.search = {
         code: '',
-        bedId: '',
         mat: '',
         batch: '',
         coefficient: '',

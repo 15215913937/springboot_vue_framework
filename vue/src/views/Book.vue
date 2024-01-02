@@ -29,8 +29,6 @@
                         :value="item.name"
                 />
             </el-select>
-            <!--            <el-input v-model="buyDate" placeholder="请输入时间" style="width: 15%" :prefix-icon="Search" class="mr-10"-->
-            <!--                      clearable/>-->
             <el-button class="mb-10" type="primary" @click="load">查询</el-button>
             <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
             <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
@@ -103,9 +101,6 @@
                     v-model:currentPage="currentPage"
                     v-model:page-size="pageSize"
                     :page-sizes="[10, 20, 50]"
-                    :small="small"
-                    :disabled="disabled"
-                    :background="background"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total"
                     @size-change="handleSizeChange"

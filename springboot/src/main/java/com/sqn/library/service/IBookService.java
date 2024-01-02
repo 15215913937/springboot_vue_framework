@@ -20,13 +20,13 @@ import java.util.Map;
  */
 public interface IBookService extends IService<Book> {
 
-    /**@Param  取别名，和xml文件里的参数一致
-     *
+    /**
      * @param tPage
      * @param name
      * @param author
      * @param category
      * @return
+     * @Param 取别名，和xml文件里的参数一致
      */
     Page<Book> findPage(Page<Book> tPage, @Param("name") String name, @Param("author") String author, @Param(
             "category") String category);
@@ -35,7 +35,7 @@ public interface IBookService extends IService<Book> {
 
     Page<Book> findPageByUid(Page<Book> objectPage, String uid, String name, String author, String category);
 
-    Map<String,List<Integer>> booksPurchaseStatistics(String year, Long id);
+    Map<String, List<Integer>> booksPurchaseStatistics(String year, Long id);
 
-    void exportBooks(HttpServletResponse response,List<Book> list) throws IOException;
+    void exportBooks(HttpServletResponse response, List<Book> list) throws IOException;
 }
