@@ -144,7 +144,7 @@
             </button>
             <button @click="pauseMonitoring" v-else-if="!isPaused" class="pause-btn">暂停</button>
             <button @click="resumeMonitoring" v-else class="resume-btn">继续</button>
-            <button @click="stopMonitoring('已终止')" class="stop-btn">终止</button>
+            <button @click="stopMonitoring('已终止')" v-if="isMonitoring" class="stop-btn">终止</button>
           </div>
 
         </div>
@@ -346,7 +346,7 @@ export default {
     playSound(text) {
       const synthesis = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(text); // 使用参数a作为语音内容
-
+      utterance.rate = 1; // 将语速设置为1秒
       synthesis.speak(utterance);
     },
     copyData(dataToCopy) {
@@ -446,6 +446,9 @@ export default {
       this.$refs.data.validate((valid) => {
         if (valid) {
           this.isMonitoring = true
+          this.count = 0
+          this.is_err = 0
+          this.timeout = 6
           this.setupInterval()
         }
       });
@@ -471,13 +474,8 @@ export default {
     stopMonitoring(sound) {
       clearInterval(this.intervalId);
       this.playSound(this.CollectBaseData.code + sound);
-      this.isMonitoring = false;
-      this.is_err = 0
-      this.timeout = 6
-      this.count = 0
-      this.CollectBaseData.code = '';
-
-
+      this.isMonitoring = false
+      this.CollectBaseData.code = ''
     },
     async updateStatus() {
       try {
@@ -535,6 +533,12 @@ export default {
                 status = '最终存储异常';
                 this.is_err = 1;
               }
+              if (this.count === 2) {
+                this.stopMonitoring('采集结束');
+              } else if (this.is_err === 1) {
+                this.stopMonitoring('采集异常');
+              }
+
             }
           }
         }
@@ -548,9 +552,9 @@ export default {
           code,
         });
         // 展示最新10条记录
-        // if (this.statusList.length > 10) {
-        //   this.statusList.pop();
-        // }
+        if (this.statusList.length > 10) {
+          this.statusList.pop();
+        }
       } catch (error) {
         console.error('Error:', error);
         this.is_err = 1;

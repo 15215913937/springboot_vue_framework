@@ -68,7 +68,7 @@ public class RenheCollectController {
     Result<?> saveFirstPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
         List<String> pressure = renheCollectDTO.getPressure();
         String strPressure = String.join(",", pressure);
-        final RenheCollect renheCollect = new RenheCollect();
+        RenheCollect renheCollect = new RenheCollect();
         renheCollect.setCode(renheCollectDTO.getCode());
         renheCollect.setBatch(renheCollectDTO.getBatch());
         renheCollect.setBedId(renheCollectDTO.getBedId());
@@ -175,7 +175,7 @@ public class RenheCollectController {
         List<RenheCollect> renheCollects;
 
         Integer status = null;
-        if(StringUtils.isNotEmpty(statusStr)) {
+        if (StringUtils.isNotEmpty(statusStr)) {
             status = Integer.parseInt(statusStr);
         }
         if (status != null) {

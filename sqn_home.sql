@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 01/01/2024 18:21:44
+ Date: 03/01/2024 01:03:40
 */
 
 SET NAMES utf8mb4;
@@ -492,7 +492,7 @@ INSERT INTO `menu` VALUES (42, '测试人员管理', '/testMemberManage', 'UserF
 -- ----------------------------
 DROP TABLE IF EXISTS `renhe_collect`;
 CREATE TABLE `renhe_collect`  (
-  `id` bigint(20) NOT NULL DEFAULT 0,
+  `id` bigint(20) NOT NULL DEFAULT 0 AUTO_INCREMENT,
   `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '垫子编码关键位',
   `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
   `pressure` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '压力',
@@ -502,10 +502,10 @@ CREATE TABLE `renhe_collect`  (
   `first_pressure` bigint(255) NULL DEFAULT NULL COMMENT '首次压力值',
   `final_pressure` bigint(255) NULL DEFAULT NULL COMMENT '前45压力总和',
   `coefficient` float NULL DEFAULT NULL COMMENT '系数：1；1.5',
-  `status` int(255) NOT NULL COMMENT '状态；默认未审核过0，合格1，不合格2',
+  `status` int(255) NOT NULL DEFAULT 0 COMMENT '状态；默认未审核过0，合格1，不合格2',
   `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 210 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of renhe_collect
@@ -769,10 +769,11 @@ CREATE TABLE `sleep_position_collect`  (
   `is_fine_adjustment` tinyint(1) NULL DEFAULT NULL COMMENT '是否启用微调0关1开',
   `project` tinyint(1) NULL DEFAULT NULL COMMENT '测试项目：1、正中识别2、1/3身体在传感器外',
   `period` int(5) NULL DEFAULT NULL COMMENT '检测周期，单位秒',
-  `recognition` tinyint(1) NULL DEFAULT NULL COMMENT '识别姿势：0无人1仰卧2侧卧3坐姿',
+  `recognition` tinyint(1) NULL DEFAULT NULL COMMENT '识别姿势：0无人1仰卧2、3侧卧4坐姿',
   `actual_sleep_position` tinyint(1) NULL DEFAULT NULL COMMENT '实际睡姿',
   `is_reg` tinyint(1) NULL DEFAULT NULL COMMENT '识别是否成功：0失败1成功',
   `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `sleepUserId_userInfoId`(`user_info_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
@@ -780,7 +781,19 @@ CREATE TABLE `sleep_position_collect`  (
 -- ----------------------------
 -- Records of sleep_position_collect
 -- ----------------------------
-INSERT INTO `sleep_position_collect` VALUES (1, 3, '2033', 1, 0, 1, 1, 30, 1, 1, 1, '2023-12-30 22:45:10');
+INSERT INTO `sleep_position_collect` VALUES (1, 3, '2033', 1, 0, 1, 2, 30, 1, 1, 1, '2023-12-30 22:45:10', '2024-01-02 22:07:31');
+INSERT INTO `sleep_position_collect` VALUES (9, 3, '1457', 2, 1, 1, 1, 5, NULL, 1, NULL, '2024-01-03 00:49:28', '2024-01-03 00:49:28');
+INSERT INTO `sleep_position_collect` VALUES (8, 3, '1457', 2, 1, 1, 1, 5, NULL, 3, NULL, '2024-01-03 00:49:13', '2024-01-03 00:49:13');
+INSERT INTO `sleep_position_collect` VALUES (6, 3, '1457', 2, 1, 1, 1, 5, NULL, 1, NULL, '2024-01-03 00:48:42', '2024-01-03 00:48:42');
+INSERT INTO `sleep_position_collect` VALUES (7, 3, '1457', 2, 1, 1, 1, 5, NULL, 2, NULL, '2024-01-03 00:48:58', '2024-01-03 00:48:58');
+INSERT INTO `sleep_position_collect` VALUES (10, 3, '1457', 2, 1, 1, 2, 5, NULL, 2, NULL, '2024-01-03 00:49:44', '2024-01-03 00:49:44');
+INSERT INTO `sleep_position_collect` VALUES (11, 3, '1457', 2, 1, 1, 2, 5, NULL, 3, NULL, '2024-01-03 00:49:58', '2024-01-03 00:49:58');
+INSERT INTO `sleep_position_collect` VALUES (12, 3, '1457', 2, 1, 1, 2, 5, NULL, 1, NULL, '2024-01-03 00:50:14', '2024-01-03 00:50:14');
+INSERT INTO `sleep_position_collect` VALUES (13, 3, '1457', 2, 1, 1, 2, 5, NULL, 2, NULL, '2024-01-03 00:50:28', '2024-01-03 00:50:28');
+INSERT INTO `sleep_position_collect` VALUES (14, 3, '1457', 2, 1, 1, 3, 5, NULL, 3, NULL, '2024-01-03 00:50:42', '2024-01-03 00:50:42');
+INSERT INTO `sleep_position_collect` VALUES (15, 3, '1457', 2, 1, 1, 3, 5, NULL, 1, NULL, '2024-01-03 00:50:57', '2024-01-03 00:50:57');
+INSERT INTO `sleep_position_collect` VALUES (16, 3, '1457', 2, 1, 1, 3, 5, NULL, 2, NULL, '2024-01-03 00:51:12', '2024-01-03 00:51:12');
+INSERT INTO `sleep_position_collect` VALUES (17, 3, '1457', 2, 1, 1, 3, 5, NULL, 3, NULL, '2024-01-03 00:51:27', '2024-01-03 00:51:27');
 
 -- ----------------------------
 -- Table structure for target
@@ -887,11 +900,13 @@ CREATE TABLE `user_info`  (
   `height` decimal(5, 1) NULL DEFAULT NULL COMMENT '身高',
   `sex` tinyint(1) NULL DEFAULT NULL COMMENT '性别：1男2女',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
+INSERT INTO `user_info` VALUES (10, '小安', 110.0, 180.0, 2);
 INSERT INTO `user_info` VALUES (3, '沈奇男', 135.0, 173.0, 1);
+INSERT INTO `user_info` VALUES (11, '小众', 100.0, 155.0, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

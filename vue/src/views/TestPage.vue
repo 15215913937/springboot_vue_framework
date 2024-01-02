@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   data() {
     return {
@@ -20,6 +22,10 @@ export default {
     };
   },
   methods: {
+    getLocalTime(){
+      let currentDate = new Date();
+      return moment(currentDate).format('YYYY-MM-DD HH:mm:ss');
+    },
     openPreview() {
       this.showPreview = true;
     },

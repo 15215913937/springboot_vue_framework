@@ -30,11 +30,11 @@ public class SleepPositionCollectController {
     SleepPositionCollectMapper sleepPositionCollectMapper;
 
     /**
-     * 新增或者更新
+     * 新增
      */
     @PostMapping
     public Result<?> save(@RequestBody SleepPositionCollect sleepPositionCollect) {
-        sleepPositionCollectService.saveOrUpdate(sleepPositionCollect);
+        sleepPositionCollectService.save(sleepPositionCollect);
         return Result.success();
     }
 

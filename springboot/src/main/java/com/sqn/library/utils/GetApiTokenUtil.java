@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class GetApiTokenUtil {
     public String getMettressToken() {
-        String url = "http://mettressapi.test.cnzxa.cn/api/sys/user/login?name=沈奇男&loginPassword=1";
+        String url = "https://mettressapi.cnzxa.cn/api/sys/user/login?name=沈奇男&loginPassword=1";
         RestTemplate restTemplate = new RestTemplate();
 
         // 发送GET请求，获取响应
@@ -30,7 +30,7 @@ public class GetApiTokenUtil {
         return token;
     }
     public String getBedToken() {
-        String url = "http://bedapi.test.cnzxa.cn//api/sys/user/login?username=admin&password=admin";
+        String url = "https://bedapi.cnzxa.cn//api/sys/user/login?username=15215913937&password=123456";
         RestTemplate restTemplate = new RestTemplate();
 
         // 发送GET请求，获取响应

@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <div class="mb-10">
-      <el-button type="primary" @click="startCollect">
+      <el-button type="primary" @click="openCollect">
         <el-icon>
           <VideoPlay/>
         </el-icon>
@@ -49,17 +49,18 @@
         <el-table-column prop="id" label="ID" align="center" width="50px"/>
         <el-table-column prop="name" label="测试者" align="center" width="80px">
         </el-table-column>
-        <el-table-column prop="mat" label="舒适层" align="center" width="80px">
+        <el-table-column prop="mat" label="舒适层" align="center" width="85px">
           <template #default="scope">
-            <el-tag effect="plain" v-if="scope.row.mat===1">stand</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.mat===2">plus</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.mat===3">pro</el-tag>
+            <el-tag effect="plain" v-if="scope.row.mat===1">STAND</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.mat===2">PLUS</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.mat===3">PRO</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="project" label="测试项目" align="center">
           <template #default="scope">
             <el-tag effect="plain" v-if="scope.row.project===1">正中识别</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.project===2">1/3身体在传感器外</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.project===2">1/3身体在传感器外(靠左)</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.project===3">1/3身体在传感器外(靠右)</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="isAutomode" label="自动模式" align="center" width="85px">
@@ -79,25 +80,28 @@
           <template #default="scope">
             <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
             <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===1">仰卧</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2">侧卧</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2||scope.row.actualSleepPosition===3">侧卧
+            </el-tag>
             <el-tag effect="plain" v-else>坐姿</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="recognition" label="识别睡姿" align="center">
           <template #default="scope">
-            <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===1">仰卧</el-tag>
-            <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2">侧卧</el-tag>
-            <el-tag effect="plain" v-else>坐姿</el-tag>
+            <el-tag effect="plain" type="danger" v-if="scope.row.recognition===0">无人</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.recognition===1">仰卧</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.recognition===2||scope.row.recognition===3">侧卧</el-tag>
+            <el-tag effect="plain" v-else-if="scope.row.recognition===4">坐姿</el-tag>
+            <el-tag effect="plain" v-else type="info">未知</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="isReg" label="结果" align="center">
           <template #default="scope">
             <el-tag effect="dark" type="success" v-if="scope.row.isReg===0">识别成功</el-tag>
-            <el-tag effect="dark" type="danger" v-else>未识别</el-tag>
+            <el-tag effect="dark" type="danger" v-if="scope.row.isReg===1">识别失败</el-tag>
+            <el-tag effect="dark" type="info" v-else>未识别</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center"/>
+        <el-table-column prop="startTime" label="开始时间" align="center"/>
 
         <el-pagination small layout="prev, pager, next" :total="50"/>
       </el-table>
@@ -111,8 +115,76 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
+        <!-- 采集功能弹窗-->
+        <el-dialog v-model="collectDialogVisible" append-to-body>
+          <div style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="header">
+              <el-form :model="CollectBaseData" :rules="collectRules" ref="collectRef" label-width="120px">
+                <div class="form-item">
+                  <el-form-item label="测试人" prop="name">
+                    <el-select v-model="CollectBaseData.userInfoId" style="width: 80%" clearable>
+                      <el-option
+                          v-for="item in names"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="采集床垫ID" prop="bedId">
+                    <el-input type="number" maxlength="10" v-model="CollectBaseData.bedId"/>
+                  </el-form-item>
+                  <el-form-item label="舒适层" prop="mat">
+                    <el-radio-group v-model="CollectBaseData.mat">
+                      <el-radio label="1">STAND</el-radio>
+                      <el-radio label="2">PLUS</el-radio>
+                      <el-radio label="3">PRO</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item label="自动模式" prop="isAutomode">
+                    <el-radio-group v-model="CollectBaseData.isAutomode">
+                      <el-radio label="true">开</el-radio>
+                      <el-radio label="false">关</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item label="微调" prop="isFineAdjustment">
+                    <el-radio-group v-model="CollectBaseData.isFineAdjustment">
+                      <el-radio label="true">开</el-radio>
+                      <el-radio label="false">关</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item label="监测周期(秒)" prop="period">
+                    <el-input-number v-model="CollectBaseData.period" :step="10" min="0"/>
+                  </el-form-item>
+                  <el-form-item label="采集方式" prop="mode">
+                    <el-radio-group v-model="mode">
+                      <el-radio label="1">顺序</el-radio>
+                      <el-radio label="0">随机</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </div>
+              </el-form>
+            </div>
+            <div class="status-container">
+              <div class="fixed-box">
+                <h3>监测记录</h3>
+                <div class="content">
+                  <div v-for="item in latestStatus" :key="item.id" class="status-item">
+                    <p class="status">状态: {{ item.status }}</p>
+                    <p class="time">时间: {{ item.time }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="footer-btn">
+              <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn">开始监测</button>
+              <button @click="pauseMonitoring" v-else-if="!isPaused" class="pause-btn">暂停</button>
+              <button @click="resumeMonitoring" v-else class="resume-btn">继续</button>
+              <button @click="stopMonitoring('已终止')" v-if="isMonitoring" class="stop-btn">终止</button>
+            </div>
+          </div>
+        </el-dialog>
       </div>
-
     </div>
   </div>
 </template>
@@ -121,6 +193,7 @@
 import request from "../utils/request";
 import {Search, Delete, Upload} from "@element-plus/icons-vue";
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
   name: "DataAcquisition",
@@ -144,8 +217,9 @@ export default {
       sleepPositions: [
         {value: 0, label: '无人'},
         {value: 1, label: '仰卧'},
-        {value: 2, label: '侧卧'},
-        {value: 3, label: '坐姿'}
+        {value: 2, label: '左侧卧'},
+        {value: 3, label: '右侧卧'},
+        {value: 4, label: '坐姿'}
       ],
       projects: [
         {value: 1, label: '正中识别'},
@@ -159,7 +233,7 @@ export default {
       tableData: [],
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       codeDataDialogVisible: false,
-      startDialogVisible: false,
+      collectDialogVisible: false,
       createTime: '',
       title: '',
       pressure: [],
@@ -170,36 +244,44 @@ export default {
       fontColor: '#000000',
       dataToCopy: '',
       CollectBaseData: {
-        bedId: '',
-        mat: 'plus',
-        batch: '',
-        coefficient: '1',
-        code: '',
-        firstPressure: null,
-        finalPressure: null,
-        pressure: []
+        userInfoId: '',
+        bedId: '1457',
+        mat: "2",
+        period: 30,
+        isAutomode: "true",
+        isFineAdjustment: "true",
+        actualSleepPosition: 1,
+        project: 1,
+        startTime: ''
       },
-      threshold: 600,
-      confirmTime: '24',
-      timeout: 6,
-      count: 0,
-      rules: {
-        code: [
-          {required: true, message: '传感垫key不能为空', trigger: 'blur'}
-        ]
+      mode: "1",
+      modePlan: {
+        1: "正中",
+        2: "1/3身体在传感器外(偏左)",
+        3: "1/3身体在传感器外(偏右)",
+        4: "仰卧",
+        5: "左侧卧",
+        6: "右侧卧"
+      },
+      collectRules: {
+        userInfoId: [
+          {required: true, message: '测试人未选择', trigger: 'blur'}
+        ],
+        bedId: [
+          {required: true, message: '床垫ID未填', trigger: 'blur'}
+        ],
       },
       statusList: [],
+      step: 1,
       intervalId: null,
       isMonitoring: false,
       isPaused: false,
-      is_err: 0,
       ids: []
     }
   },
   created() {
     this.load();
     request.get('/user-info/all').then(res => {
-      console.log(res.data);
       this.names = res.data
     })
   },
@@ -217,7 +299,6 @@ export default {
   },
   methods: {
     load() {
-      console.log(this.search)
       request.get("/sleep-position-collect/findPage", {
         params: {
           userInfoId: this.search.userInfoId,
@@ -233,9 +314,21 @@ export default {
         this.search.total = res.data.total;
       });
     },
+    reset() {
+      this.search = {
+        code: '',
+        mat: '',
+        batch: '',
+        coefficient: '',
+        status: '',
+        pageNum: 1,
+        pageSize: 20
+      };
+      this.load();
+    },
     playSound(text) {
       const synthesis = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(text); // 使用参数a作为语音内容
+      const utterance = new SpeechSynthesisUtterance(text);
 
       synthesis.speak(utterance);
     },
@@ -265,23 +358,9 @@ export default {
         return '#A60000';
       }
     },
-    reset() {
-      this.search = {
-        code: '',
-        mat: '',
-        batch: '',
-        coefficient: '',
-        status: '',
-        pageNum: 1,
-        pageSize: 20
-      };
-      this.load();
+    getRandomInt1_3() {
+      return Math.floor(Math.random() * 3) + 1
     },
-    startCollect() {
-      this.startDialogVisible = true;
-      this.statusList = [];
-    },
-
     showDialog(row) {
       this.dataToCopy = '';
       this.dataToCopy = row.pressure;
@@ -307,122 +386,97 @@ export default {
       this.createTime = row.createTime;
       this.codeDataDialogVisible = true;
     },
-
-    handleSizeChange() {
-      this.load()
-    },
-    handleCurrentChange() {
-      this.load()
+    openCollect() {
+      this.collectDialogVisible = true;
+      this.statusList = [];
+      this.step = 1
     },
     startMonitoring() {
-      this.$refs.data.validate((valid) => {
-        if (valid) {
-          this.isMonitoring = true
-          this.setupInterval()
-        }
-      });
+      this.isMonitoring = true
+      this.$refs.collectRef.validate((valid) => {
+        if (!valid) return
+        this.playSound("人员请就位")
+        this.playSound("5")
+        this.playSound("4")
+        this.playSound("3")
+        this.playSound("2")
+        this.playSound("1")
+        this.playSound("开始")
+        // 约10秒语音时长+准备时长
+        setTimeout(() => {
+          this.addInterval()
+        }, (this.CollectBaseData.period + 10) * 1000)
+      })
     },
-    setupInterval() {
-      clearInterval(this.intervalId); // 清除之前的计时器
-      this.intervalId = setInterval(() => {
-        if (this.count === 2) {
-          this.stopMonitoring('采集结束');
-        } else if (this.is_err === 1) {
-          this.stopMonitoring('采集异常');
-        } else {
-          this.updateStatus();
-        }
-      }, this.timeout * 1000);
-    },
+    stopMonitoring() {
+      clearInterval(this.intervalId);
+      this.isMonitoring = false;
+      this.step = 1
+    }
+    ,
     pauseMonitoring() {
+      clearInterval(this.intervalId)
       this.isPaused = true;
-    },
+    }
+    ,
     resumeMonitoring() {
       this.isPaused = false;
+      this.startMonitoring()
     },
-    stopMonitoring(sound) {
-      clearInterval(this.intervalId);
-      this.playSound(this.CollectBaseData.code + sound);
-      this.isMonitoring = false;
-      this.is_err = 0
-      this.timeout = 6
-      this.count = 0
-      this.CollectBaseData.code = '';
-
-
-    },
-    async updateStatus() {
-      try {
-        const config = {
-          params: {
-            bedId: this.CollectBaseData.bedId,
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            Token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MjI4ODAwLCJpYXQiOjE3MDM2NDIzODksInVzZXJuYW1lIjoiYWRtaW4ifQ.y-QS527gOeg4p4kUVKbsx58Acg-l28uiUA_u1GJynqI',
-          },
-        };
-
-        const res = await axios.get('https://bedapi.test.cnzxa.cn/api/pro/bed', config);
-        const data = res.data.data;
-        const pressure = data.pressureList;
-        const finalPressure = [...res.data.data.pressureList];
-        const sortedData = pressure.sort((a, b) => b - a);
-        const sum = sortedData.slice(0, 45).reduce((a, b) => a + b, 0);
-        const currentTime = new Date().toLocaleTimeString();
-
-        let status;
-        let bedId;
-        let code;
-        bedId = this.CollectBaseData.bedId;
-        code = this.CollectBaseData.code;
-
-        if (data.online === 'false') {
-          status = '床垫离线';
-          this.is_err = 1;
-        } else {
-          if (sum < this.threshold) {
-            status = '等待中...';
-          } else {
-            if (this.count === 0) {
-              this.CollectBaseData.firstPressure = sum;
-              const res = await request.post('/renhe-collect/saveFirstPressure', this.CollectBaseData);
-              if (res.code === '0') {
-                status = '保存首次数据';
-                this.timeout = Number(this.confirmTime);
-                this.count++;
-              } else {
-                status = '首次存储异常';
-                this.is_err = 1;
-              }
-              this.setupInterval();
-            } else {
-              this.CollectBaseData.finalPressure = sum;
-              this.CollectBaseData.pressure = finalPressure;
-              const res = await request.post('/renhe-collect/saveFinalPressure', this.CollectBaseData);
-              if (res.code === '0') {
-                status = '保存最终数据';
-                this.count = 2;
-              } else {
-                status = '最终存储异常';
-                this.is_err = 1;
-              }
-            }
-          }
+    addInterval() {
+      this.intervalId = setInterval(() => {
+        if (this.step === 13) {
+          clearInterval(this.intervalId)
+          this.updateStatus(this.step)
+          this.playSound("采集结束")
+          this.isMonitoring = false
+          return
         }
 
+        if (this.mode === "1") {
+          this.CollectBaseData.project = Math.ceil(this.step / 4);
+          this.CollectBaseData.actualSleepPosition = ((this.step - 1) % 3) + 1;
+        } else if (this.mode === "0") {
+          this.CollectBaseData.project = this.getRandomInt1_3()
+          this.CollectBaseData.actualSleepPosition = this.getRandomInt1_3()
+        }
+        this.playSound("第" + this.step + "次")
+        this.playSound(this.modePlan[this.CollectBaseData.project])
+        this.playSound(this.modePlan[this.CollectBaseData.actualSleepPosition + 3])
+        setTimeout(() => {
+          this.updateStatus(this.step)
+          //记录当前数据...
+          this.CollectBaseData.startTime = this.getLocalTime()
+          request.post('/sleep-position-collect', this.CollectBaseData).then(res => {
+          })
+          console.log(this.step)
+          console.log(this.CollectBaseData.startTime)
+          console.log(this.CollectBaseData)
+          this.step++
+        }, 10 * 1000)
+
+      }, (this.CollectBaseData.period + 10) * 1000)
+    },
+    updateStatus(step) {
+      try {
+
+        const currentTime = new Date().toLocaleTimeString();
+        let status
+        if (this.step === 13) return
+        status = "第" + step + "次已采集"
         this.statusList.unshift({
           id: Date.now(),
-          pressure: sum,
           status,
           time: currentTime,
-          bedId,
-          code,
+          bedId: this.CollectBaseData.bedId,
         });
       } catch (error) {
         console.error('Error:', error);
-        this.is_err = 1;
       }
+    },
+    getLocalTime() {
+      let currentDate = new Date();
+      return moment(currentDate).format('YYYY-MM-DD HH:mm:ss');
     },
     handleSelectionChange(val) {
       this.ids = val.map(v => ({bedId: v.bedId, code: v.code, pressure: v.pressure, batch: v.batch}))
@@ -431,7 +485,6 @@ export default {
       if (this.ids.length === 0) {
         this.$message.info("请选择至少一条记录")
       } else {
-        console.log(this.ids)
         request.post('/renhe-collect/exportPressureAndHotImg', this.ids).then(res => {
           if (res.code === '0') {
             this.$message.success('导出成功,文件已保存到 ' + res.data)
@@ -441,7 +494,16 @@ export default {
         })
       }
     }
-  },
+    ,
+    handleSizeChange() {
+      this.load()
+    }
+    ,
+    handleCurrentChange() {
+      this.load()
+    }
+  }
+  ,
   beforeDestroy() {
     clearInterval(this.intervalId);
   }
@@ -483,5 +545,89 @@ button {
   outline: none;
 }
 
+.header {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
 
+
+.form-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.status-container {
+  margin: 20px;
+}
+
+.fixed-box {
+  position: sticky;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fixed-box h3 {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px black solid;
+}
+
+.content {
+  height: 300px;
+  overflow: auto;
+}
+
+.status-item {
+  margin-bottom: 15px;
+}
+
+.status-item p {
+  margin: 0;
+}
+
+.status {
+  font-weight: bold;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.footer-btn {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px;
+}
+
+.start-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pause-btn {
+  background-color: #FF9800;
+  color: white;
+}
+
+.resume-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.stop-btn {
+  background-color: #F44336;
+  color: white;
+}
 </style>
