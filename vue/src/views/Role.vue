@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <!--    功能区-->
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="add">
         <el-icon>
           <CirclePlus/>
@@ -9,38 +9,40 @@
         &nbsp新增
       </el-button>
     </div>
-    <el-table
-        v-loading="loading"
-        :data="tableData"
-        :header-cell-style="{'text-align':'center'}"
-        border
-        stripe
-        style="width: 100%">
-      <!--            sortable:排序操作-->
-      <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
-      <el-table-column prop="role" label="角色" align="center"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column fixed="right" label="操作" width="300px" align="center">
-        <template #default="scope">
-          <el-button plain type="success" @click="selectMenu(scope.row.id)">
-            <el-icon>
-              <Menu/>
-            </el-icon>
-            分配菜单
-          </el-button>
-          <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
-            <template #reference>
-              <el-button type="danger">
-                <el-icon>
-                  <Delete/>
-                </el-icon>
-              </el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="table">
+      <el-table
+          v-loading="loading"
+          :data="tableData"
+          :header-cell-style="{'text-align':'center'}"
+          border
+          stripe>
+        <!--            sortable:排序操作-->
+        <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
+        <el-table-column prop="role" label="角色" align="center"/>
+        <el-table-column prop="description" label="描述"/>
+        <el-table-column fixed="right" label="操作" width="300px" align="center">
+          <template #default="scope">
+            <el-button plain type="success" @click="selectMenu(scope.row.id)">
+              <el-icon>
+                <Menu/>
+              </el-icon>
+              分配菜单
+            </el-button>
+            <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
+              <template #reference>
+                <el-button type="danger">
+                  <el-icon>
+                    <Delete/>
+                  </el-icon>
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
     <div style="margin: 10px 0">
       <el-dialog v-model="menuDialogVis" title="菜单分配" width="30%">
         <el-tree

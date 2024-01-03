@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <!--    功能区-->
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="add">
         <el-icon>
           <CirclePlus/>
@@ -10,26 +10,28 @@
       </el-button>
     </div>
     <!--    搜索区-->
-    <div style="margin: 10px 0;display: block;clear: both">
-      <el-select v-model="category" style="width: 15%;bottom: 2px" class="mr-10" placeholder="选择消费类别" clearable>
-        <el-option
-            v-for="item in categories"
-            :key="item.id"
-            :label="item.category"
-            :value="item.category"
-        />
-      </el-select>
-      <el-select v-model="type" style="width: 15%;bottom: 2px" class="mr-10" placeholder="选择类型" clearable>
-        <el-option
-            v-for="item in types"
-            :key="item.id"
-            :label="item.type"
-            :value="item.type"
-        />
-      </el-select>
+    <div class="container">
+      <div class="search">
+        <el-select v-model="category" style="width: 15%;" class="mr-10" placeholder="选择消费类别" clearable>
+          <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.category"
+              :value="item.category"
+          />
+        </el-select>
+        <el-select v-model="type" style="width: 15%;" class="mr-10" placeholder="选择类型" clearable>
+          <el-option
+              v-for="item in types"
+              :key="item.id"
+              :label="item.type"
+              :value="item.type"
+          />
+        </el-select>
 
-      <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-      <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+        <el-button class="mb-10" type="primary" @click="load">查询</el-button>
+        <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+      </div>
     </div>
     <!--    列表区-->
     <!--        stripe:斑马纹-->

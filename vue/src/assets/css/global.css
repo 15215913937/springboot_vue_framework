@@ -3,18 +3,41 @@
 }
 
 .mr-10 {
-    margin-right: 10px;
+    margin: 0 10px 10px 0;
     width: 10%;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mtb-10 {
+    margin: 10px 0;
 }
 
 .main-header {
     padding: 10px;
 }
 
-.mb-10 {
-    margin-bottom: 5px;
+.table{
+    width: 100%;
 }
 
 .el-sub-menu .el-menu-item {
     min-width: 180px;
+}
+
+/*页面搜索栏区域，包含搜索框和操作按钮*/
+.container {
+    display: flex;
+    margin: 10px 0;
+    clear: both;
+}
+
+.search {
+    display: flex;
+    width: 100%;
+}
+
+.search-button {
+    display: flex;
+    align-content: flex-end
 }

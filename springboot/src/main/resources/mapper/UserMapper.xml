@@ -13,6 +13,7 @@
             </if>
             and is_delete = 0
         </where>
+        order by role asc
     </select>
     <resultMap id="userMap" type="com.sqn.library.entity.User">
         <result property="id" column="id"/>

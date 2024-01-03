@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <!--    功能区-->
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="add">
         <el-icon>
           <CirclePlus/>

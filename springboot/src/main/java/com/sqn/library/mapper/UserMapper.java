@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author sqn
@@ -30,4 +31,11 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select id, name from `user`")
     ArrayList<UserListDTO> getName();
+
+    /**
+     * 统计亲属（管理员+普通成员）数量
+     * @return
+     */
+    @Select("select * from `user` where role=1 or role =3")
+    List<User> selectKinsfolk();
 }

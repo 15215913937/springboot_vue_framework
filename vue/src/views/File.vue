@@ -1,6 +1,6 @@
 <template>
   <div class="main-header">
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-upload :action="'http://'+serverIp+':'+serverPort+'/files/testUpload'" :show-file-list="false"
                  :on-success="handleFileUploadSuccess" style="display: inline">
         <el-button type="primary">
@@ -11,23 +11,28 @@
         </el-button>
       </el-upload>
     </div>
-    <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="name" placeholder="请输入文件名称" style="width: 15%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-input v-model="type" placeholder="请输入文件类型" style="width: 15%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-      <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-      <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
-        <template #reference>
-          <el-button type="danger" style="float: right;margin-right: 10px" v-if="user.role===1">
-            <el-icon>
-              <Delete/>
-            </el-icon>
-            &nbsp批量删除
-          </el-button>
-        </template>
-      </el-popconfirm>
+    <div class="container">
+      <div class="search">
+        <el-input v-model="name" placeholder="请输入文件名称" style="width: 15%" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-input v-model="type" placeholder="请输入文件类型" style="width: 15%" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-button class="mb-10" type="primary" @click="load">查询</el-button>
+        <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
+      </div>
+      <div class="search-button">
+        <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
+          <template #reference>
+            <el-button type="danger" class="mb-10" v-if="user.role===1">
+              <el-icon>
+                <Delete/>
+              </el-icon>
+              &nbsp批量删除
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </div>
+
     </div>
 
     <el-table

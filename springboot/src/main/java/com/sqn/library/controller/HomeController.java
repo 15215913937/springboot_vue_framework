@@ -6,10 +6,10 @@ import com.sqn.library.entity.Events;
 import com.sqn.library.entity.Files;
 import com.sqn.library.entity.User;
 import com.sqn.library.mapper.ConsumerDetailsMapper;
+import com.sqn.library.mapper.UserMapper;
 import com.sqn.library.service.IBookService;
 import com.sqn.library.service.IEventsService;
 import com.sqn.library.service.IFileService;
-import com.sqn.library.service.IUserService;
 import com.sqn.library.utils.ConsumeCalculate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +41,7 @@ public class HomeController {
     @Resource
     IFileService iFileService;
     @Resource
-    IUserService userService;
+    UserMapper userMapper;
 
     /**    查询当月账单
      *
@@ -84,7 +84,7 @@ public class HomeController {
         final List<Files> filesList = iFileService.list();
         commonInfo.put("filesCount", String.valueOf(filesList.size()));
         // 注册总人数
-        final List<User> usersList = userService.list();
+        final List<User> usersList = userMapper.selectKinsfolk();
         commonInfo.put("usersCount", String.valueOf(usersList.size()));
 
         homeInfo.put("commonInfo", commonInfo);

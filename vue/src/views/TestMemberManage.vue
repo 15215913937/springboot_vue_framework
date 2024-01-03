@@ -1,6 +1,6 @@
 <template>
   <div class="main-header">
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="addTester">
         <el-icon>
           <Plus/>
@@ -8,21 +8,27 @@
         &nbsp新增测试者
       </el-button>
     </div>
-    <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="search.name" placeholder="姓名" style="width: 15%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-button class="mb-10" type="primary" @click="load">查询</el-button>
-      <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
-      <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
-        <template #reference>
-          <el-button type="danger" style="float: right;margin-right: 10px" v-if="user.role===1">
-            <el-icon>
-              <Delete/>
-            </el-icon>
-            &nbsp批量删除
-          </el-button>
-        </template>
-      </el-popconfirm>
+    <div class="container">
+      <div class="search">
+        <el-input v-model="search.name" placeholder="姓名" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-button type="primary" @click="load">查询</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
+      </div>
+
+      <div class="search-button">
+        <el-popconfirm title="你确定要删除吗" @confirm="deleteBatch">
+          <template #reference>
+            <el-button type="danger" v-if="user.role===1">
+              <el-icon>
+                <Delete/>
+              </el-icon>
+              &nbsp批量删除
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </div>
+
     </div>
 
     <el-table
@@ -99,6 +105,7 @@
         </template>
       </el-dialog>
     </div>
+
   </div>
 </template>
 
@@ -225,4 +232,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

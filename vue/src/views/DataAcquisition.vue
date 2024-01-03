@@ -1,6 +1,6 @@
 <template>
   <div class="main-header">
-    <div class="mb-10">
+    <div class="mtb-10">
       <el-button type="primary" @click="startCollect">
         <el-icon>
           <VideoPlay/>
@@ -15,7 +15,7 @@
       </el-button>
     </div>
     <div class="container">
-      <div style="display: flex;align-content: flex-start">
+      <div class="search">
         <el-input v-model="search.code" placeholder="传感垫key" class="mr-10" :prefix-icon="Search"
                   clearable/>
         <el-input v-model="search.bedId" placeholder="采集床垫ID" class="mr-10" :prefix-icon="Search"
@@ -32,13 +32,21 @@
           <el-option v-for="coefficient in coefficients" :key="coefficient.value" :label="coefficient.label"
                      :value="coefficient.value"></el-option>
         </el-select>
-      </div>
-
-      <div style="display: flex;align-content: flex-end">
         <el-button class="mb-10" type="primary" @click="load">查询</el-button>
         <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
       </div>
-
+      <div class="search-button">
+        <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
+          <template #reference>
+            <el-button class="mb-10" type="danger" v-if="user.role===1 || user.role===3">
+              <el-icon>
+                <Delete/>
+              </el-icon>
+              &nbsp批量删除
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </div>
 
     </div>
 
@@ -260,7 +268,7 @@ export default {
       fontColor: '#000000',
       dataToCopy: '',
       CollectBaseData: {
-        bedId: '',
+        bedId: '1457',
         mat: 'plus',
         batch: '',
         coefficient: '1',
@@ -286,7 +294,7 @@ export default {
       isMonitoring: false,
       isPaused: false,
       is_err: 0,
-      ids: [],
+      rows: [],
       checkDialogVisible: false,
       checkOperation: {
         id: null,
@@ -315,6 +323,7 @@ export default {
     toCheck(id) {
       this.checkDialogVisible = true
       this.checkOperation.id = id;
+      this.checkOperation.status = ''
     },
     saveSelect() {
       if (this.checkOperation.status === '') {
@@ -322,8 +331,6 @@ export default {
         return
       }
       request.post("/renhe-collect/check", this.checkOperation).then(res => {
-        console.log(this.checkOperation)
-        console.log(res)
         if (res.code === '0') {
           this.load()
           this.$message.success("审批成功")
@@ -485,11 +492,11 @@ export default {
           },
           headers: {
             'Content-Type': 'application/json',
-            Token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNzM1MjI4ODAwLCJpYXQiOjE3MDM2NDIzODksInVzZXJuYW1lIjoiYWRtaW4ifQ.y-QS527gOeg4p4kUVKbsx58Acg-l28uiUA_u1GJynqI',
+            Token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjQsImV4cCI6MTczNTgzMzYwMCwiaWF0IjoxNzA0MjQ3MTA4LCJ1c2VybmFtZSI6IjE1MjE1OTEzOTM3In0.fdcR6YrrKdB3gi-l_x9Q-5kRYFwJmpF5rX5xQclh3zA',
           },
         };
 
-        const res = await axios.get('https://bedapi.test.cnzxa.cn/api/pro/bed', config);
+        const res = await axios.get('https://bedapi.cnzxa.cn/api/pro/bed', config);
         const data = res.data.data;
         const pressure = data.pressureList;
         const finalPressure = [...res.data.data.pressureList];
@@ -561,20 +568,42 @@ export default {
       }
     },
     handleSelectionChange(val) {
-      this.ids = val.map(v => ({bedId: v.bedId, code: v.code, pressure: v.pressure, batch: v.batch}))
+      this.rows = val.map(v => ({id: v.id, bedId: v.bedId, code: v.code, pressure: v.pressure, batch: v.batch}))
     },
-    exportImg() {
-      if (this.ids.length === 0) {
+    deleteBatch() {
+      if (!this.rows.length) {
+        this.$message.warning("请选择要删除的记录");
+        return
+      }
+      const ids = []
+      for (const r of this.rows) {
+        ids.push(r.id)
+      }
+      request.post("/renhe-collect/deleteBatch", ids).then(res => {
+        if (res.code === '0') {
+          this.$message.success("批量删除成功");
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).finally(() => {
+        this.load();
+      })
+    },
+    async exportImg() {
+      if (this.rows.length === 0) {
         this.$message.info("请选择至少一条记录")
       } else {
-        console.log(this.ids)
-        request.post('/renhe-collect/exportPressureAndHotImg', this.ids).then(res => {
+        try {
+          const res = await request.post('/renhe-collect/exportPressureAndHotImg', this.rows);
           if (res.code === '0') {
             this.$message.success('导出成功,文件已保存到 ' + res.data)
           } else {
             this.$message.error("导出失败，请重试！")
           }
-        })
+        } catch (error) {
+          console.error(error);
+          this.$message.error("导出失败，请重试！")
+        }
       }
     },
   },
@@ -585,17 +614,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  clear: both;
-}
-
-.container > * {
-  margin-bottom: 10px;
-  align-self: flex-start;
-}
 
 .grid {
   display: flex;

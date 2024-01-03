@@ -1,7 +1,6 @@
 <template>
   <div class="main-header">
-    <!--    功能区-->
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="add" v-if="user.role ===1|| user.role ===3">
         <el-icon>
           <CirclePlus/>
@@ -9,42 +8,44 @@
         &nbsp发表新事件
       </el-button>
     </div>
-    <!--    搜索区-->
-    <div style="margin: 10px 0;display: block;clear: both">
-      <el-input v-model="title" placeholder="请输入标题" style="width: 20%" class="mr-10" :prefix-icon="Search"
-                clearable/>
-      <el-select v-model="author" style="width: 15%;bottom: 2px" class="mr-10" placeholder="选择作者" clearable>
-        <el-option
-            v-for="item in authorList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-        />
-      </el-select>
-      <el-date-picker
-          class="mr-10"
-          v-model="timeHorizon"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          unlink-panels
-      />
-      <el-button type="primary" class="mb-10" @click="load">查询</el-button>
-      <el-button type="primary" class="mb-10" @click="reset">重置</el-button>
-      <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
-        <template #reference>
-          <el-button class="mb-10" type="danger" style="float: right;margin-right: 10px"
-                     v-if="user.role ===1">
-            <el-icon>
-              <Delete/>
-            </el-icon>
-            &nbsp批量删除
-          </el-button>
-        </template>
-      </el-popconfirm>
+    <div class="container">
+      <div class="search">
+        <el-input v-model="title" placeholder="标题" style="width:20%" class="mr-10" :prefix-icon="Search"
+                  clearable/>
+        <el-select v-model="author" style="width: 15%" class="mr-10" placeholder="选择作者" clearable>
+          <el-option
+              v-for="item in authorList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+          />
+        </el-select>
+        <div>
+          <el-date-picker
+              v-model="timeHorizon"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              unlink-panels
+          />
+        </div>
 
-
+        <el-button type="primary" style="margin-left: 10px" @click="load">查询</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
+      </div>
+      <div class="search-button">
+        <el-popconfirm title="确定要删除吗" @confirm="deleteBatch">
+          <template #reference>
+            <el-button class="mb-10" type="danger" v-if="user.role ===1">
+              <el-icon>
+                <Delete/>
+              </el-icon>
+              &nbsp批量删除
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </div>
     </div>
     <!--    列表区-->
     <!--        stripe:斑马纹-->

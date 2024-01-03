@@ -54,7 +54,7 @@ public class SleepPositionCollect implements Serializable {
     @ApiModelProperty("检测周期，单位秒")
     private Integer period;
 
-    @ApiModelProperty("睡姿识别：0无人1仰卧2侧卧3坐姿")
+    @ApiModelProperty("睡姿识别：5无人1仰卧2侧卧3坐姿")
     private Byte recognition;
 
     @ApiModelProperty("实际睡姿")

@@ -1,6 +1,6 @@
 <template>
   <div class="main-header">
-    <div style="margin: 10px 0">
+    <div class="mtb-10">
       <el-button type="primary" @click="add" v-if="user.role===1">
         <el-icon>
           <CirclePlus/>
@@ -8,12 +8,13 @@
         &nbsp新增
       </el-button>
     </div>
-    <div style="margin: 10px 0;display: block;clear: both">
+    <div class="container">
       <el-input v-model="search.name" placeholder="请输入姓名" style="width: 20%" class="mr-10" :prefix-icon="Search"
                 clearable/>
       <el-button class="mb-10" type="primary" @click="load">查询</el-button>
       <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
     </div>
+
     <el-table
         v-loading="loading"
         :data="tableData"
@@ -21,8 +22,7 @@
         border
         stripe
         style="width: 100%">
-      <el-table-column fixed="left" prop="id" label="ID" sortable="" align="center" width="50px"/>
-      <el-table-column prop="username" label="用户名" align="center"/>
+      <el-table-column fixed="left" prop="username" label="用户名" align="center"/>
       <el-table-column prop="role" label="角色" width="100px" align="center" sortable="">
         <template #default="scope">
           <el-tag type="primary" v-if="scope.row.role === 1">管理员</el-tag>
