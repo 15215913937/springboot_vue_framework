@@ -26,7 +26,7 @@
         <el-select v-model="search.status" class="mr-10" placeholder="是否合格" clearable>
           <el-option v-for="s in status" :key="s.value" :label="s.label" :value="s.value"></el-option>
         </el-select>
-        <el-input v-model="search.batch" placeholder="选择批次" :prefix-icon="Search" class="mr-10"
+        <el-input v-model="search.batch" placeholder="批次" :prefix-icon="Search" class="mr-10"
                   clearable/>
         <el-select v-model="search.coefficient" class="mr-10" placeholder="选择系数" clearable>
           <el-option v-for="coefficient in coefficients" :key="coefficient.value" :label="coefficient.label"
@@ -549,6 +549,9 @@ export default {
             }
           }
         }
+        if (this.statusList > 10) {
+          this.statusList.pop()
+        }
 
         this.statusList.unshift({
           id: Date.now(),
@@ -558,10 +561,6 @@ export default {
           bedId,
           code,
         });
-        // 展示最新10条记录
-        if (this.statusList.length > 10) {
-          this.statusList.pop();
-        }
       } catch (error) {
         console.error('Error:', error);
         this.is_err = 1;

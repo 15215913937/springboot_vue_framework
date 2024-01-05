@@ -2,10 +2,12 @@ package com.sqn.library.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sqn.library.common.Constants;
 import com.sqn.library.common.Result;
 import com.sqn.library.entity.SleepPositionCollect;
 import com.sqn.library.mapper.SleepPositionCollectMapper;
 import com.sqn.library.service.ISleepPositionCollectService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,12 +21,13 @@ import java.util.List;
  * @author shenqn
  * @since 2023-12-30
  */
+@Slf4j
 @RestController
 @RequestMapping("/sleep-position-collect")
 public class SleepPositionCollectController {
 
     @Resource
-    private ISleepPositionCollectService sleepPositionCollectService;
+    ISleepPositionCollectService sleepPositionCollectService;
 
     @Resource
     SleepPositionCollectMapper sleepPositionCollectMapper;
@@ -34,8 +37,18 @@ public class SleepPositionCollectController {
      */
     @PostMapping
     public Result<?> save(@RequestBody SleepPositionCollect sleepPositionCollect) {
-        sleepPositionCollectService.save(sleepPositionCollect);
-        return Result.success();
+        try {
+            Byte recognition = sleepPositionCollectService.getSleepReg(sleepPositionCollect.getBedId());
+            sleepPositionCollect.setRecognition(recognition);
+            sleepPositionCollect.setIsReg(sleepPositionCollectService.isReg(sleepPositionCollect.getActualSleepPosition(), recognition));
+            sleepPositionCollectService.save(sleepPositionCollect);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("sleep-position-collect/save error :" + e);
+            return Result.error(Constants.CODE_INTERNAL_ERR, "存储失败" + e);
+        }
+
     }
 
     @DeleteMapping("/{id}")

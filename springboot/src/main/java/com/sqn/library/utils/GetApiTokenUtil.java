@@ -26,8 +26,7 @@ public class GetApiTokenUtil {
         String jsonString = response.getBody();
         JSONObject json = new JSONObject(jsonString);
         JSONObject data = (JSONObject) json.get("data");
-        String token = (String) data.get("token");
-        return token;
+        return (String) data.get("token");
     }
     public String getBedToken() {
         String url = "https://bedapi.cnzxa.cn//api/sys/user/login?username=15215913937&password=123456";

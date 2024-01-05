@@ -61,7 +61,7 @@ public class SleepPositionCollect implements Serializable {
     private Byte actualSleepPosition;
 
     @ApiModelProperty("识别是否成功：0失败1成功")
-    private Byte isReg;
+    private Boolean isReg;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty("创建时间")

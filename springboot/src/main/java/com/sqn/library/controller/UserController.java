@@ -115,15 +115,7 @@ public class UserController {
         // 功能：将一个对象转换成Map<String, Object>，属性名为key，值为value，只支持实例变量。
         // 参数解释：bean待转对象，isToUnderlineCase是否转下划线，ignoreNullValue是否忽略空值。
         // setFieldValueEditor编辑键值对，使用箭头函数，例：（键，值）->值类型转字符串
-        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(),
-                CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> {
-                    if (fieldValue == null) {
-                        fieldValue = "0";
-                    } else {
-                        fieldValue = fieldValue + "";
-                    }
-                    return fieldValue;
-                }));
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(user, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue != null ? fieldValue.toString() : "0"));
         String key = Constants.USER_KEY + user.getId();
         redisUtils.hPutAllEx(key, stringObjectMap, Constants.LOGIN_INFO_TTL, TimeUnit.HOURS);
         return Result.success(user);

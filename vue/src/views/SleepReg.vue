@@ -90,7 +90,7 @@
 
       <el-table-column prop="actualSleepPosition" label="实际睡姿" align="center">
         <template #default="scope">
-          <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===5">无人</el-tag>
+          <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===1">仰卧</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===2">左侧卧</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.actualSleepPosition===3">右侧卧</el-tag>
@@ -99,18 +99,17 @@
       </el-table-column>
       <el-table-column prop="recognition" label="识别睡姿" align="center">
         <template #default="scope">
-          <el-tag effect="plain" type="danger" v-if="scope.row.recognition===5">无人</el-tag>
+          <el-tag effect="plain" type="danger" v-if="scope.row.recognition===0">无人</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.recognition===1">仰卧</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.recognition===2||scope.row.recognition===3">侧卧</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.recognition===4">坐姿</el-tag>
+          <el-tag effect="plain" v-else-if="scope.row.recognition===3||scope.row.recognition===4">侧卧</el-tag>
+          <el-tag effect="plain" v-else-if="scope.row.recognition===5">坐姿</el-tag>
           <el-tag effect="plain" v-else type="info">未知</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="isReg" label="结果" align="center">
         <template #default="scope">
-          <el-tag effect="dark" type="success" v-if="scope.row.isReg===0">识别成功</el-tag>
-          <el-tag effect="dark" type="danger" v-if="scope.row.isReg===1">识别失败</el-tag>
-          <el-tag effect="dark" type="info" v-else>未识别</el-tag>
+          <el-tag effect="dark" type="success" v-if="scope.row.isReg">识别成功</el-tag>
+          <el-tag effect="dark" type="danger" v-if="!scope.row.isReg">未识别</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="startTime" label="开始时间" align="center"/>
@@ -227,11 +226,12 @@ export default {
         {value: 3, label: 'pro'},
       ],
       sleepPositions: [
+        {value: 0, label: '无人'},
         {value: 1, label: '仰卧'},
         {value: 2, label: '左侧卧'},
         {value: 3, label: '右侧卧'},
         {value: 4, label: '坐姿'},
-        {value: 5, label: '无人'}
+
       ],
       projects: [
         {value: 1, label: '正中识别'},
@@ -262,9 +262,10 @@ export default {
         period: 30,
         isAutomode: "true",
         isFineAdjustment: "true",
-        actualSleepPosition: 1,
+        actualSleepPosition: null,
         project: 1,
-        startTime: ''
+        startTime: '',
+        recognition: null
       },
       mode: "1",
       modePlan: {
@@ -420,6 +421,7 @@ export default {
     },
     startMonitoring() {
       this.isMonitoring = true
+      this.step = 1
       this.$refs.collectRef.validate((valid) => {
         if (!valid) return
         this.playSound("人员请就位")
@@ -429,10 +431,10 @@ export default {
         this.playSound("2")
         this.playSound("1")
         this.playSound("开始")
-        // 约10秒语音时长+准备时长
+        // 约10秒语音时长
         setTimeout(() => {
           this.addInterval()
-        }, (this.CollectBaseData.period + 10) * 1000)
+        }, 10 * 1000)
       })
     },
     stopMonitoring() {
@@ -452,11 +454,17 @@ export default {
     },
     addInterval() {
       this.intervalId = setInterval(() => {
+        if (this.step > 1) {
+          // 记录前一次数据
+          this.CollectBaseData.startTime = this.getLocalTime()
+          request.post('/sleep-position-collect', this.CollectBaseData)
+        }
         if (this.step === 13) {
           clearInterval(this.intervalId)
           this.updateStatus(this.step)
           this.playSound("采集结束")
           this.isMonitoring = false
+          this.CollectBaseData.flag = ''
           return
         }
 
@@ -467,29 +475,26 @@ export default {
           this.CollectBaseData.project = this.getRandomInt1_3()
           this.CollectBaseData.actualSleepPosition = this.getRandomInt1_3()
         }
-        if (this.step > 1) {
-          console.log("记录结束识别压力")
-          request.get('//sleep-position-collect')
-        }
+
         this.playSound("第" + this.step + "次")
         this.playSound(this.modePlan[this.CollectBaseData.project])
         this.playSound(this.modePlan[this.CollectBaseData.actualSleepPosition + 3])
         setTimeout(() => {
           this.updateStatus(this.step)
-          // 记录当前数据...
-          this.CollectBaseData.startTime = this.getLocalTime()
-          request.post('/sleep-position-collect', this.CollectBaseData)
           this.step++
         }, 10 * 1000)
-
       }, (this.CollectBaseData.period + 10) * 1000)
     },
     updateStatus(step) {
       try {
         const currentTime = new Date().toLocaleTimeString();
         let status
-        if (this.step === 13) return
-        status = "第" + step + "次已采集"
+        if (this.step === 13) {
+          status = "当前轮次全部采集结束"
+        } else {
+          status = "第" + step + "次已采集"
+        }
+
         this.statusList.unshift({
           id: Date.now(),
           status,
