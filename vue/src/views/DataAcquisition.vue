@@ -59,7 +59,7 @@
         @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40px" align="center"/>
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
-      <el-table-column prop="code" label="传感垫key" align="center">
+      <el-table-column prop="code" sortable="" label="传感垫key" align="center">
         <template #default="scope">
           <span>
             <el-button style="font-size: large" type="text" @click="showDialog(scope.row)">{{

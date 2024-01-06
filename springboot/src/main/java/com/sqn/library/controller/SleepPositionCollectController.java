@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -83,5 +85,18 @@ public class SleepPositionCollectController {
                               @RequestParam(required = false) Byte isReg
     ) {
         return Result.success(sleepPositionCollectMapper.findPage(new Page<>(pageNum, pageSize), userInfoId, mat, project, actualSleepPosition, isReg));
+    }
+
+    @GetMapping("/pressureListByOne")
+    public Result<?> pressureListByOne(@RequestParam String bedId,
+                                       @RequestParam Integer period,
+                                       @RequestParam String createTime) {
+        HashMap<String, Object> res = sleepPositionCollectService.getPressureListByBedId(bedId, period, createTime);
+        if (res.get("code").equals(1)) {
+            return Result.success(res.get("data"));
+        } else {
+            return Result.error(Constants.CODE_INTERNAL_ERR, res.get("data").toString());
+        }
+
     }
 }

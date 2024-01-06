@@ -84,9 +84,7 @@
       <el-table-column fixed="right" label="操作" width="150px" align="center">
         <template #default="scope">
           <el-button plain type="primary" @click="handleEdit(scope.row)"
-                     v-if="user.role===1 || user.role===3">
-            编辑
-          </el-button>
+                     v-if="user.role===1 || user.role===3">编辑</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row)">
             <template #reference>
               <el-button type="danger" v-if="user.role===1 || user.role===3">

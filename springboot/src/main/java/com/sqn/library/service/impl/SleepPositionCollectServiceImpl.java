@@ -1,19 +1,20 @@
 package com.sqn.library.service.impl;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.entity.SleepPositionCollect;
 import com.sqn.library.mapper.SleepPositionCollectMapper;
 import com.sqn.library.service.ISleepPositionCollectService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.utils.GetApiTokenUtil;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <p>
@@ -23,41 +24,84 @@ import javax.annotation.Resource;
  * @author shenqn
  * @since 2023-12-30
  */
+@Slf4j
 @Service
 public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCollectMapper, SleepPositionCollect> implements ISleepPositionCollectService {
     @Resource
     GetApiTokenUtil getApiTokenUtil;
 
+    @Value("${bed.host}")
+    private String bedHost;
+
     @Override
     public Byte getSleepReg(String bedId) {
-        String url = "https://bedapi.cnzxa.cn/api/user/mattress/status?bedId=" + bedId;
-        // 创建HttpHeaders对象，并设置请求头内容
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Token", getApiTokenUtil.getBedToken());
-        // 创建HttpEntity对象，并将请求头设置到其中
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        RestTemplate restTemplate = new RestTemplate();
-        // 发送GET请求，获取响应
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                String.class
-        );
-
-        // 从响应的JSON中提取data字段的值
-        String jsonString = response.getBody();
-        JSONObject json = new JSONObject(jsonString);
-        JSONObject data = (JSONObject) json.get("data");
+        String url = bedHost + "api/user/mattress/status?bedId=" + bedId;
+        String token = getApiTokenUtil.getBedToken();
+        JSONObject apiResponse = getApiTokenUtil.getApiResponse(url, token);
+        JSONObject data = (JSONObject) apiResponse.get("data");
         // 0无人 1 仰卧 3,4侧卧 5坐姿
-        return Byte.valueOf(data.get("sleepPositionId").toString());
+        return Byte.valueOf(data.getStr("sleepPositionId"));
     }
 
     @Override
     public boolean isReg(Byte actualSleepPosition, Byte recognition) {
-        return (actualSleepPosition == 0 && recognition == 0) ||
+        return (actualSleepPosition == 5 && recognition == 0) ||
                 (actualSleepPosition == 1 && recognition == 1) ||
                 ((actualSleepPosition == 2 || actualSleepPosition == 3) && (recognition == 3 || recognition == 4)) ||
                 (actualSleepPosition == 4 && recognition == 5);
+    }
+
+    @Override
+    public HashMap<String, Object> getPressureListByBedId(String bedId, Integer period, String createTime) {
+        HashMap<String, Object> map = new HashMap<>();
+        Integer code = 1;
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = dateFormat.parse(createTime);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.SECOND, period + 60);
+            Date futureDate = calendar.getTime();
+            calendar.setTime(date);
+            calendar.add(Calendar.SECOND, -60);
+            Date pastDate = calendar.getTime();
+
+            String formattedStartTime = dateFormat.format(pastDate);
+            String formattedEndTime = dateFormat.format(futureDate);
+            String url = bedHost + "api/sys/bed/logs/pressure?denoise=true&bedId=" + bedId + "&startTime=" + formattedStartTime + "&endTime=" + formattedEndTime + "&currentPage=1&pageSize=10000";
+            log.info(url);
+            String token = getApiTokenUtil.getBedToken();
+            JSONObject apiResponse = getApiTokenUtil.getApiResponse(url, token);
+
+            if ("200".equals(apiResponse.get("code").toString())) {
+                JSONObject data = apiResponse.getJSONObject("data");
+                JSONArray list = data.getJSONArray("list");
+
+                ArrayList<Object> list1 = new ArrayList<>();
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    HashMap<String, String> listMap = new HashMap<>();
+                    JSONObject jsonObject = list.getJSONObject(i);
+                    String pressureList = jsonObject.getStr("pressureList");
+                    String time = jsonObject.getStr("time");
+                    listMap.put("pressure", pressureList.replaceAll("\\[|\\]", ""));
+                    listMap.put("time", time);
+                    list1.add(listMap);
+                }
+                map.put("code", code);
+                map.put("data", list1);
+            } else {
+                code = 0;
+                map.put("code", code);
+                map.put("data", "出错啦");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            code = 0;
+            map.put("code", code);
+            map.put("data", "时间出错啦");
+        }
+        return map;
     }
 }

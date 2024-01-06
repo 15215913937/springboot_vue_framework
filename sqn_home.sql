@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 05/01/2024 16:31:57
+ Date: 06/01/2024 23:19:55
 */
 
 SET NAMES utf8mb4;
@@ -476,7 +476,7 @@ CREATE TABLE `renhe_collect`  (
   `status` int(255) NOT NULL DEFAULT 0 COMMENT '状态；默认未审核过0，合格1，不合格2',
   `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 262 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 276 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of renhe_collect
@@ -808,24 +808,17 @@ CREATE TABLE `sleep_position_collect`  (
   `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `sleepUserId_userInfoId`(`user_info_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 135 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sleep_position_collect
 -- ----------------------------
-INSERT INTO `sleep_position_collect` VALUES (1, 3, '2033', 1, 0, 1, 2, 30, 1, 1, 1, '2023-12-30 22:45:10', '2024-01-02 22:07:31');
-INSERT INTO `sleep_position_collect` VALUES (101, 10, '1457', 2, 1, 1, 2, 5, 0, 3, 0, '2024-01-05 15:03:11', '2024-01-05 15:03:11');
-INSERT INTO `sleep_position_collect` VALUES (100, 10, '1457', 2, 1, 1, 2, 5, 0, 2, 0, '2024-01-05 15:02:56', '2024-01-05 15:02:56');
-INSERT INTO `sleep_position_collect` VALUES (99, 10, '1457', 2, 1, 1, 1, 5, 0, 1, 0, '2024-01-05 15:02:41', '2024-01-05 15:02:41');
-INSERT INTO `sleep_position_collect` VALUES (98, 10, '1457', 2, 1, 1, 1, 5, 0, 3, 0, '2024-01-05 15:02:26', '2024-01-05 15:02:26');
-INSERT INTO `sleep_position_collect` VALUES (97, 10, '1457', 2, 1, 1, 1, 5, 0, 2, 0, '2024-01-05 15:02:11', '2024-01-05 15:02:11');
-INSERT INTO `sleep_position_collect` VALUES (96, 10, '1457', 2, 1, 1, 1, 5, 0, 1, 0, '2024-01-05 15:01:57', '2024-01-05 15:01:56');
-INSERT INTO `sleep_position_collect` VALUES (102, 10, '1457', 2, 1, 1, 2, 5, 0, 1, 0, '2024-01-05 15:03:26', '2024-01-05 15:03:26');
-INSERT INTO `sleep_position_collect` VALUES (103, 10, '1457', 2, 1, 1, 2, 5, 0, 2, 0, '2024-01-05 15:03:41', '2024-01-05 15:03:41');
-INSERT INTO `sleep_position_collect` VALUES (104, 10, '1457', 2, 1, 1, 3, 5, 0, 3, 0, '2024-01-05 15:03:56', '2024-01-05 15:03:56');
-INSERT INTO `sleep_position_collect` VALUES (105, 10, '1457', 2, 1, 1, 3, 5, 0, 1, 0, '2024-01-05 15:04:11', '2024-01-05 15:04:11');
-INSERT INTO `sleep_position_collect` VALUES (106, 10, '1457', 2, 1, 1, 3, 5, 0, 2, 0, '2024-01-05 15:04:26', '2024-01-05 15:04:26');
-INSERT INTO `sleep_position_collect` VALUES (107, 10, '1457', 2, 1, 1, 3, 5, 0, 3, 0, '2024-01-05 15:04:41', '2024-01-05 15:04:41');
+INSERT INTO `sleep_position_collect` VALUES (134, 3, '1457', 2, 1, 1, 2, 5, 0, 3, 0, '2024-01-05 21:31:24', '2024-01-05 21:31:24');
+INSERT INTO `sleep_position_collect` VALUES (133, 3, '1457', 2, 1, 1, 2, 5, 0, 2, 0, '2024-01-05 21:31:09', '2024-01-05 21:31:09');
+INSERT INTO `sleep_position_collect` VALUES (132, 3, '1457', 2, 1, 1, 1, 5, 0, 1, 0, '2024-01-05 21:30:56', '2024-01-05 21:30:54');
+INSERT INTO `sleep_position_collect` VALUES (131, 3, '1457', 2, 1, 1, 1, 5, 0, 3, 0, '2024-01-05 21:30:40', '2024-01-05 21:30:39');
+INSERT INTO `sleep_position_collect` VALUES (130, 3, '1457', 2, 1, 1, 1, 5, 0, 2, 0, '2024-01-05 21:30:25', '2024-01-05 21:30:24');
+INSERT INTO `sleep_position_collect` VALUES (129, 3, '1457', 2, 1, 1, 1, 5, 0, 1, 0, '2024-01-05 21:30:12', '2024-01-05 21:30:09');
 
 -- ----------------------------
 -- Table structure for target
@@ -907,7 +900,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 1, '15215913937', NULL, '2024-01-05 09:58:36', 0, 1);
+INSERT INTO `user` VALUES (1, 'sqn', '$2a$10$B2mSSpvnzb3aF9WAeWXcaO1D78yc3kgO6DWceOalVFi6rIQBKQ15.', '沈奇男', '1997-10-01', '男', 'http://localhost:9090/files/test/0cda61eac7b849e59af673c5ca470e92.jpg', NULL, 1, '15215913937', NULL, '2024-01-05 21:14:55', 0, 1);
 INSERT INTO `user` VALUES (22, 'dmj', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '杜梅军', '1971-07-14', '女', 'http://localhost:9090/files/test/dd626ce6f5f441d8b34e4c9106d369eb.jpg', NULL, 3, '13819545627', NULL, '2023-12-30 14:28:41', 0, 0);
 INSERT INTO `user` VALUES (23, 'sjx', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建祥', '1974-03-22', '男', NULL, NULL, 3, '18888790728', NULL, '2023-12-30 14:26:49', 0, 0);
 INSERT INTO `user` VALUES (24, 'sjy', '$2a$10$CQ1i9M.57VCCHZsM0DggWervD/fgQWO18BalmJOXFsyMA5NWpY946', '沈建英', NULL, '女', NULL, NULL, 3, '13454588810', NULL, NULL, 0, 0);

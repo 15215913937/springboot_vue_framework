@@ -70,3 +70,6 @@ server:
   servlet:
     session:
       timeout: 10s
+
+bed:
+  host: https://bedapi.cnzxa.cn/
