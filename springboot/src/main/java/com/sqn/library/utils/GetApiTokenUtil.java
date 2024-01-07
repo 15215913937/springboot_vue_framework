@@ -20,8 +20,11 @@ public class GetApiTokenUtil {
     @Value("${bed.host}")
     private String bedHost;
 
+    @Value("${mettress.host}")
+    private String mettressHost;
+
     public String getMettressToken() {
-        String url = bedHost + "api/sys/user/login?name=沈奇男&loginPassword=1";
+        String url = mettressHost + "api/sys/user/login?name=沈奇男&loginPassword=1";
         RestTemplate restTemplate = new RestTemplate();
 
         // 发送GET请求，获取响应

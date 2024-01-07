@@ -431,6 +431,7 @@ export default {
       }
       request.get('/renhe-collect/hotmap', {
             params: {
+              id: row.id,
               pressure: row.pressure,
               bedId: row.bedId
             }

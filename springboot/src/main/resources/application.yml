@@ -73,3 +73,5 @@ server:
 
 bed:
   host: https://bedapi.cnzxa.cn/
+mettress:
+  host: https://mettressapi.cnzxa.cn/

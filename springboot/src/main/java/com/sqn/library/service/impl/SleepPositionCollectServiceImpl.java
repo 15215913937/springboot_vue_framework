@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sqn.library.entity.SleepPositionCollect;
 import com.sqn.library.mapper.SleepPositionCollectMapper;
+import com.sqn.library.service.IRenheCollectService;
 import com.sqn.library.service.ISleepPositionCollectService;
 import com.sqn.library.utils.GetApiTokenUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,9 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
     @Value("${bed.host}")
     private String bedHost;
 
+    @Resource
+    IRenheCollectService renheCollectService;
+
     @Override
     public Byte getSleepReg(String bedId) {
         String url = bedHost + "api/user/mattress/status?bedId=" + bedId;
@@ -52,10 +56,9 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
     }
 
     @Override
-    public HashMap<String, Object> getPressureListByBedId(String bedId, Integer period, String createTime) {
-        HashMap<String, Object> map = new HashMap<>();
+    public Map<Object, Object> getPressureListByBedId(Long id, String bedId, Integer period, String createTime) {
+        Map<Object, Object> map = new HashMap<>();
         Integer code = 1;
-
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = dateFormat.parse(createTime);
@@ -71,7 +74,6 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
             String formattedStartTime = dateFormat.format(pastDate);
             String formattedEndTime = dateFormat.format(futureDate);
             String url = bedHost + "api/sys/bed/logs/pressure?denoise=true&bedId=" + bedId + "&startTime=" + formattedStartTime + "&endTime=" + formattedEndTime + "&currentPage=1&pageSize=10000";
-            log.info(url);
             String token = getApiTokenUtil.getBedToken();
             JSONObject apiResponse = getApiTokenUtil.getApiResponse(url, token);
 
@@ -83,9 +85,12 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
                 for (int i = list.size() - 1; i >= 0; i--) {
                     HashMap<String, String> listMap = new HashMap<>();
                     JSONObject jsonObject = list.getJSONObject(i);
-                    String pressureList = jsonObject.getStr("pressureList");
+                    String pressure = jsonObject.getStr("pressureList").replaceAll("\\[|\\]", "");
                     String time = jsonObject.getStr("time");
-                    listMap.put("pressure", pressureList.replaceAll("\\[|\\]", ""));
+                    // 获取热力图base64
+                    String hotmapBase64 = renheCollectService.getHotmapBase64(pressure, bedId);
+                    listMap.put("pressure", pressure);
+                    listMap.put("hotBase64", hotmapBase64);
                     listMap.put("time", time);
                     list1.add(listMap);
                 }

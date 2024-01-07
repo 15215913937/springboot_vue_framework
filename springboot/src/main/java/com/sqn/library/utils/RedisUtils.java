@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.Date;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -392,7 +389,7 @@ public class RedisUtils {
         redisTemplate.opsForHash().put(key, hashKey, value);
     }
 
-    public void hPutAll(String key, Map<String, Object> maps) {
+    public void hPutAll(String key, Map<Object, Object> maps) {
         redisTemplate.opsForHash().putAll(key, maps);
     }
 

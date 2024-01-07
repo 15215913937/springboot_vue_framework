@@ -49,7 +49,8 @@ public class Constants {
     public static final String LOCK_KEY = "lock:key:"; //互斥锁前缀名
     public static final String ALL_ACTIVITY_KEY = "info:activities:"; // 运动集
     public static final String HEALTH_DATA_KEY = "info:healths:"; // 健康信息
-    public static final String SLEEP_REG_KEY = "info:sleepReg:"; // 睡眠识别记录标记
+    public static final String SLEEPREG_DETAIL = "sleepReg:detail:"; // 睡眠识别详情记录
+    public static final String RenheHotMapBase64 = "renheData:"; // 韧和压力传感垫数据记录
 
     /**
      * 角色常量

@@ -13,6 +13,7 @@ import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
 import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
+import com.sqn.library.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +37,12 @@ import java.util.List;
 public class RenheCollectController {
 
     @Resource
-    private IRenheCollectService renheCollectService;
+    IRenheCollectService renheCollectService;
     @Resource
     RenheCollectMapper renheCollectMapper;
+    @Resource
+    RedisUtils redisUtils;
+
 
     @PostMapping("/exportPressureAndHotImg")
     public Result<?> exportPressureAndHotImg(@RequestBody List<RenheScreenCapDTO> renheScreenCapDTOList) {
@@ -54,9 +58,14 @@ public class RenheCollectController {
 
     @GetMapping("/hotmap")
     @CrossOrigin(origins = "https://mettressapi.cnzxa.cn/api/work/heatmap")
-    public Result<?> hotmap(@RequestParam String pressure, @RequestParam String bedId) {
-        String hotmapBase64 = renheCollectService.getHotmapBase64(pressure, bedId);
-        return Result.success(hotmapBase64);
+    public Result<?> hotmap(@RequestParam Long id, @RequestParam String pressure, @RequestParam String bedId) {
+        String s = redisUtils.get(Constants.RenheHotMapBase64 + id);
+        if (s == null) {
+            String hotmapBase64 = renheCollectService.getHotmapBase64(pressure, bedId);
+            redisUtils.set(Constants.RenheHotMapBase64 + id, hotmapBase64);
+            return Result.success(hotmapBase64);
+        }
+        return Result.success(s);
     }
 
     /***
@@ -117,7 +126,13 @@ public class RenheCollectController {
     }
 
     @PostMapping("/deleteBatch")
-    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
+    public Result<?> deleteBatch(@RequestBody List<Long> ids) {
+        for (Long id : ids) {
+            String s = redisUtils.get(Constants.RenheHotMapBase64 + id);
+            if (s != null) {
+                redisUtils.delete(Constants.RenheHotMapBase64 + id);
+            }
+        }
         renheCollectService.removeByIds(ids);
         return Result.success();
     }

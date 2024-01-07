@@ -197,30 +197,74 @@
 
       <!--  记录详情弹窗-->
       <el-dialog v-model="viewDetailsDialogVisible" :title="title" append-to-body>
-        <el-scrollbar style="height: 600px">
-          <el-row style="display: flex">
-            <el-col v-for="p in pressures" :span="6" :key="p.time"
-                    style="display: flex; justify-content: center; padding: 10px">
-              <div style="width: 100%; display: flex; flex-direction: column">
-                <div style="flex: 1; display: flex; justify-content: center">
-                  <div class="grid">
-                    <div v-for="(row, rowIndex) in getTwoDimensionalData(p.pressure)" :key="rowIndex" class="row">
-                      <div v-for="(cell, colIndex) in row" :key="colIndex" :style="getCellStyles(cell)" class="cell">
-                        {{ cell }}
+        <div style="display: flex;flex-direction: column">
+          <div style="height: 30px;margin-bottom: 10px;display: flex;">
+
+            <el-switch
+                v-model="hotOrPressure"
+                class="mb-2"
+                active-text="热力图"
+                inactive-text="压力图"
+            />
+            <div style="position:absolute;right: 20px">
+              <el-button type="primary" @click="copyAll()">
+                一键全部复制
+              </el-button>
+            </div>
+
+          </div>
+          <div style="flex: 1">
+            <div v-if="hotOrPressure">
+              <el-scrollbar style="height: 600px">
+                <el-row style="display: flex;border:1px solid red">
+                  <el-col v-for="p in pressures" :span="6" :key="p.time"
+                          style="display: flex; justify-content: center; padding: 10px">
+                    <div style="width: 100%; display: flex; flex-direction: column">
+                      <div style="flex: 1; display: flex; justify-content: center">
+                        <img :src="'data:image/jpeg;base64,' +p.hotBase64" alt="Image" @load="imageLoaded = true">
+                      </div>
+                      <div
+                          style="display:flex;height: 30px;align-items: center;justify-content: center;font-size: 10px">
+                        <el-icon @click="copyData(p.pressure)" style="cursor: pointer;color: #409EFF">
+                          <DocumentCopy/>
+                        </el-icon>
+                        <span>&nbsp&nbsp{{ p.time }}</span>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div style="display:flex;height: 30px;align-items: center;justify-content: center;font-size: 10px">
-                  <el-icon @click="copyData(p.pressure)" style="cursor: pointer;color: #409EFF">
-                    <DocumentCopy/>
-                  </el-icon>
-                  <span>&nbsp&nbsp{{ p.time }}</span>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-scrollbar>
+                  </el-col>
+                </el-row>
+              </el-scrollbar>
+            </div>
+            <div v-else>
+              <el-scrollbar style="height: 600px">
+                <el-row style="display: flex;border:1px solid red">
+                  <el-col v-for="p in pressures" :span="6" :key="p.time"
+                          style="display: flex; justify-content: center; padding: 10px">
+                    <div style="width: 100%; display: flex; flex-direction: column">
+                      <div style="flex: 1; display: flex; justify-content: center">
+                        <div class="grid">
+                          <div v-for="(row, rowIndex) in getTwoDimensionalData(p.pressure)" :key="rowIndex" class="row">
+                            <div v-for="(cell, colIndex) in row" :key="colIndex" :style="getCellStyles(cell)"
+                                 class="cell">
+                              {{ cell }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                          style="display:flex;height: 30px;align-items: center;justify-content: center;font-size: 10px">
+                        <el-icon @click="copyData(p.pressure)" style="cursor: pointer;color: #409EFF">
+                          <DocumentCopy/>
+                        </el-icon>
+                        <span>&nbsp&nbsp{{ p.time }}</span>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-scrollbar>
+            </div>
+          </div>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -265,8 +309,8 @@ export default {
         {value: 3, label: '1/3身体在传感器外识别(偏右)'}
       ],
       res: [
-        {value: 0, label: '未识别'},
-        {value: 1, label: '识别成功'}
+        {value: false, label: '未识别'},
+        {value: true, label: '识别成功'}
       ],
       names: [],
       tableData: [],
@@ -275,7 +319,6 @@ export default {
       viewDetailsDialogVisible: false,
       title: '',
       pressures: [],
-      base64Data: '',
       WcellSize: 25,
       HcellSize: 15,
       fontSize: 10,
@@ -313,7 +356,8 @@ export default {
       intervalId: null,
       isMonitoring: false,
       isPaused: false,
-      ids: []
+      ids: [],
+      hotOrPressure: false
     }
   },
   created() {
@@ -393,6 +437,16 @@ export default {
             this.$message.error("复制数据失败:", error)
           });
     },
+    copyAll() {
+      const copyAll = []
+      for (const p of this.pressures) {
+        copyAll.push("压力值")
+        copyAll.push(p.pressure)
+        copyAll.push("时间")
+        copyAll.push(p.time)
+      }
+      this.copyData(copyAll)
+    },
     getRandomInt1_3() {
       return Math.floor(Math.random() * 3) + 1
     },
@@ -401,6 +455,7 @@ export default {
       this.title = row.id
       request.get('/sleep-position-collect/pressureListByOne', {
         params: {
+          "id": row.id,
           "bedId": row.bedId,
           "period": row.period,
           "createTime": row.createTime
@@ -480,7 +535,6 @@ export default {
     },
     addInterval() {
       this.intervalId = setInterval(() => {
-        console.log(this.step + ":计时器ID：" + this.intervalId)
         if (this.step > 1) {
           // 记录前一次数据
           request.post('/sleep-position-collect', this.CollectBaseData).then(res => {
@@ -531,10 +585,6 @@ export default {
         time: currentTime,
         bedId: this.CollectBaseData.bedId,
       })
-    },
-    getLocalTime() {
-      let currentDate = new Date();
-      return moment(currentDate).format('YYYY-MM-DD HH:mm:ss');
     },
     handleSelectionChange(val) {
       this.ids = val.map(v => (v.id))
