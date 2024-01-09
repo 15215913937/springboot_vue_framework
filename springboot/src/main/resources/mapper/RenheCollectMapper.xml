@@ -23,6 +23,9 @@
             <if test="status!=null and status !=''">
                 and status = #{status}
             </if>
+            <if test="position!=null and position !=''">
+                and position = #{position}
+            </if>
         </where>
         order by create_time desc
     </select>

@@ -1,7 +1,6 @@
 package com.sqn.library.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -105,6 +104,8 @@ public class RenheCollectController {
             if (renhe.getFinalPressure() == null) {
                 List<String> pressure = renheCollectDTO.getPressure();
                 String strPressure = String.join(",", pressure);
+                String position = renheCollectService.getPosition(strPressure);
+                renhe.setPosition(position);
                 renhe.setFinalPressure(renheCollectDTO.getFinalPressure());
                 renhe.setPressure(strPressure);
                 renheCollectMapper.updateById(renhe);
@@ -115,8 +116,22 @@ public class RenheCollectController {
         } else {
             return Result.error(Constants.CODE_DATA_ERR, "硬件码不存在");
         }
+    }
 
-
+    @GetMapping("/getPosition")
+    public void getPosition() {
+        List<RenheCollect> list = renheCollectMapper.selectList(Wrappers.<RenheCollect>lambdaQuery());
+        for (RenheCollect l : list) {
+            final String pressure = l.getPressure();
+            try {
+                String position = renheCollectService.getPosition(pressure);
+                log.info(position);
+                l.setPosition(position);
+                renheCollectMapper.updateById(l);
+            } catch (Exception e) {
+                log.error("Error occurred while getting position for pressure: " + pressure, e);
+            }
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -144,9 +159,10 @@ public class RenheCollectController {
                               @RequestParam(defaultValue = "") String bedId,
                               @RequestParam(defaultValue = "") String mat,
                               @RequestParam(defaultValue = "") String status,
+                              @RequestParam(defaultValue = "") String position,
                               @RequestParam(required = false) Long batch,
                               @RequestParam(required = false) Float coefficient) {
-        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize), code, bedId, mat, batch, coefficient, status);
+        Page<RenheCollect> userPage = renheCollectMapper.findPage(new Page<>(pageNum, pageSize), code, bedId, mat, batch, coefficient, status, position);
         return Result.success(userPage);
     }
 
@@ -160,17 +176,9 @@ public class RenheCollectController {
         return Result.success(renheCollectService.getById(id));
     }
 
-    @GetMapping("/page")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        QueryWrapper<RenheCollect> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(renheCollectService.page(new Page<>(pageNum, pageSize), queryWrapper));
-    }
-
     @PostMapping("/check")
     public Result<?> check(@RequestBody RenheCheckDTO renheCheckDTO) {
-        RenheCollect one = renheCollectMapper.selectOne(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getId, renheCheckDTO.getId()));
+        RenheCollect one = renheCollectMapper.selectById(renheCheckDTO.getId());
         if (one == null) {
             return Result.error(Constants.CODE_DATA_ERR, "数据不存在");
         } else {
@@ -180,6 +188,21 @@ public class RenheCollectController {
             return Result.success("状态更新成功");
         }
     }
+
+    @PostMapping("/saveRemark/{id}")
+    public Result<?> saveRemark(@PathVariable Long id, @RequestBody(required = false) String remark) {
+        log.info(remark);
+
+        RenheCollect one = renheCollectMapper.selectById(id);
+        if (one == null) {
+            return Result.error(Constants.CODE_DATA_ERR, "数据不存在");
+        } else {
+            one.setRemarks(remark == null ? "" : remark);
+            renheCollectMapper.updateById(one);
+            return Result.success("备注更新成功");
+        }
+    }
+
 
     @GetMapping("/countBy")
     public Result<?> countBy(@RequestParam(defaultValue = "") String mat,

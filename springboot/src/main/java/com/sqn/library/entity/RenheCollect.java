@@ -62,6 +62,8 @@ public class RenheCollect implements Serializable {
 
     @ApiModelProperty("备注")
     private String remarks;
+    @ApiModelProperty("IDLE 无人 SIT坐姿  SUPINE睡姿")
+    private String position;
 
 
 }

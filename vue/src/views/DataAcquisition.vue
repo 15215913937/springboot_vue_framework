@@ -32,6 +32,9 @@
           <el-option v-for="coefficient in coefficients" :key="coefficient.value" :label="coefficient.label"
                      :value="coefficient.value"></el-option>
         </el-select>
+        <el-select v-model="search.position" class="mr-10" placeholder="姿势" clearable>
+          <el-option v-for="p in positions" :key="p.value" :label="p.label" :value="p.value"></el-option>
+        </el-select>
         <el-button class="mb-10" type="primary" @click="load">查询</el-button>
         <el-button class="mb-10" type="primary" @click="reset">重置</el-button>
       </div>
@@ -59,7 +62,7 @@
         @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40px" align="center"/>
       <el-table-column prop="id" label="ID" sortable="" align="center" width="70px"/>
-      <el-table-column prop="code" sortable="" label="传感垫key" align="center">
+      <el-table-column prop="code" sortable label="传感垫key" align="center">
         <template #default="scope">
           <span>
             <el-button style="font-size: large" type="text" @click="showDialog(scope.row)">{{
@@ -73,15 +76,31 @@
       <el-table-column prop="batch" label="批次" align="center" width="70px"/>
       <el-table-column prop="coefficient" label="系数" align="center" width="70px"/>
       <el-table-column prop="firstPressure" label="首次压力和" align="center"/>
-      <el-table-column prop="finalPressure" label="最终压力和" align="center"/>
+      <el-table-column prop="finalPressure" label="最终压力和" align="center" sortable/>
+      <el-table-column prop="position" label="姿势" align="center">
+        <template #default="scope">
+          <el-tag type="warning" v-if="scope.row.position === 'IDLE'">无人</el-tag>
+          <el-tag type="success" v-else-if="scope.row.position==='SIT'">坐姿</el-tag>
+          <el-tag v-else>睡姿</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态" align="center">
         <template #default="scope">
-          <el-button v-if="scope.row.status === 0" type="info" @click="toCheck(scope.row.id)">待审核</el-button>
+          <el-button v-if="scope.row.status === 0" type="info" @click="toCheck(scope.row)">待审核</el-button>
           <el-tag effect="dark" type="success" v-else-if="scope.row.status===1">合格</el-tag>
           <el-tag effect="dark" type="danger" v-else>不合格</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="remarks" label="备注" align="center"/>
+      <el-table-column prop="remarks" label="备注" align="center">
+        <template #default="scope">
+          <el-button @click="editRemark(scope.row)">
+            <el-icon>
+              <Edit/>
+            </el-icon>
+          </el-button>
+          <span>&nbsp{{ scope.row.remarks }}</span>
+        </template>
+      </el-table-column>
       <el-pagination small layout="prev, pager, next" :total="50"/>
     </el-table>
     <div style="margin: 10px 0">
@@ -215,6 +234,28 @@
           </div>
         </div>
       </el-dialog>
+      <el-dialog
+          title="备注"
+          v-model="remarkDialogVisible"
+          append-to-body
+          width="400px"
+      >
+        <div style="display: flex;flex-direction: column;">
+          <div style="flex: 1;display: flex;align-items: center;justify-content: center;">
+            <el-input
+                type="textarea"
+                :rows="4"
+                placeholder="请输入备注"
+                maxlength="100"
+                show-word-limit
+                v-model="checkOperation.remarks"
+            ></el-input>
+          </div>
+          <div style="height: 30px;display: flex;justify-content: flex-end;margin-top:20px">
+            <el-button type="primary" @click="saveRemark()">确认</el-button>
+          </div>
+        </div>
+      </el-dialog>
     </div>
 
   </div>
@@ -236,6 +277,7 @@ export default {
         batch: '',
         coefficient: '',
         status: '',
+        position: '',
         pageNum: 1,
         pageSize: 20,
         total: '',
@@ -254,6 +296,11 @@ export default {
         {value: '0', label: '待审核'},
         {value: '1', label: '合格'},
         {value: '2', label: '不合格'}
+      ],
+      positions: [
+        {value: 'IDLE', label: '无人'},
+        {value: 'SIT', label: '坐姿'},
+        {value: 'SUPINE', label: '睡姿'}
       ],
       user: sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {},
       codeDataDialogVisible: false,
@@ -299,9 +346,10 @@ export default {
       checkOperation: {
         id: null,
         status: '',
-        remarks: ''
+        remarks: ""
       },
-      info: ''
+      info: '',
+      remarkDialogVisible: false
     }
   },
   created() {
@@ -320,10 +368,13 @@ export default {
     }
   },
   methods: {
-    toCheck(id) {
+    toCheck(data) {
       this.checkDialogVisible = true
-      this.checkOperation.id = id;
-      this.checkOperation.status = ''
+      this.checkOperation = {
+        id: data.id,
+        status: '',
+        remarks: data.remarks
+      }
     },
     saveSelect() {
       if (this.checkOperation.status === '') {
@@ -335,18 +386,9 @@ export default {
           this.load()
           this.$message.success("审批成功")
           this.checkDialogVisible = false;
-          this.checkOperation = {
-            id: null,
-            status: '',
-            remarks: ''
-          }
+
         } else {
           this.$message.error("审批失败")
-          this.checkOperation = {
-            id: null,
-            status: '',
-            remarks: ''
-          }
         }
       })
     },
@@ -391,6 +433,7 @@ export default {
           batch: this.search.batch,
           coefficient: this.search.coefficient,
           status: this.search.status,
+          position: this.search.position,
           pageNum: this.search.pageNum,
           pageSize: this.search.pageSize,
         }
@@ -400,45 +443,50 @@ export default {
       });
     },
     reset() {
-      this.search = {
-        code: '',
-        bedId: '',
-        mat: '',
-        batch: '',
-        coefficient: '',
-        status: '',
-        pageNum: 1,
-        pageSize: 20
-      };
+      this.search = {}
       this.load();
+    },
+    editRemark(data) {
+      this.remarkDialogVisible = true
+      this.checkOperation.remarks = data.remarks
+      this.checkOperation.id = data.id
+    },
+    saveRemark() {
+      request.post("/renhe-collect/saveRemark/" + this.checkOperation.id, this.checkOperation.remarks).then(res => {
+        if (res.code === '0') {
+          this.load()
+          this.$message.success("编辑成功")
+          this.remarkDialogVisible = false;
+        } else {
+          this.$message.error("编辑失败")
+        }
+      })
     },
     startCollect() {
       this.startDialogVisible = true;
       this.statusList = [];
     },
-
     showDialog(row) {
-      this.dataToCopy = '';
       this.dataToCopy = row.pressure;
-      const str = row.pressure;
-      this.pressure2 = []
-      this.pressure = str.split(",").map(Number)
-      // 获取对象的值数组
-      const values = Object.values(this.pressure);
-      // 转换为8列的二维数组
-      for (let i = 0; i < values.length; i += 8) {
-        this.pressure2.push(values.slice(i, i + 8));
+      this.pressure = row.pressure.split(",").map(Number);
+
+      // 创建一个新的二维数组 pressure2，包含每8个元素的子数组
+      this.pressure2 = [];
+      for (let i = 0; i < this.pressure.length; i += 8) {
+        this.pressure2.push(this.pressure.slice(i, i + 8));
       }
+
       request.get('/renhe-collect/hotmap', {
-            params: {
-              id: row.id,
-              pressure: row.pressure,
-              bedId: row.bedId
-            }
-          }
-      ).then(res => {
-        this.base64Data = 'data:image/jpeg;base64,' + res.data;
+        params: {
+          id: row.id,
+          pressure: row.pressure,
+          bedId: row.bedId
+        }
       })
+          .then(res => {
+            this.base64Data = 'data:image/jpeg;base64,' + res.data;
+          });
+
       this.title = row.code;
       this.createTime = row.createTime;
       this.codeDataDialogVisible = true;

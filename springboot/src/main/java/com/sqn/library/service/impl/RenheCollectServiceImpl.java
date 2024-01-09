@@ -8,6 +8,7 @@ import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
 import com.sqn.library.utils.GetApiTokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -96,6 +97,20 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             successCount = getPressureImg(renheScreenCapDTO.getPressure(), s, successCount);
         }
         return successCount;
+    }
+
+    @Override
+    public String getPosition(String pressure) {
+        String url = "https://bedapi.test.cnzxa.cn/api/test/predictPosition";
+        String jsonRequestBody = "{\"pressureList\": [" + pressure + "]}";
+        try {
+            JSONObject apiResponse = apiTokenUtil.callApi(HttpMethod.POST, url, jsonRequestBody, null);
+            return apiResponse.getStr("data");
+        } catch (Exception e) {
+            log.error("Error occurred while calling API for pressure: " + pressure, e);
+            // 可以根据具体情况处理异常，比如抛出异常或返回默认值
+            return "Error: Unable to retrieve position";
+        }
     }
 
     private Integer getPressureImg(String pressure, String parentFilePath, Integer successCount) {

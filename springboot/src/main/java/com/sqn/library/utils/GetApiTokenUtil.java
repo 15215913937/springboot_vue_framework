@@ -81,4 +81,31 @@ public class GetApiTokenUtil {
         String jsonString = response.getBody();
         return new JSONObject(jsonString);
     }
+
+    public JSONObject callApi(HttpMethod method, String url, String requestBody, String token) {
+        // 创建HttpHeaders对象
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        // 如果提供了token值，则设置请求头内容
+        if (token != null && !token.isEmpty()) {
+            headers.set("Token", token);
+        }
+
+        // 创建HttpEntity对象，并将请求头和请求体设置到其中
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 发送请求，根据传入的 method 参数确定使用的请求方法
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                method,
+                entity,
+                String.class
+        );
+
+        // 从响应的JSON中提取data字段的值
+        String jsonString = response.getBody();
+        log.info(jsonString);
+        return new JSONObject(jsonString);
+    }
 }

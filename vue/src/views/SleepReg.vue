@@ -54,18 +54,17 @@
       <el-table-column prop="id" label="ID" align="center" width="50px"/>
       <el-table-column prop="name" label="测试者" align="center" width="80px">
       </el-table-column>
-      <el-table-column prop="mat" label="舒适层" align="center" width="85px">
+      <el-table-column prop="mat" label="舒适层" align="center" :width="85">
         <template #default="scope">
           <el-tag effect="plain" v-if="scope.row.mat===1">STAND</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.mat===2">PLUS</el-tag>
           <el-tag effect="plain" v-else-if="scope.row.mat===3">PRO</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="project" label="测试项目" align="center">
+      <el-table-column prop="project" label="测试项目" align="center" :width="190">
         <template #default="scope">
           <el-tag effect="plain" v-if="scope.row.project===1">正中识别</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.project===2">1/3身体在传感器外(靠左)</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.project===3">1/3身体在传感器外(靠右)</el-tag>
+          <el-tag effect="plain" v-else-if="scope.row.project===2">靠边</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="isAutomode" label="自动模式" align="center" width="85px">
@@ -80,7 +79,7 @@
           <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="period" label="间隔" align="center" width="70px"/>
+      <el-table-column prop="period" label="间隔" align="center" :width="65"/>
 
       <el-table-column prop="actualSleepPosition" label="实际睡姿" align="center">
         <template #default="scope">
@@ -106,7 +105,7 @@
           <el-tag effect="dark" type="danger" v-if="!scope.row.isReg">未识别</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="开始时间" align="center"/>
+      <el-table-column prop="createTime" label="记录时间" align="center" :width="200"/>
       <el-table-column fixed="right" label="操作" align="center">
         <template #default="scope">
           <el-button plain type="primary" @click="viewDetails(scope.row)">查看详情
@@ -196,10 +195,9 @@
       </el-dialog>
 
       <!--  记录详情弹窗-->
-      <el-dialog v-model="viewDetailsDialogVisible" :title="title" append-to-body>
+      <el-dialog v-model="viewDetailsDialogVisible" :title="title" append-to-body :width="1000">
         <div style="display: flex;flex-direction: column">
           <div style="height: 30px;margin-bottom: 10px;display: flex;">
-
             <el-switch
                 v-model="hotOrPressure"
                 class="mb-2"
@@ -215,20 +213,21 @@
           </div>
           <div style="flex: 1">
             <div v-if="hotOrPressure">
-              <el-scrollbar style="height: 600px">
-                <el-row style="display: flex;border:1px solid red">
+              <el-scrollbar :height="600">
+                <el-row style="display: flex">
                   <el-col v-for="p in pressures" :span="6" :key="p.time"
                           style="display: flex; justify-content: center; padding: 10px">
                     <div style="width: 100%; display: flex; flex-direction: column">
-                      <div style="flex: 1; display: flex; justify-content: center">
-                        <img :src="'data:image/jpeg;base64,' +p.hotBase64" alt="Image" @load="imageLoaded = true">
+                      <div style="flex: 1; display: flex; justify-content: center;">
+                        <img :src="'data:image/jpeg;base64,' +p.hotBase64" alt="Image" @load="imageLoaded = true"
+                             :height="400">
                       </div>
                       <div
                           style="display:flex;height: 30px;align-items: center;justify-content: center;font-size: 10px">
                         <el-icon @click="copyData(p.pressure)" style="cursor: pointer;color: #409EFF">
                           <DocumentCopy/>
                         </el-icon>
-                        <span>&nbsp&nbsp{{ p.time }}</span>
+                        <span :style="getTimeStyles(p.time)">&nbsp&nbsp{{ p.time }}</span>
                       </div>
                     </div>
                   </el-col>
@@ -237,7 +236,7 @@
             </div>
             <div v-else>
               <el-scrollbar style="height: 600px">
-                <el-row style="display: flex;border:1px solid red">
+                <el-row style="display: flex">
                   <el-col v-for="p in pressures" :span="6" :key="p.time"
                           style="display: flex; justify-content: center; padding: 10px">
                     <div style="width: 100%; display: flex; flex-direction: column">
@@ -256,7 +255,7 @@
                         <el-icon @click="copyData(p.pressure)" style="cursor: pointer;color: #409EFF">
                           <DocumentCopy/>
                         </el-icon>
-                        <span>&nbsp&nbsp{{ p.time }}</span>
+                        <span :style="getTimeStyles(p.time)">&nbsp&nbsp{{ p.time }}</span>
                       </div>
                     </div>
                   </el-col>
@@ -266,6 +265,7 @@
           </div>
         </div>
       </el-dialog>
+
     </div>
   </div>
 
@@ -305,8 +305,7 @@ export default {
       ],
       projects: [
         {value: 1, label: '正中识别'},
-        {value: 2, label: '1/3身体在传感器外识别(偏左)'},
-        {value: 3, label: '1/3身体在传感器外识别(偏右)'}
+        {value: 2, label: '靠边识别'},
       ],
       res: [
         {value: false, label: '未识别'},
@@ -326,7 +325,7 @@ export default {
       CollectBaseData: {
         userInfoId: '',
         bedId: '1457',
-        mat: "2",
+        mat: "1",
         period: 30,
         isAutomode: "true",
         isFineAdjustment: "true",
@@ -334,14 +333,13 @@ export default {
         project: 1,
         recognition: null
       },
-      mode: "1",
+      mode: "0",
       modePlan: {
         1: "正中",
-        2: "1/3身体在传感器外(偏左)",
-        3: "1/3身体在传感器外(偏右)",
-        4: "仰卧",
-        5: "左侧卧",
-        6: "右侧卧"
+        2: "靠边",
+        3: "仰卧",
+        4: "左侧卧",
+        5: "右侧卧"
       },
       collectRules: {
         userInfoId: [
@@ -357,7 +355,11 @@ export default {
       isMonitoring: false,
       isPaused: false,
       ids: [],
-      hotOrPressure: false
+      hotOrPressure: false,
+      row: {
+        createTime: ''
+      },
+      maxHighlightedData: 3, // 设置要高亮显示的最大数据数量
     }
   },
   created() {
@@ -366,16 +368,21 @@ export default {
       this.names = res.data
     })
   },
+  computed: {
+    latestStatus() {
+      return this.statusList.slice(0, 10);
+    },
+    getMaxFilteredPressures() {
+      const specifiedTime = new Date(this.row.createTime);
+      const filteredPressures = this.pressures.filter(p => new Date(p.time) < specifiedTime);
+      return filteredPressures.slice(-this.maxHighlightedData).reverse();
+    }
+  },
   setup() {
     return {
       Search,
       Delete,
       Upload
-    }
-  },
-  computed: {
-    latestStatus() {
-      return this.statusList.slice(0, 10);
     }
   },
   methods: {
@@ -450,8 +457,15 @@ export default {
     getRandomInt1_3() {
       return Math.floor(Math.random() * 3) + 1
     },
+    getRandomInt1_2() {
+      return Math.floor(Math.random() * 2) + 1
+    },
     viewDetails(row) {
       this.viewDetailsDialogVisible = true
+      this.pressures = []
+      this.row.createTime = ''
+      this.row.createTime = row.createTime
+      this.maxHighlightedData = row.period / 10
       this.title = row.id
       request.get('/sleep-position-collect/pressureListByOne', {
         params: {
@@ -471,6 +485,13 @@ export default {
         backgroundColor: this.getCellBackgroundColor(cell),
         color: this.fontColor,
         fontSize: `${this.fontSize}px`
+      };
+    },
+    getTimeStyles(time) {
+      const isHighlighted = this.getMaxFilteredPressures.some(p => p.time === time);
+      return {
+        color: isHighlighted ? "red" : this.fontColor,
+        "font-weight": isHighlighted ? "bold" : "normal",
       };
     },
     getTwoDimensionalData(pressure) {
@@ -511,12 +532,11 @@ export default {
     startMonitoring() {
       this.isMonitoring = true
       this.step = 1
+      this.statusList = []
       this.$refs.collectRef.validate((valid) => {
         if (!valid) return
         this.playSound("人员请就位,听到睡姿指令后照做")
-        setTimeout(() => {
-          this.addInterval()
-        }, 5 * 1000)
+        this.addInterval()
       })
     },
     stopMonitoring() {
@@ -536,14 +556,11 @@ export default {
     addInterval() {
       this.intervalId = setInterval(() => {
         if (this.step > 1) {
-          // 记录前一次数据
-          request.post('/sleep-position-collect', this.CollectBaseData).then(res => {
-            this.updateStatus(this.step - 1, 1)
-          })
+          this.collectData()
         }
         if (this.step === 13) {
           clearInterval(this.intervalId)
-          this.updateStatus(this.step, 2)
+          this.updateStatus(this.step, 3)
           this.playSound("采集结束")
           this.isMonitoring = false
           this.CollectBaseData.flag = ''
@@ -551,31 +568,48 @@ export default {
         }
 
         if (this.mode === "1") {
-          this.CollectBaseData.project = Math.ceil(this.step / 4);
+          this.CollectBaseData.project = Math.ceil(this.step / 3);
           this.CollectBaseData.actualSleepPosition = ((this.step - 1) % 3) + 1;
         } else if (this.mode === "0") {
-          this.CollectBaseData.project = this.getRandomInt1_3()
+          this.CollectBaseData.project = this.getRandomInt1_2()
           this.CollectBaseData.actualSleepPosition = this.getRandomInt1_3()
         }
 
         this.playSound("第" + this.step + "次")
         this.playSound(this.modePlan[this.CollectBaseData.project])
-        this.playSound(this.modePlan[this.CollectBaseData.actualSleepPosition + 3])
+        this.playSound(this.modePlan[this.CollectBaseData.actualSleepPosition + 2])
         if (this.intervalId) {
           setTimeout(() => {
             this.updateStatus(this.step, 0)
             this.step++
           }, 10 * 1000)
         }
-      }, (this.CollectBaseData.period + 10) * 1000)
+      }, (this.CollectBaseData.period + 15) * 1000)
+    },
+    collectData() {
+      // 记录前一次数据
+      request.post('/sleep-position-collect', this.CollectBaseData).then(res => {
+        if (res.code === "0") {
+          this.updateStatus(this.step - 1, 1);
+        } else {
+          clearInterval(this.intervalId);
+          this.updateStatus(this.step - 1, 2);
+          this.playSound("采集异常");
+          this.isMonitoring = false;
+          this.CollectBaseData.flag = '';
+          return;
+        }
+      });
     },
     updateStatus(step, flag) {
       const currentTime = new Date().toLocaleTimeString();
       let status
       if (flag === 0) {
-        status = "第" + step + "次开始采集"
+        status = "第" + step + "次开始采集/" + this.modePlan[this.CollectBaseData.project] + "/" + this.modePlan[this.CollectBaseData.actualSleepPosition + 2]
       } else if (flag === 1) {
         status = "第" + step + "次结束采集"
+      } else if (flag === 2) {
+        status = "第" + step + "次采集异常"
       } else {
         status = "当前轮次全部采集结束"
       }

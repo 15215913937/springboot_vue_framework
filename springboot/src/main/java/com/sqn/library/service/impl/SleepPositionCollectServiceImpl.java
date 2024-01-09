@@ -65,10 +65,10 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.SECOND, period + 60);
+            calendar.add(Calendar.SECOND, 30);
             Date futureDate = calendar.getTime();
             calendar.setTime(date);
-            calendar.add(Calendar.SECOND, -60);
+            calendar.add(Calendar.SECOND, -30 - period);
             Date pastDate = calendar.getTime();
 
             String formattedStartTime = dateFormat.format(pastDate);

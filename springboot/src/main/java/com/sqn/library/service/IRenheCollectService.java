@@ -19,4 +19,6 @@ public interface IRenheCollectService extends IService<RenheCollect> {
     String getHotmapBase64(String pressures,String bedId);
 
     Integer export_PressureAndHot_Img(List<RenheScreenCapDTO> renheScreenCapDTOList, String savePath);
+
+    String getPosition(String pressure);
 }
