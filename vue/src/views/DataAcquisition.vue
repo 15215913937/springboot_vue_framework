@@ -142,9 +142,9 @@
                 </el-form-item>
                 <el-form-item label="确认时间" prop="confirmTime">
                   <el-radio-group v-model="confirmTime">
-                    <el-radio label='6'/>
-                    <el-radio label='12'/>
-                    <el-radio label='24'/>
+                    <el-radio label='10'/>
+                    <el-radio label='20'/>
+                    <el-radio label='30'/>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="硬件码key" prop="code">
@@ -167,10 +167,8 @@
             </div>
           </div>
           <div class="footer-btn">
-            <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn" @keyup.enter=startMonitoring>开始监测
+            <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn">开始监测
             </button>
-            <button @click="pauseMonitoring" v-else-if="!isPaused" class="pause-btn">暂停</button>
-            <button @click="resumeMonitoring" v-else class="resume-btn">继续</button>
             <button @click="stopMonitoring('已终止')" v-if="isMonitoring" class="stop-btn">终止</button>
           </div>
 
@@ -320,12 +318,10 @@ export default {
         batch: '',
         coefficient: '1',
         code: '',
-        firstPressure: null,
-        finalPressure: null,
-        pressure: []
+        firstPressure: null
       },
       threshold: 600,
-      confirmTime: '24',
+      confirmTime: '30',
       timeout: 6,
       count: 0,
       rules: {
@@ -339,7 +335,6 @@ export default {
       statusList: [],
       intervalId: null,
       isMonitoring: false,
-      isPaused: false,
       is_err: 0,
       rows: [],
       checkDialogVisible: false,
@@ -349,7 +344,9 @@ export default {
         remarks: ""
       },
       info: '',
-      remarkDialogVisible: false
+      remarkDialogVisible: false,
+      pressureApiData: {},
+      timeOutId: null
     }
   },
   created() {
@@ -521,98 +518,104 @@ export default {
         }
       }, this.timeout * 1000);
     },
-    pauseMonitoring() {
-      this.isPaused = true;
-    },
-    resumeMonitoring() {
-      this.isPaused = false;
-    },
     stopMonitoring(sound) {
-      clearInterval(this.intervalId);
+      clearInterval(this.intervalId)
+      clearInterval(this.timeOutId)
       this.playSound(this.CollectBaseData.code + sound);
       this.isMonitoring = false
       this.CollectBaseData.code = ''
     },
-    async updateStatus() {
+    async getPressureApiData(bedId) {
+      this.pressureApiData = {};
       try {
-        const config = {
+        const res = await request.get('/renhe-collect/getPressure', {
           params: {
-            bedId: this.CollectBaseData.bedId,
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            Token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjQsImV4cCI6MTczNTgzMzYwMCwiaWF0IjoxNzA0MjQ3MTA4LCJ1c2VybmFtZSI6IjE1MjE1OTEzOTM3In0.fdcR6YrrKdB3gi-l_x9Q-5kRYFwJmpF5rX5xQclh3zA',
-          },
-        };
-
-        const res = await axios.get('https://bedapi.cnzxa.cn/api/pro/bed', config);
-        const data = res.data.data;
-        const pressure = data.pressureList;
-        const finalPressure = [...res.data.data.pressureList];
-        const sortedData = pressure.sort((a, b) => b - a);
-        const sum = sortedData.slice(0, 45).reduce((a, b) => a + b, 0);
-        const currentTime = new Date().toLocaleTimeString();
-
-        let status;
-        let bedId;
-        let code;
-        bedId = this.CollectBaseData.bedId;
-        code = this.CollectBaseData.code;
-
-        if (data.online === 'false') {
-          status = '床垫离线';
-          this.is_err = 1;
-        } else {
-          if (sum < this.threshold) {
-            status = '等待中...';
-          } else {
-            if (this.count === 0) {
-              this.CollectBaseData.firstPressure = sum;
-              const res = await request.post('/renhe-collect/saveFirstPressure', this.CollectBaseData);
-              if (res.code === '0') {
-                status = '保存首次数据';
-                this.timeout = Number(this.confirmTime);
-                this.count++;
-              } else {
-                status = '首次存储异常';
-                this.is_err = 1;
-              }
-              this.setupInterval();
-            } else {
-              this.CollectBaseData.finalPressure = sum;
-              this.CollectBaseData.pressure = finalPressure;
-              const res = await request.post('/renhe-collect/saveFinalPressure', this.CollectBaseData);
-              if (res.code === '0') {
-                status = '保存最终数据';
-                this.count = 2;
-              } else {
-                status = '最终存储异常';
-                this.is_err = 1;
-              }
-              if (this.count === 2) {
-                this.stopMonitoring('采集结束');
-              } else if (this.is_err === 1) {
-                this.stopMonitoring('采集异常');
-              }
-
-            }
+            bedId: bedId
           }
+        });
+        if (res.code === '0') {
+          this.pressureApiData = {
+            "pressure": res.data.pressure,
+            "online": res.data.online,
+            "fiducial_value": parseInt(res.data.fiducial_value)
+          };
         }
-        if (this.statusList > 10) {
-          this.statusList.pop()
-        }
-
+      } catch (error) {
+        console.error(error)
+        this.pressureApiData = {};
+      }
+    },
+    async updateStatus() {
+      await this.getPressureApiData(this.CollectBaseData.bedId);
+      console.log(this.pressureApiData)
+      const currentTime = new Date().toLocaleTimeString();
+      let bedId;
+      let code;
+      bedId = this.CollectBaseData.bedId;
+      code = this.CollectBaseData.code;
+      if (this.pressureApiData.online === 'false') {
         this.statusList.unshift({
           id: Date.now(),
-          pressure: sum,
-          status,
+          pressure: "",
+          status: '床垫离线',
           time: currentTime,
           bedId,
           code,
         });
-      } catch (error) {
-        console.error('Error:', error);
-        this.is_err = 1;
+        this.stopMonitoring("床垫离线")
+      } else {
+        if (this.pressureApiData.fiducial_value < this.threshold) {
+          this.statusList.unshift({
+            id: Date.now(),
+            pressure: this.pressureApiData.fiducial_value,
+            status: '等待中...',
+            time: currentTime,
+            bedId,
+            code,
+          });
+        } else {
+          this.statusList.unshift({
+            id: Date.now(),
+            pressure: this.pressureApiData.fiducial_value,
+            status: '首次出现压力',
+            time: currentTime,
+            bedId,
+            code,
+          });
+          this.CollectBaseData.firstPressure = this.pressureApiData.fiducial_value
+          clearInterval(this.intervalId)
+          this.timeOutId = setTimeout(() => {
+            const currentTime = new Date().toLocaleTimeString();
+            this.getPressureApiData(bedId)
+            if (this.pressureApiData.online === "false") {
+              this.statusList.unshift({
+                id: Date.now(),
+                pressure: "",
+                status: '床垫离线',
+                time: currentTime,
+                bedId,
+                code,
+              });
+              this.stopMonitoring("床垫离线")
+            } else {
+              request.post('/renhe-collect/saveCollectData', this.CollectBaseData).then(res => {
+                if (res.code === '0') {
+                  this.stopMonitoring("采集结束")
+                  this.statusList.unshift({
+                    id: Date.now(),
+                    pressure: this.pressureApiData.fiducial_value,
+                    status: "数据保存成功",
+                    time: currentTime,
+                    bedId,
+                    code,
+                  });
+                } else {
+                  this.stopMonitoring("数据保存异常")
+                }
+              })
+            }
+          }, this.confirmTime * 1000)
+        }
       }
     },
     handleSelectionChange(val) {
@@ -654,7 +657,8 @@ export default {
         }
       }
     },
-  },
+  }
+  ,
   beforeDestroy() {
     clearInterval(this.intervalId);
   }

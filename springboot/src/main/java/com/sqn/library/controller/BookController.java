@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -123,14 +124,13 @@ public class BookController {
      * 导出接口
      */
     @GetMapping("/export")
-    public void export(HttpServletResponse response) throws Exception {
-        // 从数据库获取全部数据
+    public Result<?> export(HttpServletResponse response) throws IOException {
         List<Book> list = iBookService.list();
         for (Book book : list) {
             User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getId, book.getUid()));
             book.setUsername(user.getName());
         }
-        iBookService.exportBooks(response, list);
-        log.info("export success!");
+        boolean b = iBookService.exportBooks(response, list);
+        return b ? Result.success("导出成功") : Result.error(Constants.CODE_COMMON_ERR, "导出失败");
     }
 }

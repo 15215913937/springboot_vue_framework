@@ -3,6 +3,7 @@ package com.sqn.library.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sqn.library.entity.SleepPositionCollect;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public interface ISleepPositionCollectService extends IService<SleepPositionCollect> {
 
-    Byte getSleepReg(String bedId);
+    HashMap<String, String> getMattressStatus(String bedId);
 
     boolean isReg(Byte actualSleepPosition, Byte recognition);
 

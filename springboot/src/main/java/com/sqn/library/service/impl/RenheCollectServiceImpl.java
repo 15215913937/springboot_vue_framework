@@ -8,6 +8,7 @@ import com.sqn.library.mapper.RenheCollectMapper;
 import com.sqn.library.service.IRenheCollectService;
 import com.sqn.library.utils.GetApiTokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,6 +40,9 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
 
     @Resource
     GetApiTokenUtil apiTokenUtil;
+
+    @Value("${bed.host}")
+    private String bedHost;
 
     @Override
     public String getHotmapBase64(String pressures, String bedId) {
@@ -111,6 +117,31 @@ public class RenheCollectServiceImpl extends ServiceImpl<RenheCollectMapper, Ren
             // 可以根据具体情况处理异常，比如抛出异常或返回默认值
             return "Error: Unable to retrieve position";
         }
+    }
+
+    @Override
+    public HashMap<String, String> getPressureByBedId(String bedId) {
+        String url = bedHost + "api/pro/bed?noise=false&bedId=" + bedId;
+        String token = apiTokenUtil.getBedToken();
+        JSONObject jsonObject = apiTokenUtil.callApi(HttpMethod.GET, url, null, token);
+        JSONObject data = (JSONObject) jsonObject.get("data");
+        HashMap<String, String> map = new HashMap<>();
+        map.put("online", data.getStr("online"));
+        String pressure = data.getStr("pressureList");
+
+        if (pressure != null) {
+            String newPressure = pressure.replace("[", "").replace("]", "");
+            int sum = Arrays.stream(newPressure.split(","))
+                    .mapToInt(Integer::parseInt)
+                    .boxed()
+                    .sorted((x, y) -> Integer.compare(y, x))
+                    .limit(45)
+                    .mapToInt(Integer::intValue)
+                    .sum();
+            map.put("pressure", newPressure);
+            map.put("fiducial_value", String.valueOf(sum));
+        }
+        return map;
     }
 
     private Integer getPressureImg(String pressure, String parentFilePath, Integer successCount) {

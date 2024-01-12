@@ -37,14 +37,24 @@ public class SleepPositionCollectServiceImpl extends ServiceImpl<SleepPositionCo
     @Resource
     IRenheCollectService renheCollectService;
 
-    @Override
-    public Byte getSleepReg(String bedId) {
+    public JSONObject mattressStatus(String bedId) {
         String url = bedHost + "api/user/mattress/status?bedId=" + bedId;
         String token = getApiTokenUtil.getBedToken();
         JSONObject apiResponse = getApiTokenUtil.getApiResponse(url, token);
-        JSONObject data = (JSONObject) apiResponse.get("data");
+        return (JSONObject) apiResponse.get("data");
+    }
+
+    @Override
+    public HashMap<String, String> getMattressStatus(String bedId) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        String recognition = mattressStatus(bedId).getStr("sleepPositionId");
+        String tip = mattressStatus(bedId).getStr("tip");
+        String progress = mattressStatus(bedId).getStr("progress");
+        hashMap.put("recognition", recognition);
+        hashMap.put("tip", tip);
+        hashMap.put("progress", progress);
         // 0无人 1 仰卧 3,4侧卧 5坐姿
-        return Byte.valueOf(data.getStr("sleepPositionId"));
+        return hashMap;
     }
 
     @Override

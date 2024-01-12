@@ -155,40 +155,47 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
     }
 
     @Override
-    public void exportBooks(HttpServletResponse response, List<Book> list) throws IOException {
-        //在内存操作，写出到浏览器
-        ExcelWriter writer = ExcelUtil.getWriter(true);
-        //自定义标题别名
-        writer.addHeaderAlias("id", "ID");
-        writer.addHeaderAlias("bookname", "书名");
-        writer.addHeaderAlias("author", "作者");
-        writer.addHeaderAlias("category", "类别");
-        writer.addHeaderAlias("version", "版本");
-        writer.addHeaderAlias("publishingHouse", "出版社");
-        writer.addHeaderAlias("username", "购买者");
-        writer.addHeaderAlias("price", "价格");
-        writer.addHeaderAlias("buyDate", "购买日期");
-        writer.addHeaderAlias("comment", "备注");
-        writer.addHeaderAlias("cover", "封面");
-        // 设置只导出有别名的字段
-        writer.setOnlyAlias(true);
+    public boolean exportBooks(HttpServletResponse response, List<Book> list) throws IOException {
+        try {
+            //在内存操作，写出到浏览器
+            ExcelWriter writer = ExcelUtil.getWriter(true);
+            //自定义标题别名
+            writer.addHeaderAlias("id", "ID");
+            writer.addHeaderAlias("bookname", "书名");
+            writer.addHeaderAlias("author", "作者");
+            writer.addHeaderAlias("category", "类别");
+            writer.addHeaderAlias("version", "版本");
+            writer.addHeaderAlias("publishingHouse", "出版社");
+            writer.addHeaderAlias("username", "购买者");
+            writer.addHeaderAlias("price", "价格");
+            writer.addHeaderAlias("buyDate", "购买日期");
+            writer.addHeaderAlias("comment", "备注");
+            writer.addHeaderAlias("cover", "封面");
+            // 设置只导出有别名的字段
+            writer.setOnlyAlias(true);
 
-        writer.setColumnWidth(8, 20);
-        // 设置冻结行
-        writer.setFreezePane(1);
-        // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
-        writer.write(list, true);
-        // 设置时间戳
-        SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
-        String timeStamp = timestamp.format(new Date());
-        // 设置浏览器响应格式
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        String fileName = URLEncoder.encode("所有书籍", "UTF-8") + timeStamp;
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+            writer.setColumnWidth(8, 20);
+            // 设置冻结行
+            writer.setFreezePane(1);
+            // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
+            writer.write(list, true);
+            // 设置时间戳
+            SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
+            String timeStamp = timestamp.format(new Date());
+            // 设置浏览器响应格式
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+            String fileName = URLEncoder.encode("所有书籍", "UTF-8") + timeStamp;
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
 
-        ServletOutputStream out = response.getOutputStream();
-        writer.flush(out, true);
-        out.close();
-        writer.close();
+            ServletOutputStream out = response.getOutputStream();
+            writer.flush(out, true);
+            out.close();
+            writer.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

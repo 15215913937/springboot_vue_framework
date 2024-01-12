@@ -67,55 +67,34 @@ public class RenheCollectController {
         return Result.success(s);
     }
 
-    /***
-     * 垫子压力数据首次保存
-     * @param renheCollectDTO
-     * @return`
-     */
-    @PostMapping("/saveFirstPressure")
-    Result<?> saveFirstPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
-        List<String> pressure = renheCollectDTO.getPressure();
-        String strPressure = String.join(",", pressure);
-        RenheCollect renheCollect = new RenheCollect();
-        renheCollect.setCode(renheCollectDTO.getCode());
-        renheCollect.setBatch(renheCollectDTO.getBatch());
-        renheCollect.setBedId(renheCollectDTO.getBedId());
-        renheCollect.setMat(renheCollectDTO.getMat());
-        renheCollect.setFirstPressure(renheCollectDTO.getFirstPressure());
-        renheCollect.setCoefficient(renheCollectDTO.getCoefficient());
-        renheCollect.setPressure(strPressure);
-        renheCollectMapper.insert(renheCollect);
-        return Result.success();
+    @GetMapping("/getPressure")
+    public Result<?> getPressure(@RequestParam String bedId) {
+        HashMap<String, String> res = renheCollectService.getPressureByBedId(bedId);
+        return Result.success(res);
     }
 
-    /***
-     * 垫子压力数据最终保存
-     * @param renheCollectDTO
-     * @return
-     */
-    @PostMapping("/saveFinalPressure")
-    Result<?> saveFinalPressure(@RequestBody RenheCollectDTO renheCollectDTO) {
-        final List<RenheCollect> renheCollects = renheCollectMapper.selectList(Wrappers.<RenheCollect>lambdaQuery().eq(RenheCollect::getCode, renheCollectDTO.getCode()).eq(RenheCollect::getBatch, renheCollectDTO.getBatch()).eq(RenheCollect::getMat, renheCollectDTO.getMat()).orderByDesc(RenheCollect::getCreateTime));
-        RenheCollect renhe = renheCollects.get(0);
-        if (renheCollects.size() > 1) {
-            renhe.setCode(renhe.getCode() + '_' + renheCollects.size() + 1);
-        }
-        if (renhe != null) {
-            if (renhe.getFinalPressure() == null) {
-                List<String> pressure = renheCollectDTO.getPressure();
-                String strPressure = String.join(",", pressure);
-                String position = renheCollectService.getPosition(strPressure);
-                renhe.setPosition(position);
-                renhe.setFinalPressure(renheCollectDTO.getFinalPressure());
-                renhe.setPressure(strPressure);
-                renheCollectMapper.updateById(renhe);
-                return Result.success("最终数据存储成功");
-            } else {
-                return Result.error(Constants.CODE_DATA_ERR, "数据重复存储");
-            }
+    @PostMapping("/saveCollectData")
+    Result<?> saveCollectData(@RequestBody RenheCollectDTO renheCollectDTO) {
+        HashMap<String, String> res = renheCollectService.getPressureByBedId(renheCollectDTO.getBedId());
+        if ("true".equals(res.get("online"))) {
+            String pressure = res.get("pressure");
+            RenheCollect renheCollect = new RenheCollect();
+            renheCollect.setCode(renheCollectDTO.getCode());
+            renheCollect.setBatch(renheCollectDTO.getBatch());
+            renheCollect.setBedId(renheCollectDTO.getBedId());
+            renheCollect.setMat(renheCollectDTO.getMat());
+            renheCollect.setFirstPressure(renheCollectDTO.getFirstPressure());
+            renheCollect.setFinalPressure(Long.valueOf(res.get("fiducial_value")));
+            renheCollect.setCoefficient(renheCollectDTO.getCoefficient());
+            renheCollect.setPressure(pressure);
+            String position = renheCollectService.getPosition(pressure);
+            renheCollect.setPosition(position);
+            renheCollectMapper.insert(renheCollect);
+            return Result.success();
         } else {
-            return Result.error(Constants.CODE_DATA_ERR, "硬件码不存在");
+            return Result.error(Constants.CODE_DATA_ERR, "床垫离线");
         }
+
     }
 
     @GetMapping("/getPosition")
@@ -125,7 +104,6 @@ public class RenheCollectController {
             final String pressure = l.getPressure();
             try {
                 String position = renheCollectService.getPosition(pressure);
-                log.info(position);
                 l.setPosition(position);
                 renheCollectMapper.updateById(l);
             } catch (Exception e) {

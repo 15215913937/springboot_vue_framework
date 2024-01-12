@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,8 @@ public class SleepPositionCollectController {
     @PostMapping
     public Result<?> save(@RequestBody SleepPositionCollect sleepPositionCollect) {
         try {
-            Byte recognition = sleepPositionCollectService.getSleepReg(sleepPositionCollect.getBedId());
+            HashMap<String, String> mattressStatus = sleepPositionCollectService.getMattressStatus(sleepPositionCollect.getBedId());
+            Byte recognition = Byte.valueOf(mattressStatus.get("recognition"));
             sleepPositionCollect.setRecognition(recognition);
             sleepPositionCollect.setIsReg(sleepPositionCollectService.isReg(sleepPositionCollect.getActualSleepPosition(), recognition));
             sleepPositionCollectService.save(sleepPositionCollect);
@@ -112,5 +114,11 @@ public class SleepPositionCollectController {
             }
         }
         return Result.success(map.get("data"));
+    }
+
+    @GetMapping("/mattressStatus")
+    public Result<?> mattressStatus(@RequestParam String bedId) {
+        HashMap<String, String> mattressStatus = sleepPositionCollectService.getMattressStatus(bedId);
+        return Result.success(mattressStatus);
     }
 }

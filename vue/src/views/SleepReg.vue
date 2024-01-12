@@ -52,35 +52,8 @@
         @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40px" align="center"/>
       <el-table-column prop="id" label="ID" align="center" width="50px"/>
-      <el-table-column prop="name" label="测试者" align="center" width="80px">
+      <el-table-column prop="name" label="测试者" align="center">
       </el-table-column>
-      <el-table-column prop="mat" label="舒适层" align="center" :width="85">
-        <template #default="scope">
-          <el-tag effect="plain" v-if="scope.row.mat===1">STAND</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.mat===2">PLUS</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.mat===3">PRO</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="project" label="测试项目" align="center" :width="190">
-        <template #default="scope">
-          <el-tag effect="plain" v-if="scope.row.project===1">正中识别</el-tag>
-          <el-tag effect="plain" v-else-if="scope.row.project===2">靠边</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="isAutomode" label="自动模式" align="center" width="85px">
-        <template #default="scope">
-          <el-tag effect="plain" type="success" v-if="scope.row.isAutomode">开启</el-tag>
-          <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="isFineAdjustment" label="微调" align="center" width="70px">
-        <template #default="scope">
-          <el-tag effect="plain" type="success" v-if="scope.row.isFineAdjustment">开启</el-tag>
-          <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="period" label="间隔" align="center" :width="65"/>
-
       <el-table-column prop="actualSleepPosition" label="实际睡姿" align="center">
         <template #default="scope">
           <el-tag effect="plain" type="danger" v-if="scope.row.actualSleepPosition===0">无人</el-tag>
@@ -105,11 +78,11 @@
           <el-tag effect="dark" type="danger" v-if="!scope.row.isReg">未识别</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="记录时间" align="center" :width="200"/>
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column prop="createTime" label="记录时间" align="center"/>
+      <el-table-column fixed="right" label="操作" align="center" :width="200">
         <template #default="scope">
-          <el-button plain type="primary" @click="viewDetails(scope.row)">查看详情
-          </el-button>
+          <el-button plain type="primary" @click="viewDetails(scope.row)">详情</el-button>
+          <el-button type="info" @click="viewConfig(scope.row)">配置</el-button>
         </template>
       </el-table-column>
       <el-pagination small layout="prev, pager, next" :total="50"/>
@@ -125,12 +98,12 @@
           @current-change="handleCurrentChange"
       />
       <!-- 采集功能弹窗-->
-      <el-dialog v-model="collectDialogVisible" append-to-body>
+      <el-dialog v-model="collectDialogVisible" append-to-body @before-close="handleClose">
         <div style="display: flex; flex-direction: column; justify-content: space-between;">
           <div class="header">
             <el-form :model="CollectBaseData" :rules="collectRules" ref="collectRef" label-width="120px">
               <div class="form-item">
-                <el-form-item label="测试人" prop="name">
+                <el-form-item label="测试人" prop="userInfoId">
                   <el-select v-model="CollectBaseData.userInfoId" style="width: 80%" clearable>
                     <el-option
                         v-for="item in names"
@@ -143,32 +116,33 @@
                 <el-form-item label="采集床垫ID" prop="bedId">
                   <el-input type="number" maxlength="10" v-model="CollectBaseData.bedId"/>
                 </el-form-item>
-                <el-form-item label="舒适层" prop="mat">
+                <el-form-item label="舒适层">
                   <el-radio-group v-model="CollectBaseData.mat">
                     <el-radio label="1">STAND</el-radio>
                     <el-radio label="2">PLUS</el-radio>
                     <el-radio label="3">PRO</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="自动模式" prop="isAutomode">
+                <el-form-item label="自动模式">
                   <el-radio-group v-model="CollectBaseData.isAutomode">
                     <el-radio label="true">开</el-radio>
                     <el-radio label="false">关</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="微调" prop="isFineAdjustment">
+                <el-form-item label="微调">
                   <el-radio-group v-model="CollectBaseData.isFineAdjustment">
                     <el-radio label="true">开</el-radio>
                     <el-radio label="false">关</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="监测周期(秒)" prop="period">
+                <el-form-item label="监测周期(秒)">
                   <el-input-number v-model="CollectBaseData.period" :step="10" min="0"/>
                 </el-form-item>
-                <el-form-item label="采集方式" prop="mode">
+                <el-form-item label="采集方式">
                   <el-radio-group v-model="mode">
-                    <el-radio label="1">顺序</el-radio>
                     <el-radio label="0">随机</el-radio>
+                    <el-radio label="1">顺序</el-radio>
+                    <el-radio label="2">按床垫状态（随机姿势）</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </div>
@@ -186,10 +160,8 @@
             </div>
           </div>
           <div class="footer-btn">
-            <button @click="startMonitoring" v-if="!isMonitoring" class="start-btn">开始监测</button>
-            <button @click="pauseMonitoring" v-else-if="!isPaused" class="pause-btn">暂停</button>
-            <button @click="resumeMonitoring" v-else class="resume-btn">继续</button>
-            <button @click="stopMonitoring('已终止')" v-if="isMonitoring" class="stop-btn">终止</button>
+            <el-button type="primary" @click="startMonitoring" v-if="!isMonitoring">开始监测</el-button>
+            <el-button type="danger" @click="stopMonitoring('已终止')" v-if="isMonitoring">终止</el-button>
           </div>
         </div>
       </el-dialog>
@@ -197,14 +169,13 @@
       <!--  记录详情弹窗-->
       <el-dialog v-model="viewDetailsDialogVisible" :title="title" append-to-body :width="1000">
         <div style="display: flex;flex-direction: column">
-          <div style="height: 30px;margin-bottom: 10px;display: flex;">
+          <div style="height: 30px;margin-bottom: 10px;display: flex;padding-left: 20px">
             <el-switch
                 v-model="hotOrPressure"
-                class="mb-2"
                 active-text="热力图"
                 inactive-text="压力图"
             />
-            <div style="position:absolute;right: 20px">
+            <div style="position:absolute;right: 40px">
               <el-button type="primary" @click="copyAll()">
                 一键全部复制
               </el-button>
@@ -265,7 +236,43 @@
           </div>
         </div>
       </el-dialog>
-
+      <!--  配置弹窗-->
+      <el-dialog
+          title="配置"
+          v-model="configDialogVisible"
+          append-to-body
+          :width="300"
+      >
+        <div style="display: flex;align-items: center;justify-content: center">
+          <el-card style="width: 80%">
+            <el-form label-width="80px" :model="configInfo">
+              <el-form-item label="采集床垫" prop="bedId">
+                <el-tag>{{ configInfo.bedId }}</el-tag>
+              </el-form-item>
+              <el-form-item label="测试项目" prop="project">
+                <el-tag v-if="configInfo.project===1">正中识别</el-tag>
+                <el-tag v-else>靠边识别</el-tag>
+              </el-form-item>
+              <el-form-item label="舒适层" prop="mat">
+                <el-tag v-if="configInfo.mat===1">STAND</el-tag>
+                <el-tag v-else-if="configInfo.mat===2">PLUS</el-tag>
+                <el-tag v-else-if="configInfo.mat===3">PRO</el-tag>
+              </el-form-item>
+              <el-form-item label="自动模式" prop="isAutomode">
+                <el-tag effect="plain" type="success" v-if="configInfo.isAutomode">开启</el-tag>
+                <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
+              </el-form-item>
+              <el-form-item label="微调" prop="isFineAdjustment">
+                <el-tag effect="plain" type="success" v-if="configInfo.isFineAdjustment">开启</el-tag>
+                <el-tag effect="plain" type="danger" v-else>关闭</el-tag>
+              </el-form-item>
+              <el-form-item label="采集周期" prop="period">
+                <el-tag>{{ configInfo.period }}</el-tag>
+              </el-form-item>
+            </el-form>
+          </el-card>
+        </div>
+      </el-dialog>
     </div>
   </div>
 
@@ -291,9 +298,9 @@ export default {
         total: '',
       },
       mats: [
-        {value: 1, label: 'stand'},
-        {value: 2, label: 'plus'},
-        {value: 3, label: 'pro'},
+        {value: 1, label: 'STAND'},
+        {value: 2, label: 'PLUS'},
+        {value: 3, label: 'PRO'},
       ],
       sleepPositions: [
         {value: 5, label: '无人'},
@@ -353,13 +360,24 @@ export default {
       step: 1,
       intervalId: null,
       isMonitoring: false,
-      isPaused: false,
       ids: [],
       hotOrPressure: false,
       row: {
         createTime: ''
       },
       maxHighlightedData: 3, // 设置要高亮显示的最大数据数量
+      configDialogVisible: false,
+      configInfo: {
+        "bedId": "",
+        "period": null,
+        "mat": null,
+        "isAutomode": "",
+        "isFineAdjustment": "",
+        "project": null
+      },
+      mattressStatus: {},
+      befor_mattressStatus: {},
+      waitCollect: false
     }
   },
   created() {
@@ -370,7 +388,7 @@ export default {
   },
   computed: {
     latestStatus() {
-      return this.statusList.slice(0, 10);
+      return this.statusList;
     },
     getMaxFilteredPressures() {
       const specifiedTime = new Date(this.row.createTime);
@@ -478,6 +496,10 @@ export default {
         this.pressures = res.data
       })
     },
+    viewConfig(data) {
+      this.configDialogVisible = true
+      this.configInfo = data
+    },
     getCellStyles(cell) {
       return {
         width: `${this.WcellSize}px`,
@@ -530,13 +552,61 @@ export default {
       this.step = 1
     },
     startMonitoring() {
-      this.isMonitoring = true
       this.step = 1
       this.statusList = []
       this.$refs.collectRef.validate((valid) => {
         if (!valid) return
+        this.isMonitoring = true
         this.playSound("人员请就位,听到睡姿指令后照做")
-        this.addInterval()
+        if (this.mode !== "2") {
+          this.addInterval()
+        } else {
+          this.playSound("居中，仰卧")
+          this.intervalId = setInterval(() => {
+            request.get('/sleep-position-collect/mattressStatus', {params: {bedId: this.CollectBaseData.bedId}}).then(res => {
+              if (res.code === "0") {
+                if(this.step>5){
+                  clearInterval(this.intervalId);
+                  this.updateStatus(this.step, 3)
+                  this.playSound("采集结束")
+                  this.isMonitoring = false
+                  return
+                }
+                this.mattressStatus = res.data
+                if ((this.befor_mattressStatus.tip === this.mattressStatus.tip) && (this.befor_mattressStatus.progress === this.mattressStatus.progress)) return
+
+                if ((this.befor_mattressStatus.tip === "正在执行自动模式") && (this.mattressStatus.tip !== this.befor_mattressStatus.tip)) {
+                  this.playSound("自动模式结束，保持当前睡姿，等待下一步指令")
+                }
+                if (((this.befor_mattressStatus.tip === "正在执行微调") && (this.mattressStatus.tip === "在线")) && (!this.waitCollect)) {
+                  this.CollectBaseData.project = this.getRandomInt1_2()
+                  this.CollectBaseData.actualSleepPosition = this.getRandomInt1_3()
+                  this.playSound("第" + this.step + "次翻身")
+                  this.playSound(this.modePlan[this.CollectBaseData.project])
+                  this.playSound(this.modePlan[this.CollectBaseData.actualSleepPosition + 2])
+                  if (this.intervalId) {
+                    setTimeout(() => {
+                      this.updateStatus(this.step, 0)
+                      this.step++
+                      setTimeout(() => {
+                        this.collectData()
+                      }, (this.CollectBaseData.period + 5) * 1000)
+                    }, 10 * 1000)
+                  }
+                  this.waitCollect = true
+                }
+                const currentTime = new Date().toLocaleTimeString();
+                this.statusList.unshift({
+                  id: Date.now(),
+                  status: this.mattressStatus.tip + " (" + this.mattressStatus.progress + "%)",
+                  time: currentTime,
+                  bedId: this.CollectBaseData.bedId,
+                })
+                this.befor_mattressStatus = this.mattressStatus
+              }
+            })
+          }, 3 * 1000)
+        }
       })
     },
     stopMonitoring() {
@@ -544,14 +614,6 @@ export default {
       clearInterval(this.intervalId);
       this.isMonitoring = false;
       this.step = 1
-    },
-    pauseMonitoring() {
-      clearInterval(this.intervalId)
-      this.isPaused = true;
-    },
-    resumeMonitoring() {
-      this.isPaused = false;
-      this.startMonitoring()
     },
     addInterval() {
       this.intervalId = setInterval(() => {
@@ -563,7 +625,6 @@ export default {
           this.updateStatus(this.step, 3)
           this.playSound("采集结束")
           this.isMonitoring = false
-          this.CollectBaseData.flag = ''
           return
         }
 
@@ -596,9 +657,8 @@ export default {
           this.updateStatus(this.step - 1, 2);
           this.playSound("采集异常");
           this.isMonitoring = false;
-          this.CollectBaseData.flag = '';
-          return;
         }
+        this.waitCollect = false
       });
     },
     updateStatus(step, flag) {
@@ -628,6 +688,10 @@ export default {
     },
     handleCurrentChange() {
       this.load()
+    },
+    handleClose() {
+      clearInterval(this.intervalId);
+      done();
     }
   },
   beforeDestroy() {
@@ -723,26 +787,6 @@ button {
   display: flex;
   justify-content: space-between;
   margin: 0 20px;
-}
-
-.start-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.pause-btn {
-  background-color: #FF9800;
-  color: white;
-}
-
-.resume-btn {
-  background-color: #2196F3;
-  color: white;
-}
-
-.stop-btn {
-  background-color: #F44336;
-  color: white;
 }
 
 .grid {

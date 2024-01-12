@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sqn.library.controller.dto.RenheScreenCapDTO;
 import com.sqn.library.entity.RenheCollect;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,4 +22,6 @@ public interface IRenheCollectService extends IService<RenheCollect> {
     Integer export_PressureAndHot_Img(List<RenheScreenCapDTO> renheScreenCapDTOList, String savePath);
 
     String getPosition(String pressure);
+
+    HashMap<String, String> getPressureByBedId(String bedId);
 }

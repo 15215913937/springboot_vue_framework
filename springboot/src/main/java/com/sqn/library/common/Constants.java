@@ -51,6 +51,8 @@ public class Constants {
     public static final String HEALTH_DATA_KEY = "info:healths:"; // 健康信息
     public static final String SLEEPREG_DETAIL = "sleepReg:detail:"; // 睡眠识别详情记录
     public static final String RenheHotMapBase64 = "renheData:"; // 韧和压力传感垫数据记录
+    public static final String METTRESSTOKEN = "mettress:prop:token:";
+    public static final String BEDTOKEN = "bed:prop:token";
 
     /**
      * 角色常量

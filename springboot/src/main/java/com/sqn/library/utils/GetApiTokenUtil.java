@@ -1,6 +1,7 @@
 package com.sqn.library.utils;
 
 import cn.hutool.json.JSONObject;
+import com.sqn.library.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -9,6 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author sqn
@@ -23,42 +27,55 @@ public class GetApiTokenUtil {
     @Value("${mettress.host}")
     private String mettressHost;
 
+    @Resource
+    RedisUtils redisUtils;
+
     public String getMettressToken() {
-        String url = mettressHost + "api/sys/user/login?name=沈奇男&loginPassword=1";
-        RestTemplate restTemplate = new RestTemplate();
+        String s = redisUtils.get(Constants.METTRESSTOKEN);
+        if (s == null) {
+            String url = mettressHost + "api/sys/user/login?name=沈奇男&loginPassword=1";
+            RestTemplate restTemplate = new RestTemplate();
 
-        // 发送GET请求，获取响应
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                null,
-                String.class
-        );
+            // 发送GET请求，获取响应
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    String.class
+            );
 
-        // 从响应的JSON中提取data字段的值
-        String jsonString = response.getBody();
-        JSONObject json = new JSONObject(jsonString);
-        JSONObject data = (JSONObject) json.get("data");
-        return data.getStr("token");
+            // 从响应的JSON中提取data字段的值
+            String jsonString = response.getBody();
+            JSONObject json = new JSONObject(jsonString);
+            JSONObject data = (JSONObject) json.get("data");
+            s = data.getStr("token");
+            redisUtils.setEx(Constants.METTRESSTOKEN, s, 1, TimeUnit.DAYS);
+        }
+        return s;
     }
 
     public String getBedToken() {
-        String url = bedHost + "api/sys/user/login?username=15215913937&password=123456";
-        RestTemplate restTemplate = new RestTemplate();
+        String s = redisUtils.get(Constants.BEDTOKEN);
+        if (s == null) {
+            String url = bedHost + "api/sys/user/login?username=15215913937&password=123456";
+            RestTemplate restTemplate = new RestTemplate();
 
-        // 发送GET请求，获取响应
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                null,
-                String.class
-        );
+            // 发送GET请求，获取响应
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    String.class
+            );
 
-        // 从响应的JSON中提取data字段的值
-        String jsonString = response.getBody();
-        JSONObject json = new JSONObject(jsonString);
-        JSONObject data = (JSONObject) json.get("data");
-        return data.getStr("token");
+            // 从响应的JSON中提取data字段的值
+            String jsonString = response.getBody();
+            JSONObject json = new JSONObject(jsonString);
+            JSONObject data = (JSONObject) json.get("data");
+            s = data.getStr("token");
+            redisUtils.setEx(Constants.BEDTOKEN, s, 1, TimeUnit.DAYS);
+        }
+        return s;
     }
 
     public JSONObject getApiResponse(String url, String token) {

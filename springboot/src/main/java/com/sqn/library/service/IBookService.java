@@ -37,5 +37,5 @@ public interface IBookService extends IService<Book> {
 
     Map<String, List<Integer>> booksPurchaseStatistics(String year, Long id);
 
-    void exportBooks(HttpServletResponse response, List<Book> list) throws IOException;
+    boolean exportBooks(HttpServletResponse response, List<Book> list) throws IOException;
 }
